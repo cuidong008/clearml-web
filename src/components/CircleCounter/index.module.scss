@@ -1,0 +1,80 @@
+.counterContainer {
+  text-align: center;
+  padding: 8px;
+
+  .circleCounter {
+    display: inline-block;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    background-color: $blue-600;
+
+    .wrapper {
+      gap: 24px;
+    }
+
+    &.multi {
+      display: flex;
+      padding: 0 28px;
+      border-radius: 30px;
+      width: unset;
+
+      .subCounter {
+        font-size: 16px;
+        font-weight: bold;
+        color: $white;
+
+        &.noValue {
+          color: $blue-400;
+        }
+      }
+
+      .subLabel {
+        font-size: 10px;
+        color: $blue-300;
+      }
+    }
+
+    &.completed {
+      background-color: $completed-blue;
+    }
+
+    &.pending {
+      background-color: $pending-gray;
+    }
+
+    &.empty {
+      background-color: $empty-grey;
+    }
+
+    &.running {
+      background-color: $running-green;
+    }
+
+    &.failed {
+      background-color: $failed-red;
+    }
+
+    .counter {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 23px;
+      font-weight: bold;
+      text-align: center;
+      color: #ffffff;
+    }
+  }
+
+  .counterLabel {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    color: $pending-gray;
+  }
+}
+
+.leaveSpace {
+  min-height: 17px;
+}
