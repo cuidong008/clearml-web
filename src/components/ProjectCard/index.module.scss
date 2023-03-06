@@ -1,0 +1,144 @@
+.projectCard {
+  border: solid 0;
+  width: 352px;
+  background: unset;
+  overflow: hidden;
+  cursor: pointer;
+
+  .folderTab {
+    height: 20px;
+    line-height: 20px;
+    display: flex;
+
+    .firstTab {
+      flex: 0 0 64px;
+      width: 60px;
+      height: 20px;
+      line-height: 0;
+    }
+
+    .middleTab {
+      font: normal normal 500 12px/20px 'Heebo', sans-serif;
+
+      white-space: nowrap;
+      color: $blue-grey;
+
+      &.secTabActive {
+        color: $blue-200
+      }
+
+      background-color: $blue-600;
+
+      &.tabHovered:not(.showSecTab) {
+        background-color: $blue-400;
+        color: $blue-200;
+      }
+
+      padding-right: 6px;
+    }
+
+    .secondTab {
+      flex: 0 0 28px;
+      width: 28px;
+      line-height: 0;
+    }
+  }
+
+  .cardContainer {
+    position: relative;
+    transition: $transition-fast;
+    height: 226px;
+    width: 100%;
+    background-color: $blue-500;
+    border-radius: 0 6px 6px 6px;
+    overflow: hidden;
+    font-family: Heebo, sans-serif, sans-serif;
+
+    .firstTabContainer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      padding-top: 10px;
+      background-color: $card-bg;
+      display: flex;
+      flex-direction: column;
+
+      footer {
+        margin-top: auto;
+        position: relative;
+        background-color: $card-footer-bg;
+      }
+
+      header {
+        padding: 0 16px;
+
+        .cardName {
+          height: 32px;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .projectName {
+            max-width: 280px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 14px;
+            color: #c3cdf0;
+          }
+        }
+
+
+      }
+
+      header.empty {
+        padding: 0;
+      }
+
+      .line {
+        border-top: solid 1px $blue-600;
+        margin: 0 16px;
+        width: auto;
+      }
+
+      .card-body {
+        padding: 6px 16px;
+        display: flex;
+        align-items: center;
+      }
+
+      .ribbon {
+        transform: rotate(-45deg);
+        border: 25px solid transparent;
+        border-top-color: $neon-yellow;
+        position: absolute;
+        bottom: -4px;
+        right: -34px;
+        padding: 0 10px;
+        width: 110px;
+        color: #68777C;
+        font-size: 10px;
+      }
+
+      .ribbon .txt {
+        position: absolute;
+        top: -20px;
+        left: -3px;
+      }
+
+      &.firstTabHover {
+        background-color: $blue-400 !important;
+      }
+    }
+
+    .secondTabContainer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 6px;
+      background: $blue-600;
+    }
+  }
+}
