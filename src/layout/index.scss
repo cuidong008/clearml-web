@@ -1,0 +1,30 @@
+.ant-layout {
+  .ant-layout-sider-collapsed {
+    flex: 0 !important;
+    min-width: 60px !important;
+    max-width: 60px !important;
+    width: 60px !important;
+
+    .ant-menu-inline-collapsed {
+      width: 60px !important;
+
+      .ant-menu-item {
+        padding-inline: calc(50% - 14px);
+      }
+    }
+  }
+
+  .ant-layout-sider-dark {
+    background: #2c3246;
+  }
+
+  .site-header-light {
+    background: #f3f3f3 !important;
+    padding: 0;
+  }
+
+  .site-header-dark {
+    color: #ffffff;
+    padding: 0;
+  }
+}

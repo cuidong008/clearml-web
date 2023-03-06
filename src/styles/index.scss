@@ -1,0 +1,78 @@
+@import "@/assets/fonts/trains-icons.scss";
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+/* 清除浮动 */
+.clearfix::after {
+  display: block;
+  height: 0;
+  overflow: hidden;
+  clear: both;
+  content: "";
+}
+
+.primary:not(.ant-popover-disabled-compatible-wrapper) {
+  background-color: $primaryColor !important;
+  color: #ffffff !important;
+
+  .anticon {
+    color: #ffffff !important;
+  }
+}
+
+.warning:not(.ant-popover-disabled-compatible-wrapper) {
+  background-color: $warningColor !important;
+  color: #ffffff;
+
+  .anticon {
+    color: #ffffff;
+  }
+}
+
+.error:not(.ant-popover-disabled-compatible-wrapper) {
+  background-color: $errorColor !important;
+  color: #ffffff !important;
+
+  .anticon {
+    color: #ffffff;
+  }
+}
+
+.success:not(.ant-popover-disabled-compatible-wrapper) {
+  background-color: $successColor !important;
+  color: #ffffff !important;
+
+  .anticon {
+    color: #ffffff;
+  }
+}
+
+.head-container {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+}
+
+/* scroll bar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 6px;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #dddee0;
+  border-radius: 20px;
+  box-shadow: inset 0 0 0 #ffffff;
+}

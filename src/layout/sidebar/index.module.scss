@@ -1,0 +1,30 @@
+.menu {
+  .logoBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #00001f;
+    height: 50px;
+
+    .logoImg {
+      width: 30px;
+      margin: 0;
+    }
+
+    .logoText {
+      margin: 0 0 0 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffffff;
+      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      white-space: nowrap;
+      background: inherit;
+    }
+  }
+
+  :global(.ant-menu-item-selected) {
+    :global(.menu-icon) {
+      color: $neon-yellow-hover
+    }
+  }
+}

@@ -1,0 +1,38 @@
+import * as types from "./app.actions-types";
+import produce from "immer";
+import { AnyAction } from "redux";
+import { SettingState } from "@/types/store";
+
+const initState: SettingState = {
+  language: "",
+  sidebarCollapsed: false,
+  sidebarLogo: true,
+  themeConfig: {
+    // 默认 primary 主题颜色
+    primary: "#1890ff",
+    // 深色模式
+    isDark: true,
+  },
+  menuList: [],
+};
+
+export default function app(state = initState, action: AnyAction) {
+  return produce(state, (draftState) => {
+    switch (action.type) {
+      case types.SET_LANGUAGE:
+        draftState.language = action.language;
+        break;
+      case types.SET_THEME_CONFIG:
+        draftState.themeConfig = action.themeConfig;
+        break;
+      case types.SET_TOGGLE_SIDEBAR:
+        draftState.sidebarCollapsed = !draftState.sidebarCollapsed;
+        break;
+      case types.SET_MENU_LIST:
+        draftState.menuList = action.menuList;
+        break;
+      default:
+        return draftState;
+    }
+  });
+}

@@ -1,0 +1,42 @@
+.header {
+  padding: 0 10px;
+  overflow: hidden;
+  position: relative;
+
+  display: flex;
+  background: inherit;
+  color: inherit;
+  align-items: center;
+  justify-content: space-between;
+
+  .headerLeft {
+    display: flex;
+    align-items: center;
+
+    .collapsed {
+      margin-right: 20px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    :global(.ant-breadcrumb-link) {
+      background: inherit;
+      color: inherit;
+
+      :global(.b-link) {
+        font-weight: bold;
+        background: inherit;
+        color: inherit;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .headerRight {
+    display: flex;
+    height: 50px !important;
+    line-height: 0 !important;
+    align-items: center;
+  }
+}
