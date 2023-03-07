@@ -62,5 +62,13 @@
     "typescript": "^4.9.5",
     "vite": "^4.1.4",
     "vite-plugin-svgr": "^2.4.0"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ]
   }
 }
