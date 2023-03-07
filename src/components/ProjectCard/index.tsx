@@ -72,47 +72,27 @@ export const ProjectCard = (props: {
       <div className={styles.folderTab}>
         <div className={styles.firstTab} onClick={() => setShowSec(false)}>
           {!showSec ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="64"
-              height="20"
-              viewBox="0 0 64 20"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="20" viewBox="0 0 64 20">
               {project?.sub_projects?.length && secHovered && (
-                <path
-                  d="M30.06,0H64V20H30.06C29.93,19.78,30.06,11.93,30.06,0Z"
-                  fill="#5a658e"
-                />
+                <path d="M30.06,0H64V20H30.06C29.93,19.78,30.06,11.93,30.06,0Z" fill="#5a658e" />
               )}
               {project?.sub_projects?.length && !secHovered && (
-                <path
-                  d="M30.06,0H64V20H30.06C29.93,19.78,30.06,11.93,30.06,0Z"
-                  fill="#2c3246"
-                />
+                <path d="M30.06,0H64V20H30.06C29.93,19.78,30.06,11.93,30.06,0Z" fill="#2c3246" />
               )}
               {mainHovered ? (
-                <path
-                  d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
-                  fill="#5a658e"
+                <path d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z" fill="#5a658e"
                   onMouseEnter={() => setMainHovered(true)}
                   onMouseLeave={() => setMainHovered(false)}
                 />
               ) : (
-                <path
-                  d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
-                  fill="#384161"
+                <path d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z" fill="#384161"
                   onMouseEnter={() => setMainHovered(true)}
                   onMouseLeave={() => setMainHovered(false)}
                 />
               )}
             </svg>
           ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="64"
-              height="20"
-              viewBox="0 0 64 20"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="20" viewBox="0 0 64 20">
               {mainHovered ? (
                 <path
                   d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
@@ -121,17 +101,12 @@ export const ProjectCard = (props: {
                   onMouseLeave={() => setMainHovered(false)}
                 />
               ) : (
-                <path
-                  d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
-                  fill="#384161"
+                <path d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z" fill="#384161"
                   onMouseEnter={() => setMainHovered(true)}
                   onMouseLeave={() => setMainHovered(false)}
                 />
               )}
-              <path
-                d="M64,0V20H30C45.18,12.36,40.63,0,54.39,0Z"
-                fill="#2c3246"
-              />
+              <path d="M64,0V20H30C45.18,12.36,40.63,0,54.39,0Z" fill="#2c3246" />
             </svg>
           )}
         </div>
@@ -156,23 +131,12 @@ export const ProjectCard = (props: {
               })}
               onClick={() => setShowSec(true)}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="20"
-                viewBox="0 0 28 20"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="20" viewBox="0 0 28 20">
                 {(showSec || !secHovered) && (
-                  <path
-                    d="M3.61,0C17.37,0,12.82,12.36,28,20H0V0Z"
-                    fill="#2c3246"
-                  />
+                  <path d="M3.61,0C17.37,0,12.82,12.36,28,20H0V0Z" fill="#2c3246" />
                 )}
                 {!showSec && secHovered && (
-                  <path
-                    d="M3.61,0C17.37,0,12.82,12.36,28,20H0V0Z"
-                    fill="#5a658e"
-                  />
+                  <path d="M3.61,0C17.37,0,12.82,12.36,28,20H0V0Z" fill="#5a658e" />
                 )}
               </svg>
             </div>
@@ -262,10 +226,7 @@ export const ProjectCard = (props: {
               <div className={styles.secondTabContainer}>
                 <div className={styles.subProjectsList}>
                   {project?.sub_projects?.map((p) => (
-                    <a
-                      key={p.id}
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
+                    <a key={p.id} style={{ display: "flex", alignItems: "center" }}>
                       <Tooltip title={p.name} placement="bottom" color={"blue"}>
                         {subProjectNameTrans(p.name)}
                       </Tooltip>
@@ -277,19 +238,13 @@ export const ProjectCard = (props: {
           </>
         )}
         {showAdd && (
-          <div
-            className={classNames(styles.plusCard, {
+          <div className={classNames(styles.plusCard, {
               [styles.plusCardHover]: mainHovered,
             })}
             onMouseEnter={() => setMainHovered(true)}
             onMouseLeave={() => setMainHovered(false)}
           >
-            <div
-              className={classNames(
-                "al-icon al-ico-plus al-color",
-                styles.plusIcon
-              )}
-            ></div>
+            <div className={classNames("al-icon al-ico-plus al-color", styles.plusIcon)} />
           </div>
         )}
       </div>
