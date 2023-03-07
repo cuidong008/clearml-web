@@ -28,7 +28,7 @@ export const CircleCounter = (props: {
       <div
         className={classNames(
           styles.circleCounter,
-          styles[type ?? CircleTypeEnum.pending],
+          styles[type ?? CircleTypeEnum.empty],
           Array.isArray(counter) ? styles.multi : ""
         )}
       >

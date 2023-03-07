@@ -67,6 +67,14 @@
         margin-top: auto;
         position: relative;
         background-color: $card-footer-bg;
+
+        .footerTitle {
+          text-align: center;
+          font-size: 10px;
+          padding: 12px;
+          font-weight: 500;
+          color: $pending-gray;
+        }
       }
 
       header {
@@ -103,29 +111,17 @@
         width: auto;
       }
 
-      .card-body {
+      .cardBody {
         padding: 6px 16px;
         display: flex;
         align-items: center;
-      }
 
-      .ribbon {
-        transform: rotate(-45deg);
-        border: 25px solid transparent;
-        border-top-color: $neon-yellow;
-        position: absolute;
-        bottom: -4px;
-        right: -34px;
-        padding: 0 10px;
-        width: 110px;
-        color: #68777C;
-        font-size: 10px;
-      }
+        .cardCounter {
+          display: flex;
+          justify-content: space-around;
 
-      .ribbon .txt {
-        position: absolute;
-        top: -20px;
-        left: -3px;
+          width: 100%;
+        }
       }
 
       &.firstTabHover {
@@ -139,6 +135,61 @@
       position: absolute;
       border-radius: 6px;
       background: $blue-600;
+
+      .subProjectsList {
+        height: 100%;
+        margin: 6px 0;
+        overflow-y: auto;
+
+        a {
+          color: $blue-200;
+          padding: 0 24px;
+          line-height: 30px;
+          text-decoration: none;
+          display: flex;
+
+          .subPath {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 120px;
+
+            &.doubleWidth {
+              max-width: 260px;
+            }
+          }
+
+          &:hover {
+            background-color: $blue-400;
+          }
+        }
+      }
+    }
+
+    .plusCard {
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      cursor: pointer;
+
+      &.plusCardHover {
+        background-color: $blue-400 !important;
+      }
+
+      .plusIcon {
+        color: $blue-300;
+        width: 48px;
+        height: 48px;
+        font-size: 48px;
+      }
+
+      &:hover {
+        .plusIcon {
+          color: $blue-700;
+        }
+      }
     }
   }
 }
