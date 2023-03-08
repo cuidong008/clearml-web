@@ -1,6 +1,7 @@
 # Deekeeper-FrontEnd
 The ClearML Web Application Rewrite Project \
-target is migrate the clearml-web application which wrote by Angular.js to react 
+Target is migrate the clearml-web application which wrote by Angular.js to react \
+And will add some new feature to make it easier to use 
 ## Project Structure
 ```text
 api/   // request api

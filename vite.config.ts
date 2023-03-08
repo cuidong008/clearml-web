@@ -13,6 +13,15 @@ export default defineConfig({
     }
   },
   plugins: [react(), svgr()],
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://10.24.96.161:8080/api/v2.23",
+        changeOrigin: true,
+        rewrite: (path) => path.replace("/api", ""),
+      },
+    }
+  },
   css: {
     preprocessorOptions: {
       scss: {
