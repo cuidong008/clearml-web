@@ -78,3 +78,28 @@ ul {
   border-radius: 20px;
   box-shadow: inset 0 0 0 $blue-200;
 }
+
+html[data-type="dark"] {
+  .ant-table-thead {
+    .ant-table-cell {
+      background: $blue-700;
+      color: $blue-300;
+    }
+  }
+}
+
+.ant-table-thead {
+  .ant-table-cell {
+    font-family: Heebo, sans-serif;
+    font-weight: 500 !important;
+    font-size: 12px;
+    padding: 12px;
+  }
+}
+
+.ellipsis {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

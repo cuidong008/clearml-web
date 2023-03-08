@@ -76,11 +76,11 @@
     a {
       padding: 6px 12px;
       color: #8492c2;
-      text-decoration: underline;
       font-size: 12px;
       font-weight: 500;
 
       &:hover {
+        text-decoration: underline;
         color: #c3cdf0;
       }
     }

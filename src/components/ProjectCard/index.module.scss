@@ -18,13 +18,13 @@
     }
 
     .middleTab {
-      font: normal normal 500 12px/20px 'Heebo', sans-serif;
+      font: normal normal 500 12px/20px "Heebo", sans-serif;
 
       white-space: nowrap;
       color: $blue-grey;
 
       &.secTabActive {
-        color: $blue-200
+        color: $blue-200;
       }
 
       background-color: $blue-600;
@@ -97,8 +97,6 @@
             color: #c3cdf0;
           }
         }
-
-
       }
 
       header.empty {
@@ -114,6 +112,7 @@
       .cardBody {
         padding: 6px 16px;
         display: flex;
+        flex: 1 1;
         align-items: center;
 
         .cardCounter {
