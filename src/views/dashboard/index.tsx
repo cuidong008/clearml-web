@@ -3,19 +3,27 @@ import { useEffect, useRef, useState } from "react";
 import { Project } from "@/types/project";
 import styles from "./index.module.scss";
 import { Link } from "react-router-dom";
-import { Button, Table } from "antd";
-import { getAllProjects } from "@/api/project";
+import { Button, Table, Tooltip } from "antd";
+import { getAllProjectsEx } from "@/api/project";
+import Column from "antd/es/table/Column";
+import { getAllTasksEx } from "@/api/task";
+import { Task } from "@/types/task";
+import { TaskIconLabel } from "@/views/projects/TaskIconLabel";
+import { TaskStatusLabel } from "@/views/projects/TaskStatusLabel";
+import dayjs from "dayjs";
 
 const Dashboard = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getProjectList();
+    getRecentTasks();
   }, []);
 
   function getProjectList() {
-    getAllProjects({
+    getAllProjectsEx({
       stats_for_state: "active",
       include_stats: true,
       check_own_contents: true,
@@ -36,6 +44,44 @@ const Dashboard = () => {
     });
   }
 
+  function getRecentTasks() {
+    getAllTasksEx({
+      page: 0,
+      page_size: 5,
+      order_by: ["-last_update"],
+      status: [
+        "published",
+        "closed",
+        "failed",
+        "stopped",
+        "in_progress",
+        "completed",
+      ],
+      type: [
+        "__$not",
+        "annotation_manual",
+        "__$not",
+        "annotation",
+        "__$not",
+        "dataset_import",
+      ],
+      only_fields: [
+        "type",
+        "status",
+        "created",
+        "name",
+        "id",
+        "last_update",
+        "started",
+        "project.name",
+      ],
+      system_tags: ["-archived", "-pipeline"],
+      allow_public: false,
+    }).then(({ data }) => {
+      setTasks(data.tasks ?? []);
+    });
+  }
+
   return (
     <div className={styles.dashboardBody}>
       <div className={styles.recent}>
@@ -46,9 +92,11 @@ const Dashboard = () => {
               <Link to={"/projects"}>VIEW ALL</Link>
             </div>
             <div>
-              <Button icon={<i className="al-icon al-ico-add" />}>
-                NEW PROJECT
-              </Button>
+              {projects.length > 3 && (
+                <Button icon={<i className="al-icon al-ico-add" />}>
+                  NEW PROJECT
+                </Button>
+              )}
             </div>
           </div>
           {projects.map((p) => (
@@ -73,7 +121,58 @@ const Dashboard = () => {
             </div>
           </div>
           <div className={styles.tableContainer}>
-            <Table></Table>
+            <Table dataSource={tasks} rowKey="id" pagination={false}>
+              <Column
+                dataIndex="type"
+                title="TYPE"
+                render={(type) => (
+                  <TaskIconLabel type={type} showLabel iconClass="md" />
+                )}
+              />
+              <Column
+                dataIndex="name"
+                title="TITLE"
+                render={(name) => (
+                  <Tooltip title={name} color={"blue"}>
+                    <div className="ellipsis" style={{ maxWidth: 450 }}>
+                      {name}
+                    </div>
+                  </Tooltip>
+                )}
+              />
+              <Column
+                dataIndex={["project", "name"]}
+                title="PROJECT"
+                render={(name) => (
+                  <Tooltip title={name} color={"blue"}>
+                    <div className="ellipsis" style={{ maxWidth: 450 }}>
+                      {name}
+                    </div>
+                  </Tooltip>
+                )}
+              />
+              <Column
+                dataIndex="started"
+                title="STARTED"
+                render={(started) =>
+                  dayjs(started).format("YYYY-MM-DD HH:mm:ss")
+                }
+              />
+              <Column
+                dataIndex="last_update"
+                title="UPDATED"
+                render={(last_update) =>
+                  dayjs(last_update).format("YYYY-MM-DD HH:mm:ss")
+                }
+              />
+              <Column
+                dataIndex="status"
+                title="STATUS"
+                render={(status) => (
+                  <TaskStatusLabel status={status} showLabel showIcon />
+                )}
+              />
+            </Table>
           </div>
         </div>
       </div>

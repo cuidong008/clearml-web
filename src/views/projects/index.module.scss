@@ -1,0 +1,110 @@
+@mixin icon($url) {
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  background-size: contain;
+  display: inline-block;
+}
+
+.taskStatusLabel {
+  .icon {
+    min-width: 10px;
+  }
+
+  .label {
+    line-height: 18px;
+    margin-left: 5px;
+
+    &.with-spinner {
+      min-width: 50px;
+    }
+  }
+
+  &.created,
+  &.queued {
+    color: $grey-purple;
+  }
+
+  &.completed,
+  &.Final {
+    color: $completed-blue;
+  }
+
+  &.aborted {
+    color: $completed-blue;
+  }
+
+  &.running {
+    color: $running-green;
+  }
+
+  &.failed {
+    color: $strong-red;
+  }
+
+  &.in_progress,
+  &.Uploading {
+    color: $running-green;
+  }
+
+  &.published {
+    color: $neon-yellow;
+    line-height: 23px;
+  }
+
+  &.closed {
+    color: $blue-sky;
+  }
+
+  &.stopped {
+    color: $blue-sky;
+  }
+
+  .i-queued {
+    @include icon("@/assets/icons/pending.svg");
+  }
+
+  .i-in_progress,
+  .i-Uploading {
+    @include icon("@/assets/icons/running-green.svg");
+  }
+
+  .i-completed,
+  .i-Final {
+    @include icon("@/assets/icons/completed.svg");
+  }
+
+  .i-stopped {
+    @include icon("@/assets/icons/completed.svg");
+  }
+
+  .i-dequeu {
+    @include icon("@/assets/icons/dequeue.svg");
+  }
+
+  .i-closed {
+    @include icon("@/assets/icons/completed.svg");
+  }
+
+  .i-failed {
+    @include icon("@/assets/icons/failed.svg");
+  }
+
+  .i-published {
+    @include icon("@/assets/icons/published-neon.svg");
+  }
+
+  .i-created {
+    @include icon("@/assets/icons/draft-light-blue.svg");
+  }
+
+  .middle {
+    height: 14px;
+    margin-top: 2px;
+  }
+
+  .spinner {
+    margin: -2px 0 0 6px;
+  }
+}
