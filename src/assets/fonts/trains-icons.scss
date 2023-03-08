@@ -1,16 +1,17 @@
 @import "variables";
 
 @font-face {
-  font-family: '#{$icomoon-font-family}';
-  src: url('./#{$icomoon-font-family}.ttf?s4ibjb') format('truetype');
+  font-family: "#{$icomoon-font-family}";
+  src: url("./#{$icomoon-font-family}.ttf?s4ibjb") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="al-ico-"], [class*=" al-ico-"] {
+[class^="al-ico-"],
+[class*=" al-ico-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: '#{$icomoon-font-family}' !important;
+  font-family: "#{$icomoon-font-family}" !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -1356,3 +1357,70 @@
   }
 }
 
+.al-icon,
+.icon {
+  &.flashing-icon {
+    transition: opacity 0.3s;
+  }
+
+  &.flashing-icon:hover {
+    opacity: 1 !important;
+  }
+
+  &.white {
+    filter: brightness(0) contrast(1) grayscale(1) invert(1);
+  }
+
+  &.xs {
+    width: 10px;
+    height: 10px;
+    font-size: 10px;
+  }
+  &.msm {
+    width: 13px;
+    height: 13px;
+    font-size: 13px;
+  }
+
+  &.sm {
+    width: 16px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 16px;
+  }
+
+  &.sm-md {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+
+  &.md {
+    width: 28px;
+    height: 28px;
+    font-size: 28px;
+  }
+
+  &.lg {
+    width: 32px;
+    height: 32px;
+    font-size: 32px;
+  }
+  &.l-40 {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+  }
+
+  &.xl {
+    width: 48px;
+    height: 48px;
+    font-size: 48px;
+  }
+
+  &.xxl {
+    width: 64px;
+    height: 64px;
+    font-size: 64px;
+  }
+}
