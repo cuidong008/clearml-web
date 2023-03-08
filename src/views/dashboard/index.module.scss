@@ -1,0 +1,88 @@
+.dashboardBody {
+  height: 100%;
+  padding: 0 24px;
+  overflow: auto;
+  font-family: Heebo, sans-serif !important;
+
+  .recent {
+    height: 100%;
+    overflow: auto;
+    max-width: 2400px;
+    margin: 0 auto;
+
+    .recentProject {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, 352px);
+      padding-top: 24px;
+      padding-bottom: 0;
+      justify-content: center;
+      height: 320px;
+      overflow: hidden;
+      grid-gap: 16px 24px;
+
+      :global(.ant-btn) {
+        background-color: $blue-600;
+        border-color: $blue-600;
+        color: $blue-300;
+
+        i {
+          margin-right: 3px;
+        }
+
+        &:hover {
+          background-color: $blue-500;
+          border-color: $blue-500;
+          color: $blue-200;
+        }
+      }
+    }
+
+    .recentExperiment {
+      display: block;
+      margin: 24px auto 0;
+      height: calc(100% - 356px);
+
+      .recentHeader {
+        padding-bottom: 12px;
+      }
+
+      .tableContainer {
+        height: calc(100% - 38px);
+        min-height: 180px;
+        overflow-y: auto;
+      }
+    }
+  }
+}
+
+.recentHeader {
+  grid-column: 1 / -1;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  i {
+    margin-right: 3px;
+  }
+
+  .recentTitle {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: $blue-100;
+
+    a {
+      padding: 6px 12px;
+      color: #8492c2;
+      text-decoration: underline;
+      font-size: 12px;
+      font-weight: 500;
+
+      &:hover {
+        color: #c3cdf0;
+      }
+    }
+  }
+}
