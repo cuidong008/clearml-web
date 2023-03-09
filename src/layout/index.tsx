@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import "./index.scss";
 import { useState } from "react";
-import { rootRouter } from "@/router";
+import { AuthRouter, rootRouter } from "@/router";
 import NavHeader from "@/layout/nav";
 import LayoutMenu from "@/layout/sidebar";
 
@@ -30,11 +30,33 @@ const LayoutIndex = (props: any) => {
           <NavHeader breadCrumbList={breadCrumbList} />
         </Header>
         <Content style={{ padding: "0 20px" }}>
-          <Routes>
-            {rootRouter.map((item) => (
-              <Route key={item.name} path={item.path} element={item.element} />
-            ))}
-          </Routes>
+          <AuthRouter>
+            <Routes>
+              {rootRouter.map((item) =>
+                item.children?.length ? (
+                  <Route
+                    key={item.name}
+                    path={item.path}
+                    element={item.element}
+                  >
+                    {item.children.map((r) => (
+                      <Route
+                        key={item.name}
+                        path={r.path}
+                        element={r.element}
+                      ></Route>
+                    ))}
+                  </Route>
+                ) : (
+                  <Route
+                    key={item.name}
+                    path={item.path}
+                    element={item.element}
+                  />
+                )
+              )}
+            </Routes>
+          </AuthRouter>
         </Content>
       </Layout>
     </Layout>

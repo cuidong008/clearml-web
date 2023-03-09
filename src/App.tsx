@@ -1,7 +1,5 @@
 import useTheme from "@/hooks/useTheme";
-import { AuthRouter } from "@/router";
 import { setLanguage } from "@/store/app/app.actions";
-import { getBrowserLang } from "@/utils/global";
 import { ConfigProvider, theme } from "antd";
 import enUS from "antd/es/locale/en_US";
 import zhCN from "antd/es/locale/zh_CN";
@@ -14,7 +12,7 @@ import LayoutIndex from "@/layout";
 const { darkAlgorithm, defaultAlgorithm } = theme;
 const App = (props: any) => {
   const { language, themeConfig, setLanguage } = props;
-  const [i18nLocale, setI18nLocale] = useState(zhCN);
+  const [i18nLocale, setI18nLocale] = useState(enUS);
 
   // 全局使用主题
   useTheme(themeConfig);
@@ -24,14 +22,14 @@ const App = (props: any) => {
     // 如果 redux 中有默认语言就设置成 redux 的默认语言，没有默认语言就设置成浏览器默认语言
     if (language && language == "zh") return setI18nLocale(zhCN);
     if (language && language == "en") return setI18nLocale(enUS);
-    if (getBrowserLang() == "zh") return setI18nLocale(zhCN);
-    if (getBrowserLang() == "en") return setI18nLocale(enUS);
+    // if (getBrowserLang() == "zh") return setI18nLocale(zhCN);
+    // if (getBrowserLang() == "en") return setI18nLocale(enUS);
   };
 
   useEffect(() => {
     // 全局使用国际化
-    i18n.changeLanguage(language || getBrowserLang());
-    setLanguage(language || getBrowserLang());
+    i18n.changeLanguage(language);
+
     setAntdLanguage();
   }, [language]);
   return (
@@ -45,6 +43,7 @@ const App = (props: any) => {
           },
         },
         token: {
+          colorBgBase: themeConfig.isDark ? "#1a1e2c" : "#ffffff",
           colorBgContainer: themeConfig.isDark ? "#1a1e2c" : "#ffffff",
           colorBgLayout: themeConfig.isDark ? "#1a1e2c" : "#ffffff",
           colorPrimary: "#5C6BC6",
@@ -55,9 +54,7 @@ const App = (props: any) => {
       }}
     >
       <BrowserRouter>
-        <AuthRouter>
-          <LayoutIndex />
-        </AuthRouter>
+        <LayoutIndex />
       </BrowserRouter>
     </ConfigProvider>
   );

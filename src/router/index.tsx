@@ -1,11 +1,14 @@
 import { RouteObject } from "@/types/router";
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { lazyLoad } from "./utils";
 
 export const AuthRouter = (props: { children: JSX.Element }) => {
   const { children } = props;
-
+  const { pathname } = useLocation();
+  if (pathname.includes("/share")) {
+    return children;
+  }
   // * 判断是否有Token
   const token = "123"; //store.getState().user.token;
   if (!token) return <Navigate to="/login" replace />;
@@ -17,6 +20,7 @@ export const AuthRouter = (props: { children: JSX.Element }) => {
 export const rootRouter: Array<RouteObject> = [
   {
     path: "/",
+    name: "home",
     element: <Navigate to={"/dashboard"} />,
   },
   {
@@ -31,13 +35,20 @@ export const rootRouter: Array<RouteObject> = [
   },
   {
     path: "/projects",
-    element: <div />,
+    element: lazyLoad(React.lazy(() => import("@/views/projects"))),
     name: "projects",
     meta: {
       requiresAuth: true,
       title: "Projects",
       icon: "al-ico-projects",
     },
+    children: [
+      {
+        path: ":projId/experiments",
+        name: "a",
+        element: <div id="2"></div>,
+      },
+    ],
   },
   {
     path: "/pipelines",
@@ -91,19 +102,29 @@ export const rootRouter: Array<RouteObject> = [
     },
   },
   {
+    path: "/share",
+    hidden: true,
+    name: "share",
+    element: <div />,
+  },
+  {
     path: "/403",
+    name: "403",
     element: lazyLoad(React.lazy(() => import("@/components/errors/403"))),
   },
   {
     path: "/404",
+    name: "404",
     element: lazyLoad(React.lazy(() => import("@/components/errors/404"))),
   },
   {
     path: "/500",
+    name: "500",
     element: lazyLoad(React.lazy(() => import("@/components/errors/500"))),
   },
   {
     path: "*",
+    name: "hide",
     element: <Navigate to="/404" />,
   },
 ];

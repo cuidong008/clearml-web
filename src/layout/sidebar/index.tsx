@@ -1,5 +1,5 @@
 import Logo from "@/layout/sidebar/Logo";
-import { handleRouter, searchRouter } from "@/router/utils";
+import { searchRouter } from "@/router/utils";
 import { setMenuList } from "@/store/app/app.actions";
 import type { MenuProps } from "antd";
 import { Menu, Spin } from "antd";
@@ -19,8 +19,7 @@ const LayoutMenu = (props: {
 }) => {
   let init = false;
   const { pathname } = useLocation();
-  const { sidebarCollapsed, setBreadCrumbList, setAuthRouter, setMenuList } =
-    props;
+  const { sidebarCollapsed, setBreadCrumbList, setMenuList } = props;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([pathname]);
   const [menus, setMenus] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -63,8 +62,8 @@ const LayoutMenu = (props: {
         getItem(
           item.meta.title,
           item.path,
-          <i className={`menu-icon ${item.meta.icon}`} />,
-          deepLoopFloat(item.children)
+          <i className={`menu-icon ${item.meta.icon}`} />
+          // deepLoopFloat(item.children)
         )
       );
     });
