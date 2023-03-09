@@ -25,10 +25,6 @@
         border-color: $blue-600;
         color: $blue-300;
 
-        i {
-          margin-right: 3px;
-        }
-
         &:hover {
           background-color: $blue-500;
           border-color: $blue-500;
@@ -41,6 +37,18 @@
       display: block;
       margin: 24px auto 0;
       height: calc(100% - 356px);
+
+      :global(.ant-btn) {
+        background-color: $blue-600;
+        border-color: $blue-600;
+        color: $blue-50;
+
+        &:hover {
+          background-color: $blue-500;
+          border-color: $blue-500;
+          color: $blue-200;
+        }
+      }
 
       .recentHeader {
         padding-bottom: 12px;
@@ -82,6 +90,38 @@
       &:hover {
         text-decoration: underline;
         color: #c3cdf0;
+      }
+    }
+  }
+}
+
+html[data-type="light"] {
+  .recentTitle {
+    color: $blue-500;
+  }
+
+  .recentProject {
+    :global(.ant-btn) {
+      background-color: white !important;
+      border-color: $blue-600;
+      color: black !important;
+
+      &:hover {
+        border-color: $blue-300 !important;
+        color: $blue-300 !important;
+      }
+    }
+  }
+
+  .recentExperiment {
+    :global(.ant-btn) {
+      background-color: white !important;
+      border-color: $blue-600;
+      color: black !important;
+
+      &:hover {
+        border-color: $blue-300 !important;
+        color: $blue-300 !important;
       }
     }
   }
