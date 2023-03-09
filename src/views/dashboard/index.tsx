@@ -2,7 +2,7 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { useEffect, useRef, useState } from "react";
 import { Project } from "@/types/project";
 import styles from "./index.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Table, Tooltip } from "antd";
 import { getAllProjectsEx } from "@/api/project";
 import Column from "antd/es/table/Column";
@@ -11,11 +11,14 @@ import { Task } from "@/types/task";
 import { TaskIconLabel } from "@/views/projects/TaskIconLabel";
 import { TaskStatusLabel } from "@/views/projects/TaskStatusLabel";
 import dayjs from "dayjs";
+import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog";
 
 const Dashboard = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const ref = useRef<HTMLDivElement>(null);
+  const [newProjDialog, setNewProjDialog] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getProjectList();
@@ -84,6 +87,13 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardBody}>
+      <ProjectNewDialog
+        show={newProjDialog}
+        onClose={(e) => {
+          setNewProjDialog(false);
+          e && getProjectList();
+        }}
+      />
       <div className={styles.recent}>
         <div className={styles.recentProject}>
           <div className={styles.recentHeader} ref={ref}>
@@ -93,14 +103,20 @@ const Dashboard = () => {
             </div>
             <div>
               {projects.length > 3 && (
-                <Button icon={<i className="al-icon al-ico-add" />}>
+                <Button
+                  icon={<i className="al-icon al-ico-add" />}
+                  onClick={() => setNewProjDialog(true)}
+                >
                   NEW PROJECT
                 </Button>
               )}
             </div>
           </div>
           {projects.map((p) => (
-            <div key={p.id}>
+            <div
+              key={p.id}
+              onClick={() => navigate(`/projects/${p.id}/experiments`)}
+            >
               <ProjectCard project={p} />
             </div>
           ))}
@@ -115,13 +131,23 @@ const Dashboard = () => {
           <div className={styles.recentHeader}>
             <div className={styles.recentTitle}>RECENT EXPERIMENTS</div>
             <div>
-              <Button icon={<i className="al-icon al-ico-queues" />}>
-                MANAGE WORKERS AND QUEUES
+              <Button
+                icon={<i className="al-icon al-ico-queues" />}
+                size={"middle"}
+              >
+                <Link to={"/workers-and-queues?type=workers"}>
+                  MANAGE WORKERS AND QUEUES
+                </Link>
               </Button>
             </div>
           </div>
           <div className={styles.tableContainer}>
-            <Table dataSource={tasks} rowKey="id" pagination={false}>
+            <Table
+              dataSource={tasks}
+              rowKey="id"
+              pagination={false}
+              size="middle"
+            >
               <Column
                 dataIndex="type"
                 title="TYPE"

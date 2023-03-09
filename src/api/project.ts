@@ -49,3 +49,19 @@ export interface ProjectsGetAllExResponse {
 export function getAllProjectsEx(request: ProjectsGetAllExRequest) {
   return REQ.post<ProjectsGetAllExResponse>("/projects.get_all_ex", request);
 }
+
+export interface ProjectsCreateRequest {
+  name: string;
+  description?: string;
+  tags?: Array<string>;
+  system_tags?: Array<string>;
+  default_output_destination?: string;
+}
+
+export interface ProjectsCreateResponse {
+  id?: string;
+}
+
+export function projectCreate(request: ProjectsCreateRequest) {
+  return REQ.post<ProjectsCreateResponse>("/projects.create", request);
+}
