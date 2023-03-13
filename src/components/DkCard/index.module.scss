@@ -1,0 +1,132 @@
+.dkCard {
+  border: solid 0;
+  width: 352px;
+  background: unset;
+  overflow: hidden;
+  cursor: pointer;
+
+  .folderTab {
+    height: 20px;
+    line-height: 20px;
+    display: flex;
+
+    .firstTab {
+      flex: 0 0 64px;
+      width: 60px;
+      height: 20px;
+      line-height: 0;
+    }
+
+    .middleTab {
+      font: normal normal 500 12px/20px "Heebo", sans-serif;
+
+      white-space: nowrap;
+      color: $blue-grey;
+
+      &.secTabActive {
+        color: $blue-200;
+      }
+
+      background-color: $blue-600;
+
+      &.tabHovered:not(.showSecTab) {
+        background-color: $blue-400;
+        color: $blue-200;
+      }
+
+      padding-right: 6px;
+    }
+
+    .secondTab {
+      flex: 0 0 28px;
+      width: 28px;
+      line-height: 0;
+    }
+  }
+
+  .cardContainer {
+    position: relative;
+    transition: $transition-fast;
+    height: 226px;
+    width: 100%;
+    background-color: $blue-500;
+    border-radius: 0 6px 6px 6px;
+    overflow: hidden;
+    font-family: Heebo, sans-serif, sans-serif;
+
+    .firstTabContainer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      padding-top: 10px;
+      background-color: $card-bg;
+      display: flex;
+      flex-direction: column;
+
+      footer {
+        margin-top: auto;
+        position: relative;
+        background-color: $card-footer-bg;
+      }
+
+      header {
+        padding: 0 16px;
+      }
+
+      header.empty {
+        padding: 0;
+      }
+
+      .line {
+        border-top: solid 1px $blue-600;
+        margin: 0 16px;
+        width: auto;
+      }
+
+      .cardBody {
+        padding: 6px 16px;
+        display: flex;
+        flex: 1 1;
+        align-items: center;
+      }
+
+      &.firstTabHover {
+        background-color: $blue-400 !important;
+      }
+    }
+
+    .secondTabContainer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 6px;
+      background: $blue-600;
+    }
+
+    .plusCard {
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      cursor: pointer;
+
+      &.plusCardHover {
+        background-color: $blue-400 !important;
+      }
+
+      .plusIcon {
+        color: $blue-300;
+        width: 48px;
+        height: 48px;
+        font-size: 48px;
+      }
+
+      &:hover {
+        .plusIcon {
+          color: $blue-700;
+        }
+      }
+    }
+  }
+}
