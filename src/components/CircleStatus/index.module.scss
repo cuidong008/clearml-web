@@ -1,0 +1,79 @@
+$reqWidth: 56px;
+$font-size: 18px;
+.completed {
+  background-color: $completed-blue;
+}
+
+.pending {
+  background-color: $pending-gray;
+}
+
+.empty {
+  background-color: $empty-grey;
+}
+
+.running {
+  background-color: $running-green;
+}
+
+.counterContainer {
+  text-align: center;
+  padding: 8px;
+  .circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $reqWidth;
+    height: $reqWidth;
+    border-radius: 50%;
+    margin: auto auto 8px;
+    background-color: $blue-300;
+
+    &.published {
+      background-color: $neon-yellow;
+    }
+    &.in_progress {
+      background-color: #50e3c2;
+    }
+    &.queued {
+      background-color: #c4f0e4;
+    }
+    &.created {
+      background-color: $blue-300;
+    }
+    &.failed {
+      background-color: $failed-red;
+    }
+    &.stopped {
+      background-color: $completed-blue;
+    }
+    &.completed {
+      background-color: $completed-blue;
+    }
+    &.in_progress {
+      background-color: $running-green;
+    }
+    &.closed {
+      background-color: $pending-gray;
+    }
+
+    &.Caffe,
+    &.PyTorch,
+    &.Keras,
+    &.Tensor.Flow,
+    &.Custom {
+      background-color: $blue-300;
+    }
+  }
+  .counterLabel {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    color: $pending-gray;
+    text-transform: uppercase;
+  }
+}
+
+.leave-space {
+  min-height: 17px;
+}
