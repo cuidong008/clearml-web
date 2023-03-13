@@ -39,7 +39,7 @@ export interface Project {
   name: string;
   basename?: string;
   description?: string;
-  user?: string;
+  user?: { id: string };
   company?: { id: string; name?: string };
   created?: string;
   tags?: Array<string>;

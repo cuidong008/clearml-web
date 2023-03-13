@@ -124,8 +124,8 @@ export interface ConfigurationItem {
 export interface Task {
   id?: string;
   name?: string;
-  user?: string;
-  company?: string;
+  user?: { id: string; name?: string };
+  company?: { id: string; name?: string };
   type?: TaskTypeEnum;
   status?: TaskStatusEnum;
   comment?: string;
