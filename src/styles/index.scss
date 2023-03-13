@@ -1,6 +1,15 @@
 @import "@/assets/fonts/trains-icons.scss";
 @import "@/assets/fonts/heebo.scss";
 
+@mixin icon($url) {
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  background-size: contain;
+  display: inline-block;
+}
+
 html,
 body,
 #root {
@@ -103,4 +112,42 @@ html[data-type="dark"] {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.i-queued {
+  @include icon("@/assets/icons/pending.svg");
+}
+
+.i-in_progress,
+.i-Uploading {
+  @include icon("@/assets/icons/running-green.svg");
+}
+
+.i-completed,
+.i-Final {
+  @include icon("@/assets/icons/completed.svg");
+}
+
+.i-stopped {
+  @include icon("@/assets/icons/completed.svg");
+}
+
+.i-dequeu {
+  @include icon("@/assets/icons/dequeue.svg");
+}
+
+.i-closed {
+  @include icon("@/assets/icons/completed.svg");
+}
+
+.i-failed {
+  @include icon("@/assets/icons/failed.svg");
+}
+
+.i-published {
+  @include icon("@/assets/icons/published-neon.svg");
+}
+
+.i-created {
+  @include icon("@/assets/icons/draft-light-blue.svg");
 }

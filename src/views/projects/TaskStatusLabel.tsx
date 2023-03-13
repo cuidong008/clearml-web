@@ -15,9 +15,7 @@ export const TaskStatusLabel = (props: {
         [styles[status]]: showIcon,
       })}
     >
-      {showIcon && (
-        <i className={classNames("icon xs", styles[`i-${status}`])}></i>
-      )}
+      {showIcon && <i className={classNames("icon xs", `i-${status}`)}></i>}
       {showLabel && (
         <div className={classNames("ellipsis", styles.label)}>
           {EXPERIMENTS_STATUS_LABELS[status] || status}
