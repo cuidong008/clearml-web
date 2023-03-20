@@ -16,7 +16,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://10.24.96.161:8080/api/v2.23",
+        target: "http://dev-mlp-api-gateway.deeproute.cn/evaluation/v1/clearml/api/v2.23",
         changeOrigin: true,
         rewrite: (path) => path.replace("/api", ""),
       },
