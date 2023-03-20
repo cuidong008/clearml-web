@@ -82,13 +82,25 @@ export const rootRouter: Array<RouteObject> = [
   },
   {
     path: "/workers-and-queues",
-    element: <div />,
+    element: lazyLoad(React.lazy(() => import("@/views/workerAndQueues"))),
     name: "workers-and-queues",
     meta: {
       requiresAuth: true,
       title: "Workers/Queues",
       icon: "al-ico-queues",
     },
+    children: [
+      {
+        path: "workers",
+        name: "workers",
+        element: <div id="2"></div>,
+      },
+      {
+        path: "queues",
+        name: "queues",
+        element: <div id="3"></div>,
+      },
+    ],
   },
   {
     path: "/settings",

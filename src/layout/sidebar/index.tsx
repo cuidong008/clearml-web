@@ -25,7 +25,8 @@ const LayoutMenu = (props: {
   const [loading, setLoading] = useState(false);
   // 刷新页面菜单保持高亮
   useEffect(() => {
-    setSelectedKeys([pathname]);
+    const key = `/${pathname.split("/")[1]}`;
+    setSelectedKeys([key]);
   }, [pathname, sidebarCollapsed]);
 
   // 定义 menu 类型
