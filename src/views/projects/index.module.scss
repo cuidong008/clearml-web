@@ -1,0 +1,36 @@
+.projectHeader {
+  display: flex;
+  align-items: center;
+}
+
+html[data-type="dark"] {
+  .filterItem {
+    display: flex;
+    align-items: center;
+    font-family: Heebo, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    color: $blue-200;
+
+    i {
+      font-size: 18px;
+      margin-right: 5px;
+    }
+  }
+}
+
+html[data-type="light"] {
+  .filterItem {
+    display: flex;
+    align-items: center;
+    font-family: Heebo, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    color: $blue-400;
+
+    i {
+      font-size: 18px;
+      margin-right: 5px;
+    }
+  }
+}
