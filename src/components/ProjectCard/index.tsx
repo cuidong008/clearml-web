@@ -1,10 +1,18 @@
 import { Project } from "@/types/project";
+import * as React from "react";
 import { useState } from "react";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 
-import { Button, Input, Space, Tooltip } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { Button, Input, Menu, Popover, Space, Tooltip } from "antd";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteFilled,
+  EditFilled,
+  MenuOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 import { CircleCounter } from "@/components/CircleCounter";
 import { CircleTypeEnum } from "@/types/enums";
 import { DkCard } from "@/components/DkCard";
@@ -16,6 +24,19 @@ export const ProjectCard = (props: {
 }) => {
   const { project, showMenu, showAdd } = props;
   const [showRename, setShowRename] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  function startRename() {
+    setOpen(false);
+  }
+
+  function startShare() {
+    setOpen(false);
+  }
+
+  function startDelete() {
+    setOpen(false);
+  }
 
   function convertSecToDaysHrsMinsSec(secs: number) {
     const dayInSec = 60 * 60 * 24;
@@ -86,6 +107,53 @@ export const ProjectCard = (props: {
                     <Button type="text" icon={<CheckOutlined />} />
                     <Button type="text" icon={<CloseOutlined />} />
                   </Space>
+                )}
+                {showMenu && (
+                  <Popover
+                    open={open}
+                    trigger={"click"}
+                    placement={"bottomLeft"}
+                    content={
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <Menu
+                          items={[
+                            {
+                              key: "rename",
+                              icon: <EditFilled />,
+                              label: "Rename",
+                              onClick: startRename,
+                            },
+                            {
+                              key: "share",
+                              icon: <ShareAltOutlined />,
+                              label: "Share",
+                              onClick: startShare,
+                            },
+                            {
+                              key: "delete",
+                              icon: <DeleteFilled />,
+                              label: "Delete",
+                              onClick: startDelete,
+                            },
+                          ]}
+                        />
+                      </div>
+                    }
+                  >
+                    <Button
+                      type="text"
+                      style={{
+                        background: "none",
+                        borderColor: "transparent",
+                        color: "#fff",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpen(true);
+                      }}
+                      icon={<MenuOutlined />}
+                    />
+                  </Popover>
                 )}
               </div>
             )}
