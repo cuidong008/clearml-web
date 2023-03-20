@@ -22,7 +22,11 @@ export const ExperimentCard = (props: { experiment: Task }) => {
             <div style={{ paddingTop: 5 }}>
               <div className={styles.taskId}>
                 <span className={styles.subTitle}>ID: {experiment?.id} </span>
-                <Button type="text" icon={<CopyFilled />} />
+                <Button
+                  size="small"
+                  type="text"
+                  icon={<CopyFilled style={{ color: "#fff" }} />}
+                />
               </div>
             </div>
           </div>

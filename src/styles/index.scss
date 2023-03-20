@@ -1,14 +1,6 @@
 @import "@/assets/fonts/trains-icons.scss";
 @import "@/assets/fonts/heebo.scss";
-
-@mixin icon($url) {
-  background-image: url($url);
-  background-repeat: no-repeat;
-  background-position-x: center;
-  background-position-y: center;
-  background-size: contain;
-  display: inline-block;
-}
+@import "./status.scss";
 
 html,
 body,
@@ -31,42 +23,6 @@ ul {
   overflow: hidden;
   clear: both;
   content: "";
-}
-
-.primary:not(.ant-popover-disabled-compatible-wrapper) {
-  background-color: $primaryColor !important;
-  color: #ffffff !important;
-
-  .anticon {
-    color: #ffffff !important;
-  }
-}
-
-.warning:not(.ant-popover-disabled-compatible-wrapper) {
-  background-color: $warningColor !important;
-  color: #ffffff;
-
-  .anticon {
-    color: #ffffff;
-  }
-}
-
-.error:not(.ant-popover-disabled-compatible-wrapper) {
-  background-color: $errorColor !important;
-  color: #ffffff !important;
-
-  .anticon {
-    color: #ffffff;
-  }
-}
-
-.success:not(.ant-popover-disabled-compatible-wrapper) {
-  background-color: $successColor !important;
-  color: #ffffff !important;
-
-  .anticon {
-    color: #ffffff;
-  }
 }
 
 .head-container {
@@ -112,42 +68,4 @@ html[data-type="dark"] {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.i-queued {
-  @include icon("@/assets/icons/pending.svg");
-}
-
-.i-in_progress,
-.i-Uploading {
-  @include icon("@/assets/icons/running-green.svg");
-}
-
-.i-completed,
-.i-Final {
-  @include icon("@/assets/icons/completed.svg");
-}
-
-.i-stopped {
-  @include icon("@/assets/icons/completed.svg");
-}
-
-.i-dequeu {
-  @include icon("@/assets/icons/dequeue.svg");
-}
-
-.i-closed {
-  @include icon("@/assets/icons/completed.svg");
-}
-
-.i-failed {
-  @include icon("@/assets/icons/failed.svg");
-}
-
-.i-published {
-  @include icon("@/assets/icons/published-neon.svg");
-}
-
-.i-created {
-  @include icon("@/assets/icons/draft-light-blue.svg");
 }
