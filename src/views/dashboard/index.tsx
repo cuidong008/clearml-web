@@ -8,8 +8,8 @@ import { getAllProjectsEx } from "@/api/project";
 import Column from "antd/es/table/Column";
 import { getAllTasksEx } from "@/api/task";
 import { Task } from "@/types/task";
-import { TaskIconLabel } from "@/views/projects/TaskIconLabel";
-import { TaskStatusLabel } from "@/views/projects/TaskStatusLabel";
+import { TaskIconLabel } from "@/components/TaskIconLabel";
+import { TaskStatusLabel } from "@/components/TaskStatusLabel";
 import dayjs from "dayjs";
 import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog";
 
@@ -120,7 +120,11 @@ const Dashboard = () => {
               <ProjectCard project={p} />
             </div>
           ))}
-          {projects.length < 4 && <ProjectCard showAdd={true} />}
+          {projects.length < 4 && (
+            <div onClick={() => setNewProjDialog(true)}>
+              <ProjectCard showAdd={true} />
+            </div>
+          )}
         </div>
         <div
           className={styles.recentExperiment}
@@ -135,7 +139,7 @@ const Dashboard = () => {
                 icon={<i className="al-icon al-ico-queues" />}
                 size={"middle"}
               >
-                <Link to={"/workers-and-queues?type=workers"}>
+                <Link to={"/workers-and-queues/workers"}>
                   MANAGE WORKERS AND QUEUES
                 </Link>
               </Button>
