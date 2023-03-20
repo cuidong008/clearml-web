@@ -34,6 +34,11 @@ export interface Stats {
   archived?: StatsStatusCount;
 }
 
+export interface Group {
+  id: string;
+  name: string;
+}
+
 export interface Project {
   id?: string;
   name: string;
@@ -49,7 +54,6 @@ export interface Project {
   dataset_stats?: DatasetStats;
   last_update?: string;
   sub_projects?: SubProject[];
-
   own_tasks?: number;
   own_models?: number;
 }

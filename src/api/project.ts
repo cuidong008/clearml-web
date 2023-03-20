@@ -1,5 +1,5 @@
 import REQ from "@/api";
-import { Project } from "@/types/project";
+import { Group, Project } from "@/types/project";
 
 export type StatsForStateEnum = "active" | "archived";
 
@@ -64,4 +64,12 @@ export interface ProjectsCreateResponse {
 
 export function projectCreate(request: ProjectsCreateRequest) {
   return REQ.post<ProjectsCreateResponse>("/projects.create", request);
+}
+
+export interface ProjectGroupsGetAllResponse {
+  group_list: Group[];
+}
+
+export function projectGroupsGetAll() {
+  return REQ.get<ProjectGroupsGetAllResponse>("/dr_groups.get_all_ex");
 }
