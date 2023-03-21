@@ -95,7 +95,14 @@ class RequestHttp {
         if (error.message.indexOf("timeout") !== -1)
           message.error("请求超时，请稍后再试");
         // 根据响应的错误状态码，做不同的处理
-        if (response) checkStatus(response.status);
+        if (response) {
+          checkStatus(response.status);
+          if (response.status == 403 || response.status == 401) {
+            localStorage.removeItem("authTk");
+            window.location.hash = "/login";
+            return new Promise(() => {});
+          }
+        }
         // 服务器结果都没有返回(可能服务器错误可能客户端断网) 断网处理:可以跳转到断网页面
         if (!window.navigator.onLine) window.location.hash = "/500";
         return Promise.reject(
