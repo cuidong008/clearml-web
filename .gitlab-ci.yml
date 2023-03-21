@@ -1,0 +1,29 @@
+include:
+  - project: 'deeproute-projects/public/cicd-common'
+    ref: development
+    file: '/project/global.gitlab-ci.yml'
+  - project: 'deeproute-projects/public/cicd-common'
+    ref: development
+    file: '/project/build.gitlab-ci.yml'
+  - project: 'deeproute-projects/public/cicd-common'
+    ref: development
+    file: '/project-auth/global.gitlab-ci.yml'
+
+stages:
+  - build_image
+
+# specify a custom container image name
+variables:
+  OPS_CI_CONTAINER_IMAGE_NAME: ml-platform-${CI_PROJECT_NAME}
+
+.ops_ci_deploy_dev_extension:
+  variables:
+    EXTRA_DOCKER_BUILD_ARGUMENT: " \
+      --build-arg BUILD_API_GATEWAY=http://dev-mlp-api-gateway.deeproute.cn \
+      --build-arg BUILD_NODE_ENV=development"
+
+
+build_image:
+  stage: build_image
+  variables:
+    OPS_CI_CONTAINER_REGISTRY_NAMESPACE: "deeproute-all"
