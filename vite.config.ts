@@ -55,5 +55,27 @@ export default defineConfig({
   },
   build: {
     minify: "esbuild",
+    rollupOptions: {
+      output: {
+        chunkFileNames: "static/js/chunk-[hash].js",
+        assetFileNames: (e) => {
+          let dir = "";
+          if (e.name) {
+            const ext = e.name.split(".")[1];
+            if (["eot", "ttf", "woff", "woff2"].indexOf(ext) !== -1) {
+              dir = "fonts";
+            }
+            if (["svg", "png", "jpg", "jpeg"].indexOf(ext) !== -1) {
+              dir = "images";
+            }
+            if (["css", "scss"].indexOf(ext) !== -1) {
+              dir = "css";
+            }
+          }
+          return "static/" + dir + "/" + "chunk-[hash][extname]";
+        },
+        entryFileNames: "static/js/index.[hash].js"
+      }
+    }
   }
 })
