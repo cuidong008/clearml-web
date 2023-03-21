@@ -28,6 +28,5 @@ build_image:
   extends:
     - .ops_ci_deploy_default
     - .ops_ci_build_vars
-    - .ops_ci_deploy_script
   variables:
     OPS_CI_CONTAINER_REGISTRY_NAMESPACE: "deeproute-all"
