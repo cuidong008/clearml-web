@@ -12,7 +12,7 @@ import { TaskIconLabel } from "@/components/TaskIconLabel";
 import { TaskStatusLabel } from "@/components/TaskStatusLabel";
 import dayjs from "dayjs";
 import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog";
-import ProjectListHeader from "@/views/projects/ProjectListHeader";
+import { ProjectListHeaderCom } from "@/views/projects/ProjectListHeader";
 import { ProjectConfState, StoreState } from "@/types/store";
 import { connect } from "react-redux";
 
@@ -63,8 +63,6 @@ const Dashboard = (props: ProjectConfState) => {
     fetchProjects();
   }, [orderBy, sortOrder, groupId, showScope]);
 
-  function getProjectList() {}
-
   function getRecentTasks() {
     getAllTasksEx({
       page: 0,
@@ -109,7 +107,7 @@ const Dashboard = (props: ProjectConfState) => {
         show={newProjDialog}
         onClose={(e) => {
           setNewProjDialog(false);
-          e && getProjectList();
+          e && fetchProjects();
         }}
       />
       <div className={styles.recent}>
@@ -118,7 +116,7 @@ const Dashboard = (props: ProjectConfState) => {
             <div className={styles.recentTitle}>
               RECENT PROJECTS
               <Link to={"/projects"}>VIEW ALL</Link>
-              <ProjectListHeader />
+              <ProjectListHeaderCom />
             </div>
             <div>
               {projects.length > 3 && (

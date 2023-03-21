@@ -141,4 +141,7 @@ const mapDispatchToProps = {
   setProjectSort,
   setProjectGroup,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectListHeader);
+export const ProjectListHeaderCom = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProjectListHeader);
