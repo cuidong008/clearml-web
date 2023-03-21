@@ -1,0 +1,75 @@
+.projectList {
+  display: block;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  .listBody {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 352px);
+    grid-gap: 24px;
+    padding: 0 24px 24px;
+    justify-content: center;
+    .loadMore {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      padding: 15px;
+      grid-column: 1 / -1;
+
+      .loadMoreBtn {
+        padding: 8px 40px;
+      }
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      grid-column: 1 / -1;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin-bottom: -12px;
+
+      i {
+        margin-right: 3px;
+      }
+    }
+  }
+}
+
+html[data-type="dark"] {
+  .header {
+    background-color: $blue-800;
+
+    :global(.ant-btn) {
+      background-color: $blue-600;
+      border-color: $blue-600;
+      color: $blue-50;
+
+      &:hover {
+        background-color: $blue-500;
+        border-color: $blue-500;
+        color: $blue-200;
+      }
+    }
+  }
+}
+
+html[data-type="light"] {
+  .header {
+    background-color: #ffffff;
+
+    :global(.ant-btn) {
+      background-color: white;
+      border-color: $blue-600;
+      color: black !important;
+
+      &:hover {
+        border-color: $blue-300;
+        color: $blue-300;
+      }
+    }
+  }
+}
