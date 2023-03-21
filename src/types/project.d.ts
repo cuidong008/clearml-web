@@ -57,3 +57,5 @@ export interface Project {
   own_tasks?: number;
   own_models?: number;
 }
+
+export type StatsForStateEnum = "active" | "archived";

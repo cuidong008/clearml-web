@@ -1,5 +1,3 @@
-export type StatsForStateEnum = "active" | "archived";
-
 export interface MultiFieldPatternData {
   pattern?: string;
   fields?: Array<string>;

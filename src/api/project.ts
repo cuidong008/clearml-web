@@ -1,7 +1,5 @@
 import REQ from "@/api";
-import { Group, Project } from "@/types/project";
-
-export type StatsForStateEnum = "active" | "archived";
+import { Group, Project, StatsForStateEnum } from "@/types/project";
 
 export interface MultiFieldPatternData {
   pattern?: string;
@@ -29,7 +27,7 @@ export interface ProjectsGetAllExRequest {
   shallow_search?: boolean;
   check_own_contents?: boolean;
   search_hidden?: boolean;
-  scroll_id?: string;
+  scroll_id?: string | null;
   refresh_scroll?: boolean;
   size?: number;
   stats_with_children?: boolean;
@@ -40,7 +38,7 @@ export interface ProjectsGetAllExRequest {
 }
 
 export interface ProjectsGetAllExResponse {
-  projects?: Array<Project>;
+  projects: Array<Project>;
   own_tasks?: number;
   own_models?: number;
   scroll_id?: string;
