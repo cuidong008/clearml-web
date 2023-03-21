@@ -1,6 +1,7 @@
 import { Form, Input, message, Modal } from "antd";
 import { projectCreate } from "@/api/project";
 import { URI_REGEX } from "@/utils/constant";
+import { useEffect, useRef } from "react";
 
 export const ProjectNewDialog = (props: {
   show: boolean;
@@ -8,6 +9,13 @@ export const ProjectNewDialog = (props: {
 }) => {
   const { show, onClose } = props;
   const [form] = Form.useForm();
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    if (formRef.current && show) {
+      form.resetFields();
+    }
+  }, [show]);
 
   function createNewProject() {
     form.validateFields().then((values) => {
@@ -54,7 +62,7 @@ export const ProjectNewDialog = (props: {
           New Project
         </span>
       </div>
-      <Form layout={"vertical"} form={form}>
+      <Form layout={"vertical"} ref={formRef} form={form}>
         <Form.Item
           label="Project name"
           name={"name"}
