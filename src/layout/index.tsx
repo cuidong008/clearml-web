@@ -29,7 +29,7 @@ const LayoutIndex = (props: any) => {
         >
           <NavHeader breadCrumbList={breadCrumbList} />
         </Header>
-        <Content style={{ padding: "0 20px" }}>
+        <Content>
           <AuthRouter>
             <Routes>
               {rootRouter.map((item) =>

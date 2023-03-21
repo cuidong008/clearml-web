@@ -1,16 +1,5 @@
-import NProgress from "@/components/NProgress";
 import { RouteObject } from "@/types/router";
-import React, { Suspense } from "react";
-
-export const lazyLoad = (
-  Comp: React.LazyExoticComponent<any>
-): React.ReactNode => {
-  return (
-    <Suspense fallback={<NProgress />}>
-      <Comp />
-    </Suspense>
-  );
-};
+import React from "react";
 
 /**
  * @description 递归查询对应的路由
@@ -31,48 +20,6 @@ export const searchRouter = (
     }
   }
   return result;
-};
-
-/**
- * @description 使用递归处理路由菜单，生成一维数组，做菜单权限判断
- * @param {Array<any>} routerList 所有菜单列表
- * @param {Array} newArr 菜单的一维数组
- * @return array
- */
-export function handleRouter(routerList: Array<any>, newArr: string[] = []) {
-  routerList.forEach((item: any) => {
-    typeof item === "object" && item.path && newArr.push(item.path);
-    item.children &&
-      item.children.length &&
-      handleRouter(item.children, newArr);
-  });
-  return newArr;
-}
-
-export const filterAsyncRouter = (routers: Array<any>) => {
-  // 遍历后台传来的路由字符串，转换为组件对象
-  return routers.filter((router: any) => {
-    router.meta.noCache = false;
-    //外链
-    if (router.iframe) {
-      return true;
-    }
-    //多级菜单
-    if (router.com) {
-      if (router.com === "Index") {
-        // Layout组件特殊处理
-        router.alwaysShow = true;
-        if (router.children.length > 0) {
-          router.redirect = `noRedirect`;
-        }
-      } else {
-      }
-    }
-    if (router.children && router.children.length) {
-      router.children = filterAsyncRouter(router.children);
-    }
-    return true;
-  });
 };
 
 /**

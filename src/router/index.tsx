@@ -1,7 +1,12 @@
 import { RouteObject } from "@/types/router";
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { lazyLoad } from "./utils";
+import Dashboard from "@/views/dashboard";
+import Projects from "@/views/projects";
+import WorkerAndQueues from "@/views/workerAndQueues";
+import NotAuth from "@/components/errors/403";
+import NotFound from "@/components/errors/404";
+import NotNetwork from "@/components/errors/500";
 
 export const AuthRouter = (props: { children: JSX.Element }) => {
   const { children } = props;
@@ -26,7 +31,7 @@ export const rootRouter: Array<RouteObject> = [
   {
     path: "/dashboard",
     name: "dashboard",
-    element: lazyLoad(React.lazy(() => import("@/views/dashboard"))),
+    element: <Dashboard />,
     meta: {
       requiresAuth: false,
       title: "Dashboard",
@@ -35,7 +40,7 @@ export const rootRouter: Array<RouteObject> = [
   },
   {
     path: "/projects",
-    element: lazyLoad(React.lazy(() => import("@/views/projects"))),
+    element: <Projects />,
     name: "projects",
     meta: {
       requiresAuth: true,
@@ -82,7 +87,7 @@ export const rootRouter: Array<RouteObject> = [
   },
   {
     path: "/workers-and-queues",
-    element: lazyLoad(React.lazy(() => import("@/views/workerAndQueues"))),
+    element: <WorkerAndQueues />,
     name: "workers-and-queues",
     meta: {
       requiresAuth: true,
@@ -122,17 +127,17 @@ export const rootRouter: Array<RouteObject> = [
   {
     path: "/403",
     name: "403",
-    element: lazyLoad(React.lazy(() => import("@/components/errors/403"))),
+    element: <NotAuth />,
   },
   {
     path: "/404",
     name: "404",
-    element: lazyLoad(React.lazy(() => import("@/components/errors/404"))),
+    element: <NotFound />,
   },
   {
     path: "/500",
     name: "500",
-    element: lazyLoad(React.lazy(() => import("@/components/errors/500"))),
+    element: <NotNetwork />,
   },
   {
     path: "*",
