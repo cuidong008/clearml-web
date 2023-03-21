@@ -6,8 +6,9 @@ import zhCN from "antd/es/locale/zh_CN";
 import i18n from "i18next";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LayoutIndex from "@/layout";
+import { Login } from "@/layout/login";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 const App = (props: any) => {
@@ -54,7 +55,10 @@ const App = (props: any) => {
       }}
     >
       <BrowserRouter>
-        <LayoutIndex />
+        <Routes>
+          <Route path="*" element={<LayoutIndex />} />
+          <Route path={"/login"} element={<Login />}></Route>
+        </Routes>
       </BrowserRouter>
     </ConfigProvider>
   );

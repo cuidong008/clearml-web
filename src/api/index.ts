@@ -53,10 +53,6 @@ class RequestHttp {
     this.service.interceptors.request.use(
       (config) => {
         // * 将当前请求添加到 pending 中
-        // const token: any = getToken() || store.getState().user.token;
-        // if (token) {
-        //   config.headers.set("Authorization",`Bearer ${token}`);
-        // }
         axiosCanceler.addPending(config);
         return config;
       },
@@ -76,8 +72,9 @@ class RequestHttp {
         axiosCanceler.removePending(config);
 
         // * 登录失效（code == 599）
-        if (data.status == 403) {
+        if (data.status == 403 || data.status == 401) {
           message.error(data.message).then();
+          localStorage.removeItem("authTk");
           window.location.hash = "/login";
           return Promise.reject(data);
         }

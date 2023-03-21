@@ -19,6 +19,17 @@ export default defineConfig({
         target: "http://dev-mlp-api-gateway.deeproute.cn/evaluation/v1/clearml/api/v2.23",
         changeOrigin: true,
         rewrite: (path) => path.replace("/api", ""),
+        bypass: (r, s, o) => {
+          console.log(r.url)
+        }
+      },
+      "/auth": {
+        target: "http://dev-mlp-api-gateway.deeproute.cn",
+        changeOrigin: true,
+        rewrite: (path) => path.replace("/auth", ""),
+        bypass: (r, s, o) => {
+          console.log(r.url)
+        }
       },
     }
   },
