@@ -171,7 +171,6 @@ export const ProjectCard = (props: {
                       style={{
                         background: "none",
                         borderColor: "transparent",
-                        color: "#fff",
                       }}
                       onClick={(e) => {
                         e.stopPropagation()

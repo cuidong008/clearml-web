@@ -10,7 +10,6 @@
       .title {
         font-weight: 500;
         font-size: 14px;
-        color: $blue-200;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -26,7 +25,6 @@
         font-size: 10px;
         font-weight: 500;
         text-align: center;
-        color: $pending-gray;
       }
     }
   }
@@ -47,9 +45,40 @@
     .topLabel {
       font-size: 10px;
       font-weight: 500;
-      color: $pending-gray;
       text-align: left;
       padding-top: 8px;
     }
+  }
+}
+
+html[data-type="light"] {
+  .title {
+    color: $blue-700;
+  }
+
+  .subTitle {
+    color: $blue-600;
+
+    .ant-btn {
+      color: $blue-600;
+    }
+  }
+
+  .topLabel {
+    color: $blue-600;
+  }
+}
+
+html[data-type="dark"] {
+  .title {
+    color: $blue-200;
+  }
+
+  .subTitle {
+    color: $pending-gray;
+  }
+
+  .topLabel {
+    color: $pending-gray;
   }
 }
