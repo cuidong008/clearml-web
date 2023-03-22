@@ -44,6 +44,7 @@ variables:
   docker push "$IMAGE"
 
 build_image:
+  image: reg.deeproute.ai/deeproute-public/docker:19.03.12-bash
   stage: build_image
   script:
     - *deploy_script
