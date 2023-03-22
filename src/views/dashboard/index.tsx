@@ -1,34 +1,45 @@
-import { ProjectCard } from "@/components/ProjectCard";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Project } from "@/types/project";
-import styles from "./index.module.scss";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Table, Tooltip } from "antd";
-import { getAllProjectsEx } from "@/api/project";
-import Column from "antd/es/table/Column";
-import { getAllTasksEx } from "@/api/task";
-import { Task } from "@/types/task";
-import { TaskIconLabel } from "@/components/TaskIconLabel";
-import { TaskStatusLabel } from "@/components/TaskStatusLabel";
-import dayjs from "dayjs";
-import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog";
-import { ProjectListHeaderCom } from "@/views/projects/ProjectListHeader";
-import { ProjectConfState, StoreState } from "@/types/store";
-import { connect } from "react-redux";
+import { ProjectCard } from "@/components/ProjectCard"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Project } from "@/types/project"
+import styles from "./index.module.scss"
+import { Link, useNavigate } from "react-router-dom"
+import { Button, Table, Tooltip } from "antd"
+import { getAllProjectsEx } from "@/api/project"
+import Column from "antd/es/table/Column"
+import { getAllTasksEx } from "@/api/task"
+import { Task } from "@/types/task"
+import { TaskIconLabel } from "@/components/TaskIconLabel"
+import { TaskStatusLabel } from "@/components/TaskStatusLabel"
+import dayjs from "dayjs"
+import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog"
+import { ProjectListHeaderCom } from "@/views/projects/ProjectListHeader"
+import { ProjectConfState, StoreState } from "@/types/store"
+import { connect } from "react-redux"
+import { CurrentUser } from "@/types/user"
 
-const Dashboard = (props: ProjectConfState) => {
-  const { showScope, sortOrder, orderBy, groupId } = props;
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const ref = useRef<HTMLDivElement>(null);
-  const [newProjDialog, setNewProjDialog] = useState(false);
-  const navigate = useNavigate();
+const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
+  const { showScope, sortOrder, orderBy, groupId, user } = props
+  const [projects, setProjects] = useState<Project[]>([])
+  const [tasks, setTasks] = useState<Task[]>([])
+  const ref = useRef<HTMLDivElement>(null)
+  const [newProjDialog, setNewProjDialog] = useState(false)
+  const navigate = useNavigate()
 
   const fetchProjects = useCallback(() => {
-    setProjects([]);
+    setProjects([])
+    let active_user: Record<string, any> = {}
     if (showScope === "public" && groupId === "") {
-      return;
+      return
     }
+    if (showScope === "my" && !user) {
+      return
+    }
+    active_user =
+      showScope === "my"
+        ? { active_users: [user ? user.id : ""] }
+        : showScope === "public"
+        ? { active_users: [groupId] }
+        : {}
     getAllProjectsEx({
       stats_for_state: "active",
       include_stats: true,
@@ -36,11 +47,7 @@ const Dashboard = (props: ProjectConfState) => {
       order_by: ["featured", sortOrder === "desc" ? "-" + orderBy : orderBy],
       page: 0,
       page_size: 6,
-      ...(showScope === "my"
-        ? { active_users: ["22799e975b20205938276afb8e6e792b"] }
-        : showScope === "public"
-        ? { active_users: [groupId] }
-        : {}),
+      ...active_user,
       include_stats_filter: { system_tags: ["-pipeline"] },
       allow_public: false,
       only_fields: [
@@ -51,19 +58,32 @@ const Dashboard = (props: ProjectConfState) => {
         "default_output_destination",
       ],
     }).then(({ data }) => {
-      setProjects(data.projects ?? []);
-    });
-  }, [showScope, orderBy, sortOrder, groupId]);
+      setProjects(data.projects ?? [])
+    })
+  }, [showScope, orderBy, sortOrder, groupId])
   useEffect(() => {
-    fetchProjects();
-    getRecentTasks();
-  }, []);
+    fetchProjects()
+    getRecentTasks()
+  }, [])
 
   useEffect(() => {
-    fetchProjects();
-  }, [orderBy, sortOrder, groupId, showScope]);
+    fetchProjects()
+  }, [orderBy, sortOrder, groupId, showScope])
 
   function getRecentTasks() {
+    let active_user: Record<string, any> = {}
+    if (showScope === "public" && groupId === "") {
+      return
+    }
+    if (showScope === "my" && !user) {
+      return
+    }
+    active_user =
+      showScope === "my"
+        ? { user: [user ? user.id : ""] }
+        : showScope === "public"
+        ? { user: [groupId] }
+        : {}
     getAllTasksEx({
       page: 0,
       page_size: 5,
@@ -76,6 +96,7 @@ const Dashboard = (props: ProjectConfState) => {
         "in_progress",
         "completed",
       ],
+      ...active_user,
       type: [
         "__$not",
         "annotation_manual",
@@ -97,8 +118,8 @@ const Dashboard = (props: ProjectConfState) => {
       system_tags: ["-archived", "-pipeline"],
       allow_public: false,
     }).then(({ data }) => {
-      setTasks(data.tasks ?? []);
-    });
+      setTasks(data.tasks ?? [])
+    })
   }
 
   return (
@@ -106,8 +127,8 @@ const Dashboard = (props: ProjectConfState) => {
       <ProjectNewDialog
         show={newProjDialog}
         onClose={(e) => {
-          setNewProjDialog(false);
-          e && fetchProjects();
+          setNewProjDialog(false)
+          e && fetchProjects()
         }}
       />
       <div className={styles.recent}>
@@ -224,8 +245,11 @@ const Dashboard = (props: ProjectConfState) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-const mapStateToProps = (state: StoreState) => state.project;
-export default connect(mapStateToProps, {})(Dashboard);
+const mapStateToProps = (state: StoreState) => ({
+  ...state.project,
+  user: state.app.user,
+})
+export default connect(mapStateToProps, {})(Dashboard)

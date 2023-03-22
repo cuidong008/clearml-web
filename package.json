@@ -65,6 +65,13 @@
     "vite": "^4.2.1",
     "vite-plugin-svgr": "^2.4.0"
   },
+  "prettier": {
+    "singleQuote": false,
+    "semi": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "endOfLine": "lf"
+  },
   "lint-staged": {
     "src/**/*.{ts,tsx,json,css,scss,md}": [
       "prettier --write"
