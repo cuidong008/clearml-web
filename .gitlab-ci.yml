@@ -1,16 +1,13 @@
 include:
-  - project: 'deeproute-projects/public/cicd-common'
-    ref: development
-    file: '/project/global.gitlab-ci.yml'
-  - project: 'deeproute-projects/public/cicd-common'
-    ref: development
-    file: '/project/build.gitlab-ci.yml'
-  - project: 'deeproute-projects/public/cicd-common'
-    ref: development
-    file: '/project-auth/global.gitlab-ci.yml'
+    - project: 'deeproute-projects/public/cicd-common'
+      ref: development
+      file: '/project-build-env/global.gitlab-ci.yml'
+    - project: 'deeproute-projects/public/cicd-common'
+      ref: development
+      file: '/project-build-env/build.gitlab-ci.yml'
 
 stages:
-  - build_image
+  - build
  
 
 variables:
@@ -22,29 +19,7 @@ variables:
       --build-arg BUILD_API_GATEWAY=http://dev-mlp-api-gateway.deeproute.cn \
       --build-arg BUILD_NODE_ENV=development"
 
-.deploy_script: &deploy_script |
-  export DOCKER_NAMESPACE="deeproute-all"
-  export tag_build_num="0.1.${CI_PIPELINE_ID}"
-  export IMAGE="${DOCKER_URL}/${DOCKER_NAMESPACE}/${DEPARTMENT}/public/${CI_PROJECT_NAME}:$tag_build_num"
-  export IMAGE_LATEST="${DOCKER_URL}/${DOCKER_NAMESPACE}/${DEPARTMENT}/public/${CI_PROJECT_NAME}:latest"
-  echo "$IMAGE"
-  echo "$IMAGE_LATEST"
-  export IMAGE_BUILDER=test
-
-  cat ${NETRC} > .netrc
-
-  # build the final image
-  docker build \
-    -t "$IMAGE" \
-    -f Dockerfile ${EXTRA_DOCKER_BUILD_ARGUMENT}\
-    .
-
-  # upload to harbor
-  docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" "${DOCKER_URL}"
-  docker push "$IMAGE"
-
-build_image:
-  image: reg.deeproute.ai/deeproute-public/docker:19.03.12-bash
-  stage: build_image
-  script:
-    - *deploy_script
+build:
+  extends: .build
+  variables:
+    BUILD_PATH: "${EXTRA_DOCKER_BUILD_ARGUMENT} ."
