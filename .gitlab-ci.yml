@@ -22,4 +22,4 @@ variables:
 build:
   extends: .build
   variables:
-    BUILD_PATH: "${EXTRA_DOCKER_BUILD_ARGUMENT} ."
+    BUILD_PATH: "."
