@@ -1,12 +1,12 @@
-import { TaskTypeEnum } from "@/types/enums";
-import classNames from "classnames";
+import { TaskTypeEnum } from "@/types/enums"
+import classNames from "classnames"
 
 export const TaskIconLabel = (props: {
-  type: TaskTypeEnum;
-  iconClass?: string;
-  showLabel?: boolean;
+  type: TaskTypeEnum
+  iconClass?: string
+  showLabel?: boolean
 }) => {
-  const { type, iconClass, showLabel } = props;
+  const { type, iconClass, showLabel } = props
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <i
@@ -14,7 +14,7 @@ export const TaskIconLabel = (props: {
           "al-icon",
           `${iconClass} al-ico-type-${
             type ? type.toString().replace("_", "-") : "training"
-          }`
+          }`,
         )}
       ></i>
       {showLabel && (
@@ -25,5 +25,5 @@ export const TaskIconLabel = (props: {
         </span>
       )}
     </div>
-  );
-};
+  )
+}

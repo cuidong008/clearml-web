@@ -1,5 +1,5 @@
-import { RouteObject } from "@/types/router";
-import React from "react";
+import { RouteObject } from "@/types/router"
+import React from "react"
 
 /**
  * @description 递归查询对应的路由
@@ -9,18 +9,18 @@ import React from "react";
  */
 export const searchRouter = (
   path: string,
-  routes: RouteObject[] = []
+  routes: RouteObject[] = [],
 ): RouteObject => {
-  let result: RouteObject = {};
+  let result: RouteObject = {}
   for (const item of routes) {
-    if (item.path === path) return item;
+    if (item.path === path) return item
     if (item.children) {
-      const res = searchRouter(path, item.children);
-      if (Object.keys(res).length) result = res;
+      const res = searchRouter(path, item.children)
+      if (Object.keys(res).length) result = res
     }
   }
-  return result;
-};
+  return result
+}
 
 /**
  * @description 获取需要展开的 subMenu
@@ -28,12 +28,12 @@ export const searchRouter = (
  * @returns array
  */
 export const getOpenKeys = (path: string) => {
-  let newStr = "";
-  const newArr: any[] = [];
-  const arr = path.split("/").map((i) => "/" + i);
+  let newStr = ""
+  const newArr: any[] = []
+  const arr = path.split("/").map((i) => "/" + i)
   for (let i = 1; i < arr.length - 1; i++) {
-    newStr += arr[i];
-    newArr.push(newStr);
+    newStr += arr[i]
+    newArr.push(newStr)
   }
-  return newArr;
-};
+  return newArr
+}

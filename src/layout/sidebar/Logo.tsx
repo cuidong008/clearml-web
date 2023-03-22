@@ -1,9 +1,9 @@
-import logo from "@/assets/icons/c-logo.svg";
-import { connect } from "react-redux";
-import styles from "./index.module.scss";
+import logo from "@/assets/icons/c-logo.svg"
+import { connect } from "react-redux"
+import styles from "./index.module.scss"
 
 const Logo = (props: any) => {
-  const { sidebarCollapsed, themeConfig } = props;
+  const { sidebarCollapsed, themeConfig } = props
   return (
     <div
       className={styles.logoBox}
@@ -14,8 +14,8 @@ const Logo = (props: any) => {
         <h2 className={styles.logoText}>Deekeeper</h2>
       ) : null}
     </div>
-  );
-};
+  )
+}
 
-const mapStateToProps = (state: any) => state.app;
-export default connect(mapStateToProps)(Logo);
+const mapStateToProps = (state: any) => state.app
+export default connect(mapStateToProps)(Logo)

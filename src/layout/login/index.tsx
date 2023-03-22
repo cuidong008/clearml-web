@@ -1,49 +1,49 @@
-import { useCallback, useState } from "react";
-import styles from "./index.module.scss";
-import { GetAccessToken, UserCredentials } from "@/api/auth";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Card, Form, Input, message } from "antd";
+import { useCallback, useState } from "react"
+import styles from "./index.module.scss"
+import { GetAccessToken, UserCredentials } from "@/api/auth"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Button, Card, Form, Input, message } from "antd"
 
 export function Login() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>();
-  const navigate = useNavigate();
-  const location = useLocation().state?.location ?? "/";
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string>()
+  const navigate = useNavigate()
+  const location = useLocation().state?.location ?? "/"
 
   const handleLogin = useCallback(
     (form: UserCredentials) => {
-      setLoading(true);
+      setLoading(true)
       GetAccessToken({
         username: form.username,
         password: form.password,
       })
         .then(({ data }) => {
-          document.cookie = `access_token=${data.access_token}`;
-          localStorage.setItem("authTk", data.access_token);
-          setError(undefined);
+          document.cookie = `access_token=${data.access_token}`
+          localStorage.setItem("authTk", data.access_token)
+          setError(undefined)
           message.success(
             location === "/"
               ? "登录成功，即将跳转到主页..."
-              : "登录成功，即将返回之前页面..."
-          );
+              : "登录成功，即将返回之前页面...",
+          )
           setTimeout(() => {
-            navigate(location);
-          }, 1000);
+            navigate(location)
+          }, 1000)
         })
         .catch((err) => {
           if (err.response?.data?.detail) {
-            setError(err.response.data.detail);
+            setError(err.response.data.detail)
           } else {
-            setError(String(err));
+            setError(String(err))
           }
-          console.error(err);
+          console.error(err)
         })
         .finally(() => {
-          setLoading(false);
-        });
+          setLoading(false)
+        })
     },
-    [location, navigate]
-  );
+    [location, navigate],
+  )
 
   return (
     <div className={styles.container}>
@@ -87,5 +87,5 @@ export function Login() {
         )}
       </Card>
     </div>
-  );
+  )
 }

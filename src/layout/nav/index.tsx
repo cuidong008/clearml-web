@@ -1,37 +1,37 @@
-import Hamburger from "@/layout/nav/Hamburger";
-import ThemeToggle from "@/components/ThemeToggle";
-import { toggleSideBar } from "@/store/app/app.actions";
+import Hamburger from "@/layout/nav/Hamburger"
+import ThemeToggle from "@/components/ThemeToggle"
+import { toggleSideBar } from "@/store/app/app.actions"
 import {
   FullscreenExitOutlined,
   FullscreenOutlined,
   SettingOutlined,
-} from "@ant-design/icons";
-import { Space } from "antd";
-import { useState } from "react";
-import { connect } from "react-redux";
-import { useLocation } from "react-router-dom";
-import Breadcrumbs from "./Breadcrumbs";
-import styles from "./index.module.scss";
+} from "@ant-design/icons"
+import { Space } from "antd"
+import { useState } from "react"
+import { connect } from "react-redux"
+import { useLocation } from "react-router-dom"
+import Breadcrumbs from "./Breadcrumbs"
+import styles from "./index.module.scss"
 
 const NavHeader = (props: { breadCrumbList: Record<string, Array<any>> }) => {
-  const { breadCrumbList } = props;
-  const { pathname } = useLocation();
-  const [full, setFull] = useState(false);
-  const breadCrumbs = breadCrumbList[pathname] || [];
+  const { breadCrumbList } = props
+  const { pathname } = useLocation()
+  const [full, setFull] = useState(false)
+  const breadCrumbs = breadCrumbList[pathname] || []
 
   function fullScreen() {
-    const element = document.documentElement;
+    const element = document.documentElement
     if (element.requestFullscreen) {
-      setFull(true);
-      element.requestFullscreen();
+      setFull(true)
+      element.requestFullscreen()
     }
   }
 
   //退出全屏
   function exitFullscreen() {
     if (document.exitFullscreen) {
-      setFull(false);
-      document.exitFullscreen();
+      setFull(false)
+      document.exitFullscreen()
     }
   }
 
@@ -59,9 +59,9 @@ const NavHeader = (props: { breadCrumbList: Record<string, Array<any>> }) => {
         </Space>
       </Space>
     </div>
-  );
-};
+  )
+}
 
-const mapStateToProps = (state: any) => state.app;
-const mapDispatchToProps = { toggleSideBar };
-export default connect(mapStateToProps, mapDispatchToProps)(NavHeader);
+const mapStateToProps = (state: any) => state.app
+const mapDispatchToProps = { toggleSideBar }
+export default connect(mapStateToProps, mapDispatchToProps)(NavHeader)

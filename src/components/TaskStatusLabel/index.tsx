@@ -1,13 +1,13 @@
-import classNames from "classnames";
-import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums";
-import styles from "./index.module.scss";
+import classNames from "classnames"
+import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
+import styles from "./index.module.scss"
 
 export const TaskStatusLabel = (props: {
-  status: string;
-  showLabel?: boolean;
-  showIcon?: boolean;
+  status: string
+  showLabel?: boolean
+  showIcon?: boolean
 }) => {
-  const { status, showLabel, showIcon } = props;
+  const { status, showLabel, showIcon } = props
   return (
     <div
       style={{ display: "flex", alignItems: "center", width: "100%" }}
@@ -22,5 +22,5 @@ export const TaskStatusLabel = (props: {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

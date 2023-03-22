@@ -1,17 +1,17 @@
-import { ReactNode, useState } from "react";
-import styles from "./index.module.scss";
-import classNames from "classnames";
+import { ReactNode, useState } from "react"
+import styles from "./index.module.scss"
+import classNames from "classnames"
 
 export const DkCard = (props: {
-  showFolder: boolean;
-  showAdd?: boolean;
-  cardHeader?: ReactNode;
-  cardBody?: ReactNode;
-  cardFooter?: ReactNode;
-  subCard?: ReactNode;
-  subFolderTitle?: string;
-  oneTabMode?: boolean;
-  height?: number;
+  showFolder: boolean
+  showAdd?: boolean
+  cardHeader?: ReactNode
+  cardBody?: ReactNode
+  cardFooter?: ReactNode
+  subCard?: ReactNode
+  subFolderTitle?: string
+  oneTabMode?: boolean
+  height?: number
 }) => {
   const {
     showFolder,
@@ -23,10 +23,10 @@ export const DkCard = (props: {
     subFolderTitle,
     subCard,
     height,
-  } = props;
-  const [mainHovered, setMainHovered] = useState(false);
-  const [secHovered, setSecHovered] = useState(false);
-  const [showSec, setShowSec] = useState(false);
+  } = props
+  const [mainHovered, setMainHovered] = useState(false)
+  const [secHovered, setSecHovered] = useState(false)
+  const [showSec, setShowSec] = useState(false)
   return (
     <div className={styles.dkCard}>
       {showFolder && (
@@ -34,8 +34,8 @@ export const DkCard = (props: {
           <div
             className={styles.firstTab}
             onClick={(e) => {
-              e.stopPropagation();
-              setShowSec(false);
+              e.stopPropagation()
+              setShowSec(false)
             }}
           >
             {!showSec ? (
@@ -111,8 +111,8 @@ export const DkCard = (props: {
                   [styles.secTabActive]: showSec,
                 })}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setShowSec(true);
+                  e.stopPropagation()
+                  setShowSec(true)
                 }}
                 onMouseEnter={() => setSecHovered(true)}
                 onMouseLeave={() => setSecHovered(false)}
@@ -125,8 +125,8 @@ export const DkCard = (props: {
                   [styles.showSecTab]: showSec,
                 })}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setShowSec(true);
+                  e.stopPropagation()
+                  setShowSec(true)
                 }}
               >
                 <svg
@@ -191,12 +191,12 @@ export const DkCard = (props: {
             <div
               className={classNames(
                 "al-icon al-ico-plus al-color",
-                styles.plusIcon
+                styles.plusIcon,
               )}
             />
           </div>
         )}
       </div>
     </div>
-  );
-};
+  )
+}

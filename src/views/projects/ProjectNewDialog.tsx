@@ -1,21 +1,21 @@
-import { Form, Input, message, Modal } from "antd";
-import { projectCreate } from "@/api/project";
-import { URI_REGEX } from "@/utils/constant";
-import { useEffect, useRef } from "react";
+import { Form, Input, message, Modal } from "antd"
+import { projectCreate } from "@/api/project"
+import { URI_REGEX } from "@/utils/constant"
+import { useEffect, useRef } from "react"
 
 export const ProjectNewDialog = (props: {
-  show: boolean;
-  onClose: (e: boolean) => void;
+  show: boolean
+  onClose: (e: boolean) => void
 }) => {
-  const { show, onClose } = props;
-  const [form] = Form.useForm();
-  const formRef = useRef(null);
+  const { show, onClose } = props
+  const [form] = Form.useForm()
+  const formRef = useRef(null)
 
   useEffect(() => {
     if (formRef.current && show) {
-      form.resetFields();
+      form.resetFields()
     }
-  }, [show]);
+  }, [show])
 
   function createNewProject() {
     form.validateFields().then((values) => {
@@ -26,13 +26,13 @@ export const ProjectNewDialog = (props: {
         default_output_destination: values.default_output_destination,
       })
         .then(({ data }) => {
-          data.id && onClose(true);
-          message.success("create project success");
+          data.id && onClose(true)
+          message.success("create project success")
         })
         .catch(() => {
-          message.error("create project success");
-        });
-    });
+          message.error("create project success")
+        })
+    })
   }
 
   return (
@@ -83,12 +83,12 @@ export const ProjectNewDialog = (props: {
                 if (
                   value &&
                   !new RegExp(
-                    `${URI_REGEX.S3_WITH_BUCKET}$|${URI_REGEX.S3_WITH_BUCKET_AND_HOST}$|${URI_REGEX.FILE}$|${URI_REGEX.NON_AWS_S3}$|${URI_REGEX.GS_WITH_BUCKET}$|${URI_REGEX.GS_WITH_BUCKET_AND_HOST}$`
+                    `${URI_REGEX.S3_WITH_BUCKET}$|${URI_REGEX.S3_WITH_BUCKET_AND_HOST}$|${URI_REGEX.FILE}$|${URI_REGEX.NON_AWS_S3}$|${URI_REGEX.GS_WITH_BUCKET}$|${URI_REGEX.GS_WITH_BUCKET_AND_HOST}$`,
                   ).test(value)
                 ) {
-                  return Promise.reject(new Error("please enter right format"));
+                  return Promise.reject(new Error("please enter right format"))
                 }
-                return Promise.resolve();
+                return Promise.resolve()
               },
             },
           ]}
@@ -97,5 +97,5 @@ export const ProjectNewDialog = (props: {
         </Form.Item>
       </Form>
     </Modal>
-  );
-};
+  )
+}

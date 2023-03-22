@@ -1,23 +1,23 @@
-import { Select, Space } from "antd";
-import { connect } from "react-redux";
+import { Select, Space } from "antd"
+import { connect } from "react-redux"
 import {
   changeScope,
   setProjectGroup,
   setProjectOrder,
   setProjectSort,
-} from "@/store/project/project.actions";
-import { ProjectConfState, StoreState } from "@/types/store";
-import classNames from "classnames";
-import styles from "./index.module.scss";
-import { MouseEvent } from "react";
+} from "@/store/project/project.actions"
+import { ProjectConfState, StoreState } from "@/types/store"
+import classNames from "classnames"
+import styles from "./index.module.scss"
+import { MouseEvent } from "react"
 
 const ProjectListHeader = (
   props: ProjectConfState & {
-    setProjectOrder: (order: string) => void;
-    changeScope: (scope: string) => void;
-    setProjectSort: (sort: string) => void;
-    setProjectGroup: (group: string) => void;
-  }
+    setProjectOrder: (order: string) => void
+    changeScope: (scope: string) => void
+    setProjectSort: (sort: string) => void
+    setProjectGroup: (group: string) => void
+  },
 ) => {
   const {
     showScope,
@@ -29,11 +29,11 @@ const ProjectListHeader = (
     setProjectOrder,
     setProjectSort,
     setProjectGroup,
-  } = props;
+  } = props
 
   function reverseOrder(e: MouseEvent<HTMLElement>) {
-    setProjectSort(sortOrder === "asc" ? "desc" : "asc");
-    e.stopPropagation();
+    setProjectSort(sortOrder === "asc" ? "desc" : "asc")
+    e.stopPropagation()
   }
 
   return (
@@ -132,16 +132,16 @@ const ProjectListHeader = (
         )}
       </Space>
     </div>
-  );
-};
-const mapStateToProps = (state: StoreState) => state.project;
+  )
+}
+const mapStateToProps = (state: StoreState) => state.project
 const mapDispatchToProps = {
   changeScope,
   setProjectOrder,
   setProjectSort,
   setProjectGroup,
-};
+}
 export const ProjectListHeaderCom = connect(
   mapStateToProps,
-  mapDispatchToProps
-)(ProjectListHeader);
+  mapDispatchToProps,
+)(ProjectListHeader)

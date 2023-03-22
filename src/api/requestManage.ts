@@ -1,12 +1,12 @@
-import { isFunction } from "@/utils/global";
-import axios, { AxiosRequestConfig, Canceler } from "axios";
+import { isFunction } from "@/utils/global"
+import axios, { AxiosRequestConfig, Canceler } from "axios"
 
 // * 声明一个 Map 用于存储每个请求的标识 和 取消函数
-let pendingMap = new Map<string, Canceler>();
+let pendingMap = new Map<string, Canceler>()
 
 // * 序列化参数
 export const getPendingUrl = (config: AxiosRequestConfig) =>
-  [config.method, config.url].join("&");
+  [config.method, config.url].join("&")
 
 export class AxiosCanceler {
   /**
@@ -15,16 +15,16 @@ export class AxiosCanceler {
    */
   addPending(config: AxiosRequestConfig) {
     // * 在请求开始前，对之前的请求做检查取消操作
-    this.removePending(config);
-    const url = getPendingUrl(config);
+    this.removePending(config)
+    const url = getPendingUrl(config)
     config.cancelToken =
       config.cancelToken ||
       new axios.CancelToken((cancel) => {
         if (!pendingMap.has(url)) {
           // 如果 pending 中不存在当前请求，则添加进去
-          pendingMap.set(url, cancel);
+          pendingMap.set(url, cancel)
         }
-      });
+      })
   }
 
   /**
@@ -32,13 +32,13 @@ export class AxiosCanceler {
    * @param {Object} config
    */
   removePending(config: AxiosRequestConfig) {
-    const url = getPendingUrl(config);
+    const url = getPendingUrl(config)
 
     if (pendingMap.has(url)) {
       // 如果在 pending 中存在当前请求标识，需要取消当前请求，并且移除
-      const cancel = pendingMap.get(url);
-      cancel && cancel();
-      pendingMap.delete(url);
+      const cancel = pendingMap.get(url)
+      cancel && cancel()
+      pendingMap.delete(url)
     }
   }
 
@@ -47,15 +47,15 @@ export class AxiosCanceler {
    */
   removeAllPending() {
     pendingMap.forEach((cancel) => {
-      cancel && isFunction(cancel) && cancel();
-    });
-    pendingMap.clear();
+      cancel && isFunction(cancel) && cancel()
+    })
+    pendingMap.clear()
   }
 
   /**
    * @description: 重置
    */
   reset(): void {
-    pendingMap = new Map<string, Canceler>();
+    pendingMap = new Map<string, Canceler>()
   }
 }

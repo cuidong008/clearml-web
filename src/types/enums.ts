@@ -17,7 +17,7 @@ export type TaskStatusEnum =
   | "closed"
   | "failed"
   | "completed"
-  | "unknown";
+  | "unknown"
 
 export const TaskStatusEnum = {
   Created: "created",
@@ -30,7 +30,7 @@ export const TaskStatusEnum = {
   Failed: "failed",
   Completed: "completed",
   Unknown: "unknown",
-};
+}
 
 export type TaskTypeEnum =
   | "training"
@@ -43,7 +43,7 @@ export type TaskTypeEnum =
   | "optimizer"
   | "service"
   | "qc"
-  | "custom";
+  | "custom"
 
 export const TaskTypeEnum = {
   Training: "training" as TaskTypeEnum,
@@ -57,14 +57,14 @@ export const TaskTypeEnum = {
   Service: "service" as TaskTypeEnum,
   Qc: "qc" as TaskTypeEnum,
   Custom: "custom" as TaskTypeEnum,
-};
+}
 
-export type ArtifactModeEnum = "input" | "output";
+export type ArtifactModeEnum = "input" | "output"
 
 export const ArtifactModeEnum = {
   Input: "input" as ArtifactModeEnum,
   Output: "output" as ArtifactModeEnum,
-};
+}
 export const EXPERIMENTS_STATUS_LABELS = {
   [TaskStatusEnum.Created]: "Draft",
   [TaskStatusEnum.Queued]: "Pending",
@@ -74,7 +74,7 @@ export const EXPERIMENTS_STATUS_LABELS = {
   [TaskStatusEnum.Failed]: "Failed",
   [TaskStatusEnum.Stopped]: "Completed",
   [TaskStatusEnum.Closed]: "Closed",
-};
+}
 export const EXPERIMENTS_TYPE_LABELS = {
   [TaskTypeEnum.Testing]: "Testing",
   [TaskTypeEnum.Training]: "Training",
@@ -87,4 +87,4 @@ export const EXPERIMENTS_TYPE_LABELS = {
   [TaskTypeEnum.Service]: "Service",
   [TaskTypeEnum.Qc]: "Qc",
   [TaskTypeEnum.Custom]: "Custom",
-};
+}

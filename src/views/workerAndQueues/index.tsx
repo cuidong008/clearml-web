@@ -1,12 +1,12 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom"
 
 const WorkerAndQueues = () => {
-  const params = useParams();
+  const params = useParams()
 
   return (
     <div>
       <Outlet />
     </div>
-  );
-};
-export default WorkerAndQueues;
+  )
+}
+export default WorkerAndQueues

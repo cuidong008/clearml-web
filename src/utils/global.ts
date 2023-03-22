@@ -5,24 +5,24 @@
 export const getBrowserLang = () => {
   const browserLang = navigator.language
     ? navigator.language
-    : navigator.browserLanguage;
-  let defaultBrowserLang: string;
+    : navigator.browserLanguage
+  let defaultBrowserLang: string
   if (
     browserLang.toLowerCase() === "cn" ||
     browserLang.toLowerCase() === "zh" ||
     browserLang.toLowerCase() === "zh-cn"
   ) {
-    defaultBrowserLang = "zh";
+    defaultBrowserLang = "zh"
   } else {
-    defaultBrowserLang = "en";
+    defaultBrowserLang = "en"
   }
-  return defaultBrowserLang;
-};
+  return defaultBrowserLang
+}
 
 export function is(val: unknown, type: string) {
-  return toString.call(val) === `[object ${type}]`;
+  return toString.call(val) === `[object ${type}]`
 }
 
 export function isFunction<T = Function>(val: unknown): val is T {
-  return is(val, "Function");
+  return is(val, "Function")
 }

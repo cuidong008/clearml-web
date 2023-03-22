@@ -1,4 +1,4 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb } from "antd"
 
 const Breadcrumbs = (props: { breadCrumbs: any[] }) => {
   return (
@@ -8,9 +8,9 @@ const Breadcrumbs = (props: { breadCrumbs: any[] }) => {
           <Breadcrumb.Item key={key.name}>
             <span className="b-link">{key.name}</span>
           </Breadcrumb.Item>
-        );
+        )
       })}
     ></Breadcrumb>
-  );
-};
-export default Breadcrumbs;
+  )
+}
+export default Breadcrumbs

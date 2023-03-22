@@ -1,12 +1,12 @@
-import { setThemeConfig } from "@/store/app/app.actions";
-import { connect } from "react-redux";
-import styles from "./index.module.scss";
+import { setThemeConfig } from "@/store/app/app.actions"
+import { connect } from "react-redux"
+import styles from "./index.module.scss"
 
 const Index = (props: any) => {
-  const { themeConfig, setThemeConfig } = props;
+  const { themeConfig, setThemeConfig } = props
 
   function toggleTheme() {
-    setThemeConfig({ ...themeConfig, isDark: !themeConfig.isDark });
+    setThemeConfig({ ...themeConfig, isDark: !themeConfig.isDark })
   }
 
   return (
@@ -43,9 +43,9 @@ const Index = (props: any) => {
         </span>
       </span>
     </button>
-  );
-};
+  )
+}
 
-const mapStateToProps = (state: any) => state.app;
-const mapDispatchToProps = { setThemeConfig };
-export default connect(mapStateToProps, mapDispatchToProps)(Index);
+const mapStateToProps = (state: any) => state.app
+const mapDispatchToProps = { setThemeConfig }
+export default connect(mapStateToProps, mapDispatchToProps)(Index)

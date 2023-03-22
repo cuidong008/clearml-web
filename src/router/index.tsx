@@ -1,26 +1,26 @@
-import { RouteObject } from "@/types/router";
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import Dashboard from "@/views/dashboard";
-import Projects from "@/views/projects";
-import WorkerAndQueues from "@/views/workerAndQueues";
-import NotAuth from "@/components/errors/403";
-import NotFound from "@/components/errors/404";
-import NotNetwork from "@/components/errors/500";
+import { RouteObject } from "@/types/router"
+import React from "react"
+import { Navigate, useLocation } from "react-router-dom"
+import Dashboard from "@/views/dashboard"
+import Projects from "@/views/projects"
+import WorkerAndQueues from "@/views/workerAndQueues"
+import NotAuth from "@/components/errors/403"
+import NotFound from "@/components/errors/404"
+import NotNetwork from "@/components/errors/500"
 
 export const AuthRouter = (props: { children: JSX.Element }) => {
-  const { children } = props;
-  const { pathname } = useLocation();
+  const { children } = props
+  const { pathname } = useLocation()
   if (pathname.includes("/share")) {
-    return children;
+    return children
   }
   // * 判断是否有Token
-  const token = localStorage.getItem("authTk"); //store.getState().user.token;
-  if (!token) return <Navigate to="/login" replace />;
+  const token = localStorage.getItem("authTk") //store.getState().user.token;
+  if (!token) return <Navigate to="/login" replace />
   // todo add auth logic
   // * 当前账号有权限返回 Router，正常访问页面
-  return children;
-};
+  return children
+}
 
 export const rootRouter: Array<RouteObject> = [
   {
@@ -144,4 +144,4 @@ export const rootRouter: Array<RouteObject> = [
     name: "hide",
     element: <Navigate to="/404" />,
   },
-];
+]

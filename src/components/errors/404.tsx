@@ -1,12 +1,12 @@
-import { Button, Result } from "antd";
-import { useNavigate } from "react-router-dom";
-import "./index.scss";
+import { Button, Result } from "antd"
+import { useNavigate } from "react-router-dom"
+import "./index.scss"
 
 const NotFound = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const goHome = () => {
-    navigate("/");
-  };
+    navigate("/")
+  }
   return (
     <Result
       status="404"
@@ -18,7 +18,7 @@ const NotFound = () => {
         </Button>
       }
     />
-  );
-};
+  )
+}
 
-export default NotFound;
+export default NotFound
