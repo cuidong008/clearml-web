@@ -18,8 +18,8 @@ export function Login() {
         password: form.password,
       })
         .then(({ data }) => {
-          document.cookie = `access_token=${data.access_token}`
-          localStorage.setItem("authTk", data.access_token)
+          document.cookie = `access_token=${data.data.access_token}`
+          localStorage.setItem("authTk", data.data.access_token)
           setError(undefined)
           message.success(
             location === "/"

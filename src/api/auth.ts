@@ -14,9 +14,11 @@ type GetAccessTokenReq = {
 }
 
 type GetAccessTokenRes = {
-  access_token: string
-  email: string
-  email_verified: string
+  data: {
+    access_token: string
+    email: string
+    email_verified: string
+  }
 }
 
 export function GetAccessToken(params: GetAccessTokenReq) {
