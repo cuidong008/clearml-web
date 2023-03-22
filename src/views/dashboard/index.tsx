@@ -158,7 +158,7 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
               <ProjectCard project={p} />
             </div>
           ))}
-          {projects.length < 4 && (
+          {projects.length < 4 && showScope === "my" && (
             <div onClick={() => setNewProjDialog(true)}>
               <ProjectCard showAdd={true} />
             </div>

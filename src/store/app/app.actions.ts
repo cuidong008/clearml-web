@@ -51,7 +51,7 @@ export const getLoginUser =
         .catch((err) => {
           localStorage.removeItem("authTk")
           message.error("获取用户失败，请重新登录！")
-          window.location.hash = "/login"
+          window.location.href = "/login"
           reject(err)
         })
     })

@@ -75,7 +75,7 @@ class RequestHttp {
         if (data.status == 403 || data.status == 401) {
           message.error(data.message).then()
           localStorage.removeItem("authTk")
-          window.location.hash = "/login"
+          window.location.href = "/login"
           return Promise.reject(data)
         }
         // * 全局错误信息拦截（防止下载文件得时候返回数据流，没有code，直接报错）
@@ -99,12 +99,12 @@ class RequestHttp {
           checkStatus(response.status)
           if (response.status == 403 || response.status == 401) {
             localStorage.removeItem("authTk")
-            window.location.hash = "/login"
+            window.location.href = "/login"
             return new Promise(() => {})
           }
         }
         // 服务器结果都没有返回(可能服务器错误可能客户端断网) 断网处理:可以跳转到断网页面
-        if (!window.navigator.onLine) window.location.hash = "/500"
+        if (!window.navigator.onLine) window.location.href = "/500"
         return Promise.reject(
           error.response?.data ? error.response?.data : error.message,
         )

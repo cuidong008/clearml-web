@@ -85,6 +85,7 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
   function projectEditAction(action: string, project?: Project, data?: any) {
     switch (action) {
       case "rename":
+        console.log(project, data)
         break
       case "share":
         break
@@ -102,7 +103,6 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
           e && fetchProjects(true)
         }}
       />
-
       <div className={styles.listBody}>
         <header className={styles.header}>
           <ProjectListHeaderCom />
