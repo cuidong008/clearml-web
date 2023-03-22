@@ -34,7 +34,5 @@ deploy:
   before_script:
       - env_name=$CI_COMMIT_BRANCH
   rules:
-    - if: $CI_COMMIT_BRANCH == "development"
-      when: manual
     - if: $CI_COMMIT_BRANCH == "master"
       when: manual
