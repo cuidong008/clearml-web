@@ -34,8 +34,8 @@ COPY ./config/nginx.conf.template /etc/nginx/templates/hurricane.conf.template
 ARG BUILD_API_GATEWAY
 ARG BUILD_NODE_ENV
 
-ENV API_GATEWAY=http://dev-mlp-api-gateway.deeproute.cn
-ENV NODE_ENV=development
+ENV API_GATEWAY=${BUILD_API_GATEWAY}
+ENV NODE_ENV=${BUILD_NODE_ENV}
 
 ENV PORT=3000
 
