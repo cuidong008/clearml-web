@@ -11,18 +11,39 @@ include:
 
 stages:
   - build_image
+ 
 
-# specify a custom container image name
 variables:
   OPS_CI_CONTAINER_IMAGE_NAME: ml-platform-${CI_PROJECT_NAME}
-
-.ops_ci_deploy_dev_extension:
-  variables:
-    EXTRA_DOCKER_BUILD_ARGUMENT: " \
+  GIT_DEPTH: '1'
+  OS: '${CI_COMMIT_REF_NAME}'
+  DEPARTMENT: 'mlp'
+  EXTRA_DOCKER_BUILD_ARGUMENT: " \
       --build-arg BUILD_API_GATEWAY=http://dev-mlp-api-gateway.deeproute.cn \
       --build-arg BUILD_NODE_ENV=development"
 
+.deploy_script: &deploy_script |
+  export DOCKER_NAMESPACE="deeproute-all"
+  export tag_build_num="0.1.${CI_PIPELINE_ID}"
+  export IMAGE="${DOCKER_URL}/${DOCKER_NAMESPACE}/${DEPARTMENT}/public/${CI_PROJECT_NAME}:$tag_build_num"
+  export IMAGE_LATEST="${DOCKER_URL}/${DOCKER_NAMESPACE}/${DEPARTMENT}/public/${CI_PROJECT_NAME}:latest"
+  echo "$IMAGE"
+  echo "$IMAGE_LATEST"
+  export IMAGE_BUILDER=test
+
+  cat ${NETRC} > .netrc
+
+  # build the final image
+  docker build \
+    -t "$IMAGE" \
+    -f Dockerfile ${EXTRA_DOCKER_BUILD_ARGUMENT}\
+    .
+
+  # upload to harbor
+  docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" "${DOCKER_URL}"
+  docker push "$IMAGE"
 
 build_image:
   stage: build_image
-  script: .build
+  script:
+    - *deploy_script
