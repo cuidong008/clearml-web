@@ -9,26 +9,20 @@ include:
 
 stages:
   - deploy
- 
-
-variables:
-  OPS_CI_CONTAINER_IMAGE_NAME: ml-platform-${CI_PROJECT_NAME}
-  EXTRA_DOCKER_BUILD_ARGUMENT: " \
-      --build-arg BUILD_API_GATEWAY=http://dev-mlp-api-gateway.deeproute.cn \
-      --build-arg BUILD_NODE_ENV=${env_name}"
 
 .build_docker:
     script:
         - docker build -t "$IMAGE" -t $IMAGE_LATEST -f $DOCKERFILE_NAME ${EXTRA_DOCKER_BUILD_ARGUMENT} .
 
-  
-
 deploy:
   extends: .deploy
   image: "${DEPLOY_IMAGE_NAME}:${DEPLOY_IMAGE_VERSION}"
   variables:
+      EXTRA_DOCKER_BUILD_ARGUMENT: " \
+        --build-arg BUILD_API_GATEWAY=http://dev-mlp-api-gateway.deeproute.cn \
+        --build-arg BUILD_NODE_ENV=${env_name}"
       DOCKERFILE_NAME: "Dockerfile"
-      CUSTOM_SUB_IMAGE_NAME: ${CI_PROJECT_NAME}
+      CUSTOM_SUB_IMAGE_NAME: "mlp/${CI_PROJECT_NAME}"
   tags:
     - build
   before_script:
