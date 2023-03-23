@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from "path";
 import svgr from "vite-plugin-svgr";
+import viteCompression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,11 +13,13 @@ export default defineConfig({
       "~antd": resolve(__dirname, "./node_modules/antd")
     }
   },
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr(), viteCompression({
+    deleteOriginFile: true
+  }),],
   server: {
     proxy: {
       "/api": {
-        target: "http://dev-mlp-api-gateway.deeproute.cn/evaluation/v1/clearml/api/v2.23",
+        target: "http://stg-mlp-api-gateway.deeproute.cn/evaluation/v1/clearml/api/v2.23",
         changeOrigin: true,
         rewrite: (path) => path.replace("/api", ""),
         bypass: (r, s, o) => {
@@ -24,7 +27,7 @@ export default defineConfig({
         }
       },
       "/auth": {
-        target: "http://dev-mlp-api-gateway.deeproute.cn",
+        target: "http://stg-mlp-api-gateway.deeproute.cn",
         changeOrigin: true,
         rewrite: (path) => path.replace("/auth", ""),
         bypass: (r, s, o) => {
