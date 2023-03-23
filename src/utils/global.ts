@@ -1,3 +1,5 @@
+import { CloudProviders } from "@/types/enums"
+
 /**
  * @description 获取浏览器默认语言
  * @return string
@@ -25,4 +27,32 @@ export function is(val: unknown, type: string) {
 
 export function isFunction<T = Function>(val: unknown): val is T {
   return is(val, "Function")
+}
+
+export function getUrlsPerProvider(commutativeUrls: string[]): {
+  [provider in CloudProviders]: string[]
+} {
+  return commutativeUrls.reduce(
+    (acc: { [provider in CloudProviders]: string[] }, url) => {
+      const sourceType = getSourceType(url)
+      url && acc[sourceType].push(url)
+      return acc
+    },
+    { fs: [], gc: [], s3: [], azure: [], misc: [] },
+  )
+}
+
+export function getSourceType(src: string): CloudProviders {
+  //TODO add file serer path
+  if (src?.startsWith("fileServer")) {
+    return "fs"
+  } else if (src?.startsWith("s3://")) {
+    return "s3"
+  } else if (src?.startsWith("gs://")) {
+    return "gc"
+  } else if (src.startsWith("azure://")) {
+    return "azure"
+  } else {
+    return "misc"
+  }
 }
