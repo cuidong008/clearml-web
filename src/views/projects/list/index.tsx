@@ -1,21 +1,29 @@
 import { ProjectListHeaderCom } from "@/views/projects/ProjectListHeader"
 import styles from "./index.module.scss"
-import { Button } from "antd"
+import { Button, message } from "antd"
 import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ProjectCard } from "@/components/ProjectCard"
-import { getAllProjectsEx } from "@/api/project"
+import {
+  getAllProjectsEx,
+  projectUpdate,
+  projectValidateDelete,
+} from "@/api/project"
 import { ProjectConfState, StoreState } from "@/types/store"
 import { connect } from "react-redux"
-import { Project } from "@/types/project"
+import { Project, ReadyForDeletion } from "@/types/project"
 import { CurrentUser } from "@/types/user"
+import { ProjectDeleteDialog } from "@/views/projects/ProjectDeleteDialog"
 
 const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
   const { showScope, sortOrder, orderBy, groupId, user } = props
   const [newProjDialog, setNewProjDialog] = useState(false)
+  const [delProjDialog, setDelProjDialog] = useState(false)
   const [scrollId, setScrollId] = useState<string>()
   const [hasMore, setHasMore] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
+  const [selectProject, setSelectProject] = useState<Project>()
+  const [readyDelete, setReadyDelete] = useState<ReadyForDeletion>()
 
   const fetchProjects = useCallback(
     (reload: boolean) => {
@@ -40,6 +48,7 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
         permission_roots_only: true,
         search_hidden: true,
         shallow_search: true,
+        ...(showScope !== "my" && { stats_get_all: true }),
         ...active_user,
         allow_public: false,
         scroll_id: reload ? null : scrollId ?? null,
@@ -51,11 +60,15 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
           "default_output_destination",
           "basename",
         ],
-      }).then(({ data }) => {
+      }).then(({ data, meta }) => {
+        if (meta.result_code !== 200) {
+          message.error(meta.result_msg)
+          return
+        }
         if (reload) {
-          setProjects(data.projects)
+          setProjects(() => data.projects)
         } else {
-          setProjects(projects.concat(data.projects))
+          setProjects(() => projects.concat(data.projects))
         }
         setHasMore(data.projects.length >= 12)
         if (data.scroll_id && data.scroll_id !== scrollId) {
@@ -65,7 +78,7 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
         }
       })
     },
-    [showScope, scrollId, orderBy, sortOrder, groupId],
+    [projects, user, showScope, scrollId, orderBy, sortOrder, groupId],
   )
 
   const fetchDataRef = useRef(fetchProjects)
@@ -82,20 +95,95 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
     fetchDataRef.current(true)
   }, [orderBy, sortOrder, groupId, showScope])
 
-  function projectEditAction(action: string, project?: Project, data?: any) {
+  function validateProjectDel(project: Project) {
+    projectValidateDelete({ project: project.id })
+      .then(({ data, meta }) => {
+        if (meta.result_code !== 200) {
+          message.error(meta.result_msg)
+          return
+        }
+        const readyForDeletion: ReadyForDeletion = {
+          project: project,
+          experiments: {
+            total: data.tasks ?? 0,
+            archived: data.tasks
+              ? data.tasks - (data.non_archived_tasks ?? 0)
+              : 0,
+            unarchived: data.non_archived_tasks ?? 0,
+          },
+          models: {
+            total: data.models ?? 0,
+            archived: data.models
+              ? data.models - (data.non_archived_models ?? 0)
+              : 0,
+            unarchived: data.non_archived_models ?? 0,
+          },
+        }
+        setReadyDelete(readyForDeletion)
+        setDelProjDialog(true)
+      })
+      .catch(() => {
+        message.error("validate project delete failure")
+      })
+  }
+
+  function projectEditAction(action: string, project?: Project, data?: string) {
     switch (action) {
+      case "setEditProj":
+        setSelectProject(project)
+        break
       case "rename":
-        console.log(project, data)
+        if (project && data) {
+          projectRename(project, data)
+        }
         break
       case "share":
         break
       case "delete":
+        if (project) {
+          validateProjectDel(project)
+        }
         break
     }
   }
 
+  function projectRename(project: Project, newName: string) {
+    projectUpdate({ project: project.id, name: newName })
+      .then(({ data, meta }) => {
+        if (meta.result_code !== 200) {
+          message.error(meta.result_msg)
+          return
+        }
+        setProjects(() =>
+          projects.map((p) => {
+            if (p.id === project.id) {
+              p = { ...p, ...data.fields }
+            }
+            return p
+          }),
+        )
+        setSelectProject(undefined)
+        message.success(
+          `update project name "${project.name}" to "${newName}" success`,
+        )
+      })
+      .catch((err) => {
+        message.error(`update project ${project.name}'s name failure`)
+      })
+  }
+
   return (
     <div className={styles.projectList}>
+      <ProjectDeleteDialog
+        show={delProjDialog}
+        readyForDeletion={readyDelete}
+        onClose={(e) => {
+          setDelProjDialog(false)
+          if (e) {
+            setReadyDelete(undefined)
+          }
+        }}
+      />
       <ProjectNewDialog
         show={newProjDialog}
         onClose={(e) => {
@@ -117,6 +205,7 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
           <ProjectCard
             project={r}
             key={r.id}
+            editProjId={selectProject?.id}
             showMenu={showScope === "my"}
             dispatch={projectEditAction}
           />
