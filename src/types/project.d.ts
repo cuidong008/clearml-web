@@ -40,7 +40,7 @@ export interface Group {
 }
 
 export interface Project {
-  id?: string
+  id: string
   name: string
   basename?: string
   description?: string
@@ -56,6 +56,20 @@ export interface Project {
   sub_projects?: SubProject[]
   own_tasks?: number
   own_models?: number
+}
+
+export interface ReadyForDeletion {
+  project: Project
+  experiments: {
+    total: number
+    archived: number
+    unarchived: number
+  }
+  models: {
+    total: number
+    archived: number
+    unarchived: number
+  }
 }
 
 export type StatsForStateEnum = "active" | "archived"

@@ -88,3 +88,4 @@ export const EXPERIMENTS_TYPE_LABELS = {
   [TaskTypeEnum.Qc]: "Qc",
   [TaskTypeEnum.Custom]: "Custom",
 }
+export type CloudProviders = "fs" | "gc" | "s3" | "azure" | "misc"
