@@ -19,7 +19,7 @@ deploy:
   image: "${DEPLOY_IMAGE_NAME}:${DEPLOY_IMAGE_VERSION}"
   variables:
       EXTRA_DOCKER_BUILD_ARGUMENT: " \
-        --build-arg BUILD_API_GATEWAY=http://dev-mlp-api-gateway.deeproute.cn \
+        --build-arg BUILD_API_GATEWAY=http://stg-mlp-api-gateway.deeproute.cn \
         --build-arg BUILD_NODE_ENV=${env_name}"
       DOCKERFILE_NAME: "Dockerfile"
       CUSTOM_SUB_IMAGE_NAME: "mlp/${CI_PROJECT_NAME}"
