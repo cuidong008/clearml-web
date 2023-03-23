@@ -13,9 +13,7 @@ export default defineConfig({
       "~antd": resolve(__dirname, "./node_modules/antd")
     }
   },
-  plugins: [react(), svgr(), viteCompression({
-    deleteOriginFile: true
-  }),],
+  plugins: [react(), svgr(), viteCompression(),],
   server: {
     proxy: {
       "/api": {
