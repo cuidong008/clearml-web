@@ -67,7 +67,7 @@ export const ProjectNewDialog = (props: {
           label="Project name"
           name={"name"}
           required={true}
-          rules={[{ required: true }]}
+          rules={[{ required: true, min: 3 }]}
         >
           <Input />
         </Form.Item>
