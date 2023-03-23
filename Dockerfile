@@ -5,14 +5,14 @@ WORKDIR /code
 RUN npm i -g pnpm
 COPY ./package.json ./package.json
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
-
+COPY ./.npmrc ./.npmrc
 RUN npx pnpm install
 
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./tsconfig.node.json ./tsconfig.node.json
 COPY ./vite.config.ts ./vite.config.ts
 COPY ./.eslintrc.js ./.eslintrc.js
-COPY ./.npmrc ./.npmrc
+
 COPY ./public ./public
 COPY index.html index.html
 COPY ./src ./src
