@@ -80,3 +80,7 @@
 .i-created {
   @include icon("@/assets/icons/draft-light-blue.svg");
 }
+
+.i-alert {
+  @include icon("@/assets/icons/alert.svg");
+}

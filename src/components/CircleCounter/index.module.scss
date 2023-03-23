@@ -73,8 +73,6 @@
 html[data-type="dark"] {
   .counterContainer {
     .circleCounter {
-      background-color: $blue-600;
-
       &.multi {
         .subCounter {
           color: $white;
@@ -103,7 +101,9 @@ html[data-type="dark"] {
 html[data-type="light"] {
   .counterContainer {
     .circleCounter {
-      background-color: $blue-200;
+      &.empty {
+        background-color: $blue-400;
+      }
 
       &.multi {
         .subCounter {
@@ -120,7 +120,7 @@ html[data-type="light"] {
       }
 
       .counter {
-        color: $blue-800;
+        color: #ffffff;
       }
     }
 
