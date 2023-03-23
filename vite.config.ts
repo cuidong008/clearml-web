@@ -21,6 +21,7 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace("/api", ""),
         bypass: (r, s, o) => {
+          r.headers["X-DR-Swimlane"] = '(ml-platform-api-evaluation=swimlane-00)'
           console.log(r.url)
         }
       },
@@ -29,6 +30,7 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace("/auth", ""),
         bypass: (r, s, o) => {
+          r.headers["X-DR-Swimlane"] = '(ml-platform-api-evaluation=swimlane-00)'
           console.log(r.url)
         }
       },

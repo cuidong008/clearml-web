@@ -137,7 +137,6 @@ export const ProjectCard = (props: {
                 {showMenu && (
                   <Popover
                     open={open}
-                    trigger={"click"}
                     placement={"bottomLeft"}
                     content={
                       <div onClick={(e) => e.stopPropagation()}>
