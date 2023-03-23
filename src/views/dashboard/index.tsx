@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { Project } from "@/types/project"
 import styles from "./index.module.scss"
 import { Link, useNavigate } from "react-router-dom"
-import { Button, Table, Tooltip } from "antd"
+import { Button, message, Table, Tooltip } from "antd"
 import { getAllProjectsEx } from "@/api/project"
 import Column from "antd/es/table/Column"
 import { getAllTasksEx } from "@/api/task"
@@ -44,6 +44,7 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
       stats_for_state: "active",
       include_stats: true,
       check_own_contents: true,
+      ...(showScope !== "my" && { stats_get_all: true }),
       order_by: ["featured", sortOrder === "desc" ? "-" + orderBy : orderBy],
       page: 0,
       page_size: 6,
@@ -57,7 +58,11 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
         "created",
         "default_output_destination",
       ],
-    }).then(({ data }) => {
+    }).then(({ data, meta }) => {
+      if (meta.result_code !== 200) {
+        message.error(meta.result_msg)
+        return
+      }
       setProjects(data.projects ?? [])
     })
   }, [showScope, orderBy, sortOrder, groupId])
@@ -117,7 +122,11 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
       ],
       system_tags: ["-archived", "-pipeline"],
       allow_public: false,
-    }).then(({ data }) => {
+    }).then(({ data, meta }) => {
+      if (meta.result_code !== 200) {
+        message.error(meta.result_msg)
+        return
+      }
       setTasks(data.tasks ?? [])
     })
   }
