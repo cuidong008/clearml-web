@@ -3,6 +3,7 @@ server {
     listen ${PORT};
     root /code/build;
     gzip on;
+    gzip_static on;
 
     location = / {
         add_header Cache-Control no-cache;
