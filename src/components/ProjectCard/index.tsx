@@ -1,6 +1,6 @@
 import { Project } from "@/types/project"
 import * as React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import classNames from "classnames"
 import styles from "./index.module.scss"
 
@@ -21,26 +21,30 @@ export const ProjectCard = (props: {
   project?: Project
   showMenu?: boolean
   showAdd?: boolean
-  dispatch?: (action: string, project?: Project, data?: any) => void
+  editProjId?: string
+  dispatch?: (action: string, project?: Project, data?: string) => void
 }) => {
-  const { project, showMenu, showAdd, dispatch } = props
-  const [showRename, setShowRename] = useState(false)
-  const [open, setOpen] = useState(false)
+  const { project, showMenu, showAdd, dispatch, editProjId } = props
   const [projectNewName, setProjectNewName] = useState("")
+  const [showRename, setShowRename] = useState(false)
+
+  useEffect(() => {
+    if (project?.id !== editProjId && showRename) {
+      setShowRename(() => false)
+    }
+  }, [editProjId, project, showRename])
 
   function startRename() {
-    setOpen(false)
     setProjectNewName(project?.name ?? "")
     setShowRename(true)
+    dispatch?.("setEditProj", project)
   }
 
   function startShare() {
-    setOpen(false)
     dispatch?.("share", project)
   }
 
   function startDelete() {
-    setOpen(false)
     dispatch?.("delete", project)
   }
 
@@ -116,7 +120,7 @@ export const ProjectCard = (props: {
                     </span>
                   </Tooltip>
                 )}
-                {showRename && (
+                {showRename && editProjId === project.id && (
                   <Space>
                     <Input
                       value={projectNewName}
@@ -136,10 +140,10 @@ export const ProjectCard = (props: {
                 )}
                 {showMenu && (
                   <Popover
-                    open={open}
                     placement={"bottomLeft"}
+                    destroyTooltipOnHide
                     content={
-                      <div onClick={(e) => e.stopPropagation()}>
+                      <div>
                         <Menu
                           items={[
                             {
@@ -173,7 +177,6 @@ export const ProjectCard = (props: {
                       }}
                       onClick={(e) => {
                         e.stopPropagation()
-                        setOpen(true)
                       }}
                       icon={<MenuOutlined />}
                     />
