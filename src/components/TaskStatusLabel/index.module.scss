@@ -11,6 +11,7 @@
       min-width: 50px;
     }
   }
+
   &.created,
   &.queued {
     color: $grey-purple;
@@ -20,9 +21,11 @@
   &.Final {
     color: $completed-blue;
   }
+
   &.aborted {
     color: $completed-blue;
   }
+
   &.running {
     color: $running-green;
   }
@@ -35,6 +38,7 @@
   &.Uploading {
     color: $running-green;
   }
+
   &.published {
     color: $neon-yellow;
     line-height: 23px;

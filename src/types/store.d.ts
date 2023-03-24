@@ -1,5 +1,5 @@
 import { Group } from "@/types/project"
-import { CurrentUser } from "@/types/user"
+import { CurrentUser, User } from "@/types/user"
 import { RouteObject } from "@/types/router"
 
 export interface ThemeConfigState {
@@ -14,6 +14,7 @@ export interface AppStoreState {
   themeConfig: ThemeConfigState
   menuList: Array<RouteObject>
   user?: CurrentUser
+  users: User[]
 }
 
 export interface ProjectConfState {
@@ -22,6 +23,7 @@ export interface ProjectConfState {
   groupId: string
   orderBy: string
   sortOrder: string
+  sharedProjects: { id: string }[]
 }
 
 export interface StoreState {

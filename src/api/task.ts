@@ -2,10 +2,6 @@ import { MultiFieldPatternData } from "@/types/common"
 import { TaskStatusEnum } from "@/types/enums"
 import { Task } from "@/types/task"
 import REQ from "@/api/index"
-import {
-  ProjectsGetAllExRequest,
-  ProjectsGetAllExResponse,
-} from "@/api/project"
 
 export interface TasksGetAllExRequest {
   id?: Array<string>

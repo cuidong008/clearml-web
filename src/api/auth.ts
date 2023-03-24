@@ -1,8 +1,4 @@
-import REQ from "@/api"
 import axios from "axios"
-
-export const AUTH_TOKEN_KEY = "Authorization"
-export const PASSWORD_KEY = "UserCredential"
 
 export type UserCredentials = {
   username: string
