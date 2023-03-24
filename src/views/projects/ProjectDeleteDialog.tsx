@@ -3,6 +3,7 @@ import { ReadyForDeletion } from "@/types/project"
 import { useEffect, useState } from "react"
 import { projectDelete } from "@/api/project"
 import { getUrlsPerProvider } from "@/utils/global"
+import styles from "./index.module.scss"
 
 export const ProjectDeleteDialog = (props: {
   show: boolean
@@ -87,12 +88,11 @@ export const ProjectDeleteDialog = (props: {
       readyForDeletion.experiments[statsSubset] > 0
         ? `${readyForDeletion.experiments[statsSubset]} ${experimentCaption} `
         : ""
-    }
-          ${
-            readyForDeletion.models[statsSubset] > 0
-              ? readyForDeletion.models[statsSubset] + " models "
-              : ""
-          }`
+    }${
+      readyForDeletion.models[statsSubset] > 0
+        ? readyForDeletion.models[statsSubset] + " models "
+        : ""
+    }`
   return (
     <Modal
       open={show}
@@ -113,16 +113,7 @@ export const ProjectDeleteDialog = (props: {
             <div className="i-alert" style={{ width: 60, height: 60 }}></div>
           )}
         </div>
-        <span
-          style={{
-            fontSize: 24,
-            fontWeight: 300,
-            marginTop: 10,
-            color: "#8492c2",
-            display: "block",
-            fontFamily: "Heebo,sans-serif",
-          }}
-        >
+        <span className={styles.projectDialogTitle}>
           {isDeletable === 0
             ? ""
             : isDeletable === 1
@@ -156,7 +147,7 @@ export const ProjectDeleteDialog = (props: {
             )}
             {isDeletable === 1 && (
               <div style={{ padding: "30px 0" }}>
-                <div className="text-center">
+                <div style={{ textAlign: "center" }}>
                   Are you sure you want to delete &quot;
                   <b>{readyForDeletion?.project.name}</b>&quot;?
                 </div>
