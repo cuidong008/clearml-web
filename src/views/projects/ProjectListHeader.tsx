@@ -95,15 +95,15 @@ export const ProjectListHeader = () => {
               ),
               value: "public",
             },
-            {
-              label: (
-                <div className={styles.filterItem}>
-                  <i className={classNames("al-icon", "al-ico-publish")} />
-                  Shared Work
-                </div>
-              ),
-              value: "share",
-            },
+            // {
+            //   label: (
+            //     <div className={styles.filterItem}>
+            //       <i className={classNames("al-icon", "al-ico-publish")} />
+            //       Shared Work
+            //     </div>
+            //   ),
+            //   value: "share",
+            // },
           ]}
         />
         {groups.length > 0 && showScope === "public" && (

@@ -152,13 +152,13 @@ export const ProjectCard = (props: {
                               label: "Rename",
                               onClick: startRename,
                             },
-                            {
-                              key: "share",
-                              icon: <ShareAltOutlined />,
-                              label: "Share",
-                              disabled: true,
-                              onClick: startShare,
-                            },
+                            // {
+                            //   key: "share",
+                            //   icon: <ShareAltOutlined />,
+                            //   label: "Share",
+                            //   disabled: true,
+                            //   onClick: startShare,
+                            // },
                             {
                               key: "delete",
                               icon: <DeleteFilled />,
