@@ -26,13 +26,16 @@ export const Dashboard = () => {
   const [newProjDialog, setNewProjDialog] = useState(false)
   const navigate = useNavigate()
 
-  const fetchProjects = useCallback(() => {
+  const fetchRecentProjects = useCallback(() => {
     setProjects([])
     let active_user: Record<string, any> = {}
     if (showScope === "public" && groupId === "") {
       return
     }
     if (showScope === "my" && !user) {
+      return
+    }
+    if (showScope === "share" && !sharedProjects.length) {
       return
     }
     active_user =
@@ -71,16 +74,8 @@ export const Dashboard = () => {
       setProjects(data.projects ?? [])
     })
   }, [showScope, orderBy, sortOrder, groupId, sharedProjects])
-  useEffect(() => {
-    fetchProjects()
-    getRecentTasks()
-  }, [])
 
-  useEffect(() => {
-    fetchProjects()
-  }, [orderBy, sortOrder, groupId, showScope, sharedProjects])
-
-  function getRecentTasks() {
+  const fetchTaskRecent = useCallback(() => {
     let active_user: Record<string, any> = {}
     if (showScope === "public" && groupId === "") {
       return
@@ -88,12 +83,19 @@ export const Dashboard = () => {
     if (showScope === "my" && !user) {
       return
     }
+    if (showScope === "share" && !sharedProjects.length) {
+      return
+    }
     active_user =
       showScope === "my"
         ? { user: [user ? user.id : ""] }
         : showScope === "public"
         ? { user: [groupId] }
-        : {}
+        : {
+            project: sharedProjects.length
+              ? sharedProjects.map((r) => r.id)
+              : ["none"],
+          }
     getAllTasksEx({
       page: 0,
       page_size: 5,
@@ -125,7 +127,6 @@ export const Dashboard = () => {
         "started",
         "project.name",
       ],
-      system_tags: ["-archived", "-pipeline"],
       allow_public: false,
     }).then(({ data, meta }) => {
       if (meta.result_code !== 200) {
@@ -134,7 +135,17 @@ export const Dashboard = () => {
       }
       setTasks(data.tasks ?? [])
     })
-  }
+  }, [user, groupId, showScope, sharedProjects])
+
+  useEffect(() => {
+    fetchRecentProjects()
+    fetchTaskRecent()
+  }, [])
+
+  useEffect(() => {
+    fetchRecentProjects()
+    fetchTaskRecent()
+  }, [orderBy, sortOrder, groupId, showScope, sharedProjects])
 
   return (
     <div className={styles.dashboardBody}>
@@ -142,7 +153,7 @@ export const Dashboard = () => {
         show={newProjDialog}
         onClose={(e) => {
           setNewProjDialog(false)
-          e && fetchProjects()
+          e && fetchRecentProjects()
         }}
       />
       <div className={styles.recent}>

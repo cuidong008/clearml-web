@@ -20,6 +20,11 @@ export default function project(state = initState, action: AnyAction) {
         break
       case types.PROJECT_CHANGE_SCOPE:
         draftState.showScope = action.scope
+        if (action.scope === "my") {
+          draftState.groups = []
+          draftState.groupId = ""
+          draftState.sharedProjects = []
+        }
         break
       case types.PROJECT_CHANGE_ORDER:
         draftState.orderBy = action.orderBy
