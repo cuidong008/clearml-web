@@ -1,38 +1,27 @@
 import { Select, Space } from "antd"
-import { connect } from "react-redux"
+import { useDispatch } from "react-redux"
+import { StoreState } from "@/types/store"
+import classNames from "classnames"
+import styles from "./index.module.scss"
+import { MouseEvent } from "react"
+import { useStoreSelector } from "@/store"
 import {
   changeScope,
   setProjectGroup,
   setProjectOrder,
   setProjectSort,
 } from "@/store/project/project.actions"
-import { ProjectConfState, StoreState } from "@/types/store"
-import classNames from "classnames"
-import styles from "./index.module.scss"
-import { MouseEvent } from "react"
+import { ThunkActionDispatch } from "redux-thunk"
 
-const ProjectListHeader = (
-  props: ProjectConfState & {
-    setProjectOrder: (order: string) => void
-    changeScope: (scope: string) => void
-    setProjectSort: (sort: string) => void
-    setProjectGroup: (group: string) => void
-  },
-) => {
-  const {
-    showScope,
-    sortOrder,
-    orderBy,
-    groups,
-    groupId,
-    changeScope,
-    setProjectOrder,
-    setProjectSort,
-    setProjectGroup,
-  } = props
+export const ProjectListHeader = () => {
+  const { showScope, sortOrder, orderBy, groups, groupId } = useStoreSelector(
+    (state: StoreState) => state.project,
+  )
+
+  const dispatch = useDispatch<ThunkActionDispatch<any>>()
 
   function reverseOrder(e: MouseEvent<HTMLElement>) {
-    setProjectSort(sortOrder === "asc" ? "desc" : "asc")
+    dispatch(setProjectSort(sortOrder === "asc" ? "desc" : "asc"))
     e.stopPropagation()
   }
 
@@ -42,7 +31,7 @@ const ProjectListHeader = (
         <Select
           bordered={false}
           value={orderBy}
-          onChange={(e) => setProjectOrder(e)}
+          onChange={(e) => dispatch(setProjectOrder(e))}
           dropdownStyle={{ width: "auto" }}
           options={[
             {
@@ -86,7 +75,7 @@ const ProjectListHeader = (
           bordered={false}
           value={showScope}
           dropdownStyle={{ minWidth: 130 }}
-          onChange={(e) => changeScope(e)}
+          onChange={(e) => dispatch(changeScope(e))}
           options={[
             {
               label: (
@@ -122,7 +111,7 @@ const ProjectListHeader = (
             size="small"
             dropdownStyle={{ minWidth: 130 }}
             bordered={false}
-            onChange={(g) => setProjectGroup(g)}
+            onChange={(g) => dispatch(setProjectGroup(g))}
             options={groups.map((g) => ({
               label: <div className={styles.filterItem}>{g.name}</div>,
               value: g.id,
@@ -134,14 +123,3 @@ const ProjectListHeader = (
     </div>
   )
 }
-const mapStateToProps = (state: StoreState) => state.project
-const mapDispatchToProps = {
-  changeScope,
-  setProjectOrder,
-  setProjectSort,
-  setProjectGroup,
-}
-export const ProjectListHeaderCom = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ProjectListHeader)

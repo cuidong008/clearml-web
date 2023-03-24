@@ -1,28 +1,29 @@
-import Logo from "@/layout/sidebar/Logo"
+import { Logo } from "@/layout/sidebar/Logo"
 import { searchRouter } from "@/router/utils"
-import { setMenuList } from "@/store/app/app.actions"
 import type { MenuProps } from "antd"
 import { Menu, Spin } from "antd"
 import React, { useEffect, useState } from "react"
-import { connect } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 import { rootRouter } from "@/router"
 import styles from "./index.module.scss"
+import { useStoreSelector } from "@/store"
+import { useDispatch } from "react-redux"
+import { setMenuList } from "@/store/app/app.actions"
 
-const LayoutMenu = (props: {
-  menuList?: any
-  getUserDetail?: any
-  sidebarCollapsed?: any
-  setBreadCrumbList?: any
-  setAuthRouter?: any
-  setMenuList?: any
-}) => {
+export const LayoutMenu = (props: { setBreadCrumbList?: any }) => {
   let init = false
   const { pathname } = useLocation()
-  const { sidebarCollapsed, setBreadCrumbList, setMenuList } = props
+  const sidebarCollapsed = useStoreSelector(
+    (state) => state.app.sidebarCollapsed,
+  )
+  const menuList = useStoreSelector((state) => state.app.menuList)
+  const { setBreadCrumbList } = props
   const [selectedKeys, setSelectedKeys] = useState<string[]>([pathname])
   const [menus, setMenus] = useState<MenuItem[]>([])
   const [loading, setLoading] = useState(false)
+
+  const dispatch = useDispatch()
+
   // 刷新页面菜单保持高亮
   useEffect(() => {
     const key = `/${pathname.split("/")[1]}`
@@ -134,7 +135,7 @@ const LayoutMenu = (props: {
     try {
       setMenus(deepLoopFloat(rootRouter))
       setBreadCrumbList(findAllBreadcrumb(rootRouter))
-      setMenuList(rootRouter)
+      dispatch(setMenuList(rootRouter))
     } finally {
       setLoading(false)
     }
@@ -149,7 +150,7 @@ const LayoutMenu = (props: {
   // 点击当前菜单跳转页面
   const navigate = useNavigate()
   const clickMenu: MenuProps["onClick"] = ({ key }: { key: string }) => {
-    const route = searchRouter(key, props.menuList)
+    const route = searchRouter(key, menuList)
     if (route.iframe) {
       window.open(route.path, "_blank")
       return
@@ -175,7 +176,3 @@ const LayoutMenu = (props: {
     </div>
   )
 }
-
-const mapStateToProps = (state: any) => state.app
-const mapDispatchToProps = { setMenuList }
-export default connect(mapStateToProps, mapDispatchToProps)(LayoutMenu)

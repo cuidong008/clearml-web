@@ -1,33 +1,34 @@
 import { Layout } from "antd"
-import { connect } from "react-redux"
 import { Route, Routes } from "react-router-dom"
 import "./index.scss"
 import { useEffect, useState } from "react"
 import { AuthRouter, rootRouter } from "@/router"
-import NavHeader from "@/layout/nav"
-import LayoutMenu from "@/layout/sidebar"
+import { NavHeader } from "@/layout/nav"
+import { LayoutMenu } from "@/layout/sidebar"
 import { getLoginUser } from "@/store/app/app.actions"
-import { AppStoreState, StoreState } from "@/types/store"
-import { CurrentUser } from "@/types/user"
+import { useStoreSelector } from "@/store"
+import { ThunkActionDispatch } from "redux-thunk"
+import { useDispatch } from "react-redux"
 
 const { Header, Sider, Content } = Layout
 
-const LayoutIndex = (
-  props: AppStoreState & {
-    getLoginUser: () => Promise<CurrentUser | undefined>
-  },
-) => {
-  const { themeConfig, getLoginUser, user } = props
+export const LayoutIndex = () => {
+  const sidebarCollapsed = useStoreSelector(
+    (state) => state.app.sidebarCollapsed,
+  )
+  const themeConfig = useStoreSelector((state) => state.app.themeConfig)
+  const user = useStoreSelector((state) => state.app.user)
+  const dispatch = useDispatch<ThunkActionDispatch<any>>()
   const [breadCrumbList, setBreadCrumbList] = useState<Record<any, any>>({})
 
   useEffect(() => {
-    getLoginUser().then()
-  }, [])
+    dispatch(getLoginUser())
+  }, [dispatch])
 
   return (
     <Layout style={{ minHeight: "100vh", minWidth: "100vw" }}>
       <Sider
-        collapsed={props.sidebarCollapsed}
+        collapsed={sidebarCollapsed}
         theme={themeConfig.isDark ? "dark" : "light"}
       >
         <LayoutMenu setBreadCrumbList={setBreadCrumbList} />
@@ -75,6 +76,3 @@ const LayoutIndex = (
     </Layout>
   )
 }
-
-const mapStateToProps = (state: StoreState) => state.app
-export default connect(mapStateToProps, { getLoginUser })(LayoutIndex)

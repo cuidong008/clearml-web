@@ -1,9 +1,12 @@
 import logo from "@/assets/icons/c-logo.svg"
-import { connect } from "react-redux"
 import styles from "./index.module.scss"
+import { useStoreSelector } from "@/store"
 
-const Logo = (props: any) => {
-  const { sidebarCollapsed, themeConfig } = props
+export const Logo = () => {
+  const sidebarCollapsed = useStoreSelector(
+    (state) => state.app.sidebarCollapsed,
+  )
+  const themeConfig = useStoreSelector((state) => state.app.themeConfig)
   return (
     <div
       className={styles.logoBox}
@@ -16,6 +19,3 @@ const Logo = (props: any) => {
     </div>
   )
 }
-
-const mapStateToProps = (state: any) => state.app
-export default connect(mapStateToProps)(Logo)

@@ -1,19 +1,18 @@
 import useTheme from "@/hooks/useTheme"
-import { setLanguage } from "@/store/app/app.actions"
 import { ConfigProvider, theme } from "antd"
 import enUS from "antd/es/locale/en_US"
 import zhCN from "antd/es/locale/zh_CN"
 import i18n from "i18next"
 import { useEffect, useState } from "react"
-import { connect } from "react-redux"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import LayoutIndex from "@/layout"
+import { LayoutIndex } from "@/layout"
 import { Login } from "@/layout/login"
-import { StoreState } from "@/types/store"
+import { useStoreSelector } from "@/store"
 
 const { darkAlgorithm, defaultAlgorithm } = theme
-const App = (props: any) => {
-  const { language, themeConfig, setLanguage } = props
+export const App = () => {
+  const themeConfig = useStoreSelector((state) => state.app.themeConfig)
+  const language = useStoreSelector((state) => state.app.language)
   const [i18nLocale, setI18nLocale] = useState(enUS)
 
   // 全局使用主题
@@ -24,8 +23,6 @@ const App = (props: any) => {
     // 如果 redux 中有默认语言就设置成 redux 的默认语言，没有默认语言就设置成浏览器默认语言
     if (language && language == "zh") return setI18nLocale(zhCN)
     if (language && language == "en") return setI18nLocale(enUS)
-    // if (getBrowserLang() == "zh") return setI18nLocale(zhCN);
-    // if (getBrowserLang() == "en") return setI18nLocale(enUS);
   }
 
   useEffect(() => {
@@ -33,7 +30,7 @@ const App = (props: any) => {
     i18n.changeLanguage(language)
 
     setAntdLanguage()
-  }, [language])
+  }, [setAntdLanguage, language])
   return (
     <ConfigProvider
       locale={i18nLocale}
@@ -64,6 +61,3 @@ const App = (props: any) => {
     </ConfigProvider>
   )
 }
-const mapStateToProps = (state: StoreState) => state.app
-const mapDispatchToProps = { setLanguage }
-export default connect(mapStateToProps, mapDispatchToProps)(App)

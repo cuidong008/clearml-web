@@ -1,6 +1,5 @@
-import Hamburger from "@/layout/nav/Hamburger"
-import ThemeToggle from "@/components/ThemeToggle"
-import { toggleSideBar } from "@/store/app/app.actions"
+import { Hamburger } from "@/layout/nav/Hamburger"
+import { ThemeToggle } from "@/components/ThemeToggle"
 import {
   FullscreenExitOutlined,
   FullscreenOutlined,
@@ -8,12 +7,13 @@ import {
 } from "@ant-design/icons"
 import { Space } from "antd"
 import { useState } from "react"
-import { connect } from "react-redux"
 import { useLocation } from "react-router-dom"
 import Breadcrumbs from "./Breadcrumbs"
 import styles from "./index.module.scss"
 
-const NavHeader = (props: { breadCrumbList: Record<string, Array<any>> }) => {
+export const NavHeader = (props: {
+  breadCrumbList: Record<string, Array<any>>
+}) => {
   const { breadCrumbList } = props
   const { pathname } = useLocation()
   const [full, setFull] = useState(false)
@@ -61,7 +61,3 @@ const NavHeader = (props: { breadCrumbList: Record<string, Array<any>> }) => {
     </div>
   )
 }
-
-const mapStateToProps = (state: any) => state.app
-const mapDispatchToProps = { toggleSideBar }
-export default connect(mapStateToProps, mapDispatchToProps)(NavHeader)
