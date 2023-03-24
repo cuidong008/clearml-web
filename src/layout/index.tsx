@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { AuthRouter, rootRouter } from "@/router"
 import { NavHeader } from "@/layout/nav"
 import { LayoutMenu } from "@/layout/sidebar"
-import { getLoginUser } from "@/store/app/app.actions"
+import { getAllUser, getLoginUser } from "@/store/app/app.actions"
 import { useStoreSelector } from "@/store"
 import { ThunkActionDispatch } from "redux-thunk"
 import { useDispatch } from "react-redux"
@@ -23,6 +23,7 @@ export const LayoutIndex = () => {
 
   useEffect(() => {
     dispatch(getLoginUser())
+    dispatch(getAllUser())
   }, [dispatch])
 
   return (

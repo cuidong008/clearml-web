@@ -156,6 +156,7 @@ export const ProjectCard = (props: {
                               key: "share",
                               icon: <ShareAltOutlined />,
                               label: "Share",
+                              disabled: true,
                               onClick: startShare,
                             },
                             {

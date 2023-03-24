@@ -1,4 +1,4 @@
-import logo from "@/assets/icons/c-logo.svg"
+import logo from "@/assets/icons/logo.svg"
 import styles from "./index.module.scss"
 import { useStoreSelector } from "@/store"
 

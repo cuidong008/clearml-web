@@ -2,8 +2,8 @@ import * as types from "./app.actions-types"
 import { ThemeConfigState } from "@/types/store"
 import { RouteObject } from "@/types/router"
 import { ThunkActionDispatch } from "redux-thunk"
-import { CurrentUser } from "@/types/user"
-import { getCurrentUser } from "@/api/user"
+import { CurrentUser, User } from "@/types/user"
+import { getCurrentUser, getUserAll } from "@/api/user"
 import { message } from "antd"
 
 export const setLanguage = (language: string) => {
@@ -39,6 +39,13 @@ export const setUser = (user?: CurrentUser) => {
   }
 }
 
+export const setAllUser = (users: User[]) => {
+  return {
+    type: types.SET_USER_LIST,
+    users,
+  }
+}
+
 export const getLoginUser =
   () =>
   (dispatch: ThunkActionDispatch<any>): Promise<CurrentUser | undefined> => {
@@ -54,5 +61,24 @@ export const getLoginUser =
           window.location.href = "/login"
           reject(err)
         })
+    })
+  }
+
+export const getAllUser =
+  () =>
+  (dispatch: ThunkActionDispatch<any>): Promise<User[] | undefined> => {
+    return new Promise((resolve, reject) => {
+      getUserAll({
+        only_fields: ["id", "name"],
+        page_size: 10000,
+        page: 0,
+      }).then(({ data, meta }) => {
+        if (meta.result_code !== 200) {
+          message.error(meta.result_msg)
+          reject()
+        }
+        dispatch(setAllUser(data.users ?? []))
+        resolve(data.users)
+      })
     })
   }
