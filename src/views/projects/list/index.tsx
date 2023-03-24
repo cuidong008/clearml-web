@@ -1,4 +1,4 @@
-import { ProjectListHeaderCom } from "@/views/projects/ProjectListHeader"
+import { ProjectListHeader } from "@/views/projects/ProjectListHeader"
 import styles from "./index.module.scss"
 import { Button, message } from "antd"
 import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog"
@@ -9,16 +9,19 @@ import {
   projectUpdate,
   projectValidateDelete,
 } from "@/api/project"
-import { ProjectConfState, StoreState } from "@/types/store"
-import { connect } from "react-redux"
 import { Project, ReadyForDeletion } from "@/types/project"
-import { CurrentUser } from "@/types/user"
 import { ProjectDeleteDialog } from "@/views/projects/ProjectDeleteDialog"
+import { ProjectShareDialog } from "@/views/projects/ProjectShareDialog"
+import { useStoreSelector } from "@/store"
+import { StoreState } from "@/types/store"
 
-const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
-  const { showScope, sortOrder, orderBy, groupId, user } = props
+export const ProjectList = () => {
+  const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
+    useStoreSelector((state: StoreState) => state.project)
+  const user = useStoreSelector((state) => state.app.user)
   const [newProjDialog, setNewProjDialog] = useState(false)
   const [delProjDialog, setDelProjDialog] = useState(false)
+  const [shareProjDialog, setShareProjDialog] = useState(false)
   const [scrollId, setScrollId] = useState<string>()
   const [hasMore, setHasMore] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
@@ -34,12 +37,19 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
       if (showScope === "my" && !user) {
         return
       }
+      if (showScope === "share" && !sharedProjects.length) {
+        return
+      }
       active_user =
         showScope === "my"
           ? { active_users: [user ? user.id : ""] }
           : showScope === "public"
           ? { active_users: [groupId] }
-          : {}
+          : {
+              id: sharedProjects.length
+                ? sharedProjects.map((r) => r.id)
+                : ["none"],
+            }
       getAllProjectsEx({
         stats_for_state: "active",
         include_stats: true,
@@ -78,7 +88,16 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
         }
       })
     },
-    [projects, user, showScope, scrollId, orderBy, sortOrder, groupId],
+    [
+      projects,
+      user,
+      showScope,
+      scrollId,
+      orderBy,
+      sortOrder,
+      groupId,
+      sharedProjects,
+    ],
   )
 
   const fetchDataRef = useRef(fetchProjects)
@@ -93,7 +112,7 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
 
   useEffect(() => {
     fetchDataRef.current(true)
-  }, [orderBy, sortOrder, groupId, showScope])
+  }, [orderBy, sortOrder, groupId, showScope, sharedProjects])
 
   function validateProjectDel(project: Project) {
     projectValidateDelete({ project: project.id })
@@ -138,6 +157,9 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
         }
         break
       case "share":
+        if (project) {
+          setShareProjDialog(true)
+        }
         break
       case "delete":
         if (project) {
@@ -191,9 +213,15 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
           e && fetchProjects(true)
         }}
       />
+      <ProjectShareDialog
+        show={shareProjDialog}
+        onClose={(e) => {
+          setShareProjDialog(false)
+        }}
+      />
       <div className={styles.listBody}>
         <header className={styles.header}>
-          <ProjectListHeaderCom />
+          <ProjectListHeader />
           <Button
             icon={<i className="al-icon al-ico-add" />}
             onClick={() => setNewProjDialog(true)}
@@ -219,8 +247,3 @@ const ProjectList = (props: ProjectConfState & { user?: CurrentUser }) => {
     </div>
   )
 }
-const mapStateToProps = (state: StoreState) => ({
-  ...state.project,
-  user: state.app.user,
-})
-export default connect(mapStateToProps, {})(ProjectList)
