@@ -27,7 +27,5 @@ export function getCurrentUser() {
 }
 
 export function getUserAll(request: UsersGetAllExRequest) {
-  return REQ.post<UsersGetAllExResponse>("/users.get_all_ex", {
-    get_supported_features: true,
-  })
+  return REQ.post<UsersGetAllExResponse>("/users.get_all_ex", request)
 }
