@@ -7,6 +7,7 @@ import WorkerAndQueues from "@/views/workerAndQueues"
 import NotAuth from "@/components/errors/403"
 import NotFound from "@/components/errors/404"
 import NotNetwork from "@/components/errors/500"
+import { Overview } from "@/views/projects/overview"
 
 export const AuthRouter = (props: { children: JSX.Element }) => {
   const { children } = props
@@ -50,8 +51,18 @@ export const rootRouter: Array<RouteObject> = [
     children: [
       {
         path: ":projId/experiments",
-        name: "a",
-        element: <div id="2"></div>,
+        name: "experiments",
+        element: <div id="1"></div>,
+      },
+      {
+        path: ":projId/overview",
+        name: "overview",
+        element: <Overview />,
+      },
+      {
+        path: ":projId/models",
+        name: "models",
+        element: <div id="3"></div>,
       },
     ],
   },

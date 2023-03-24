@@ -178,7 +178,11 @@ export const Dashboard = () => {
           {projects.map((p) => (
             <div
               key={p.id}
-              onClick={() => navigate(`/projects/${p.id}/experiments`)}
+              onClick={() =>
+                navigate(`/projects/${p.id}/experiments`, {
+                  state: { target: "experiments" },
+                })
+              }
             >
               <ProjectCard project={p} />
             </div>

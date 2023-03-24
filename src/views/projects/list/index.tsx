@@ -14,6 +14,7 @@ import { ProjectDeleteDialog } from "@/views/projects/ProjectDeleteDialog"
 import { ProjectShareDialog } from "@/views/projects/ProjectShareDialog"
 import { useStoreSelector } from "@/store"
 import { StoreState } from "@/types/store"
+import { useNavigate } from "react-router-dom"
 
 export const ProjectList = () => {
   const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
@@ -27,6 +28,7 @@ export const ProjectList = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const [selectProject, setSelectProject] = useState<Project>()
   const [readyDelete, setReadyDelete] = useState<ReadyForDeletion>()
+  const navigate = useNavigate()
 
   const fetchProjects = useCallback(
     (reload: boolean) => {
@@ -229,14 +231,22 @@ export const ProjectList = () => {
             NEW PROJECT
           </Button>
         </header>
-        {projects.map((r, i) => (
-          <ProjectCard
-            project={r}
+        {projects.map((r) => (
+          <div
             key={r.id}
-            editProjId={selectProject?.id}
-            showMenu={showScope === "my"}
-            dispatch={projectEditAction}
-          />
+            onClick={() =>
+              navigate(`/projects/${r.id}/experiments`, {
+                state: { target: "experiments" },
+              })
+            }
+          >
+            <ProjectCard
+              project={r}
+              editProjId={selectProject?.id}
+              showMenu={showScope === "my"}
+              dispatch={projectEditAction}
+            />
+          </div>
         ))}
         {hasMore && !!scrollId && (
           <div className={styles.loadMore}>
