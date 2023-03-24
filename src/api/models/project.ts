@@ -103,3 +103,7 @@ export interface ProjectsValidateDeleteResponse {
   models?: number
   non_archived_models?: number
 }
+
+export interface ProjectsSharedGetAllResponse {
+  project_list: { id: string }[]
+}

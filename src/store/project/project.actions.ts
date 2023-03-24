@@ -1,5 +1,5 @@
 import * as types from "@/store/project/project.actions-types"
-import { projectGroupsGetAll } from "@/api/project"
+import { projectGroupsGetAll, projectsShareGetAll } from "@/api/project"
 import { Group } from "@/types/project"
 import { ThunkActionDispatch } from "redux-thunk"
 
@@ -18,6 +18,9 @@ export const changeScope =
     }).then((scope) => {
       if (scope === "public") {
         dispatch(getProjectGroups())
+      }
+      if (scope === "share") {
+        dispatch(getProjectShare())
       }
     })
   }
@@ -48,6 +51,19 @@ export const resetProjectGroup = () => {
   }
 }
 
+export const resetProjectShared = () => {
+  return {
+    type: types.PROJECT_RESET_SHARED,
+  }
+}
+
+export const setProjectShared = (shared: { id: string }[]) => {
+  return {
+    type: types.PROJECT_SET_SHARED,
+    shared,
+  }
+}
+
 export const setProjectGroup = (groupId: string) => {
   return {
     type: types.PROJECT_SET_GROUP,
@@ -64,6 +80,19 @@ export const getProjectGroups = () => (dispatch: ThunkActionDispatch<any>) => {
         if (data.group_list.length) {
           dispatch(setProjectGroup(data.group_list[0].id))
         }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+export const getProjectShare = () => (dispatch: ThunkActionDispatch<any>) => {
+  dispatch(resetProjectShared())
+  return new Promise((resolve, reject) => {
+    projectsShareGetAll()
+      .then(({ data }) => {
+        dispatch(setProjectShared(data.project_list))
       })
       .catch((error) => {
         reject(error)

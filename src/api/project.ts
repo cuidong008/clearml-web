@@ -7,6 +7,7 @@ import {
   ProjectsDeleteResponse,
   ProjectsGetAllExRequest,
   ProjectsGetAllExResponse,
+  ProjectsSharedGetAllResponse,
   ProjectsUpdateRequest,
   ProjectsUpdateResponse,
   ProjectsValidateDeleteRequest,
@@ -23,6 +24,10 @@ export function projectCreate(request: ProjectsCreateRequest) {
 
 export function projectGroupsGetAll() {
   return REQ.get<ProjectGroupsGetAllResponse>("/dr_groups.get_all_ex")
+}
+
+export function projectsShareGetAll() {
+  return REQ.get<ProjectsSharedGetAllResponse>("/dr_projects.get_shared")
 }
 
 export function projectUpdate(request: ProjectsUpdateRequest) {

@@ -12,13 +12,14 @@ import { TaskIconLabel } from "@/components/TaskIconLabel"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
 import dayjs from "dayjs"
 import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog"
-import { ProjectListHeaderCom } from "@/views/projects/ProjectListHeader"
-import { ProjectConfState, StoreState } from "@/types/store"
-import { connect } from "react-redux"
-import { CurrentUser } from "@/types/user"
+import { ProjectListHeader } from "@/views/projects/ProjectListHeader"
+import { StoreState } from "@/types/store"
+import { useStoreSelector } from "@/store"
 
-const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
-  const { showScope, sortOrder, orderBy, groupId, user } = props
+export const Dashboard = () => {
+  const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
+    useStoreSelector((state: StoreState) => state.project)
+  const user = useStoreSelector((state) => state.app.user)
   const [projects, setProjects] = useState<Project[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
   const ref = useRef<HTMLDivElement>(null)
@@ -39,7 +40,11 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
         ? { active_users: [user ? user.id : ""] }
         : showScope === "public"
         ? { active_users: [groupId] }
-        : {}
+        : {
+            id: sharedProjects.length
+              ? sharedProjects.map((r) => r.id)
+              : ["none"],
+          }
     getAllProjectsEx({
       stats_for_state: "active",
       include_stats: true,
@@ -65,7 +70,7 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
       }
       setProjects(data.projects ?? [])
     })
-  }, [showScope, orderBy, sortOrder, groupId])
+  }, [showScope, orderBy, sortOrder, groupId, sharedProjects])
   useEffect(() => {
     fetchProjects()
     getRecentTasks()
@@ -73,7 +78,7 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
 
   useEffect(() => {
     fetchProjects()
-  }, [orderBy, sortOrder, groupId, showScope])
+  }, [orderBy, sortOrder, groupId, showScope, sharedProjects])
 
   function getRecentTasks() {
     let active_user: Record<string, any> = {}
@@ -146,7 +151,7 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
             <div className={styles.recentTitle}>
               RECENT PROJECTS
               <Link to={"/projects"}>VIEW ALL</Link>
-              <ProjectListHeaderCom />
+              <ProjectListHeader />
             </div>
             <div>
               {projects.length > 3 && (
@@ -256,9 +261,3 @@ const Dashboard = (props: ProjectConfState & { user?: CurrentUser }) => {
     </div>
   )
 }
-
-const mapStateToProps = (state: StoreState) => ({
-  ...state.project,
-  user: state.app.user,
-})
-export default connect(mapStateToProps, {})(Dashboard)

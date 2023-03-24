@@ -9,6 +9,7 @@ const initState: ProjectConfState = {
   sortOrder: "desc",
   groups: [],
   groupId: "",
+  sharedProjects: [],
 }
 
 export default function project(state = initState, action: AnyAction) {
@@ -32,6 +33,12 @@ export default function project(state = initState, action: AnyAction) {
         break
       case types.PROJECT_SET_GROUP:
         draftState.groupId = action.groupId
+        break
+      case types.PROJECT_RESET_SHARED:
+        draftState.sharedProjects = []
+        break
+      case types.PROJECT_SET_SHARED:
+        draftState.sharedProjects = action.shared
         break
       default:
         return draftState
