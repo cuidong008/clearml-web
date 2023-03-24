@@ -1,0 +1,105 @@
+.rc-md-editor {
+  border-radius: 3px;
+  border-width: 2px;
+
+  .custom-html-style {
+    ol {
+      li {
+        list-style: decimal;
+      }
+    }
+
+    ul {
+      li {
+        list-style: disc;
+
+        li {
+          list-style: circle;
+        }
+      }
+    }
+  }
+
+  .rc-md-editor .drop-wrap {
+    background-color: #fff;
+    border-color: #f1f1f1 #ddd #ddd #f1f1f1;
+  }
+}
+
+html[data-type="dark"] {
+  .rc-md-editor {
+    background: $blue-800 !important;
+    border-color: $blue-300;
+    color: white;
+
+    .rc-md-navigation {
+      border-color: $blue-700;
+      background: $blue-600 !important;
+    }
+
+    .editor-container .sec-md .input {
+      background: $blue-800;
+      color: white;
+    }
+
+    .editor-container .section {
+      border-color: $blue-700;
+    }
+
+    .custom-html-style {
+      color: $blue-100;
+
+      a {
+        color: $completed-blue;
+      }
+
+      hr {
+        border-top: 1px solid $blue-200;
+      }
+
+      ol {
+        li {
+          text-decoration-color: $blue-200;
+        }
+      }
+
+      ul {
+        li {
+          text-decoration-color: $blue-200;
+        }
+      }
+
+      code,
+      pre {
+        background-color: $blue-600;
+      }
+
+      blockquote {
+        color: $blue-200;
+        border-left: 10px solid $grey-purple;
+      }
+
+      table {
+        border: 1px solid $blue-300;
+      }
+
+      table tr {
+        border: 1px solid $blue-300;
+      }
+
+      table th {
+        border: 1px solid $blue-300;
+        background-color: $blue-650;
+      }
+
+      table td {
+        border: 1px solid $blue-300;
+      }
+    }
+
+    .rc-md-editor .drop-wrap {
+      background-color: #fff;
+      border-color: #f1f1f1 #ddd #ddd #f1f1f1;
+    }
+  }
+}
