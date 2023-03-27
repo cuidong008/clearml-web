@@ -15,11 +15,14 @@ import { ProjectShareDialog } from "@/views/projects/ProjectShareDialog"
 import { useStoreSelector } from "@/store"
 import { StoreState } from "@/types/store"
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { setProjectSelected } from "@/store/project/project.actions"
 
 export const ProjectList = () => {
   const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
     useStoreSelector((state: StoreState) => state.project)
   const user = useStoreSelector((state) => state.app.user)
+  const dispatch = useDispatch()
   const [newProjDialog, setNewProjDialog] = useState(false)
   const [delProjDialog, setDelProjDialog] = useState(false)
   const [shareProjDialog, setShareProjDialog] = useState(false)
@@ -234,11 +237,12 @@ export const ProjectList = () => {
         {projects.map((r) => (
           <div
             key={r.id}
-            onClick={() =>
+            onClick={() => {
               navigate(`/projects/${r.id}/experiments`, {
                 state: { target: "experiments" },
               })
-            }
+              dispatch(setProjectSelected(r))
+            }}
           >
             <ProjectCard
               project={r}
