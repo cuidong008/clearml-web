@@ -89,3 +89,5 @@ export const EXPERIMENTS_TYPE_LABELS = {
   [TaskTypeEnum.Custom]: "Custom",
 }
 export type CloudProviders = "fs" | "gc" | "s3" | "azure" | "misc"
+
+export type MetricValueType = "min_value" | "max_value" | "value"
