@@ -1,14 +1,56 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 import { ProjectList } from "@/views/projects/list"
 import styles from "./index.module.scss"
-import { Tabs } from "antd"
-import { useEffect, useState } from "react"
+import { message, Tabs } from "antd"
+import { useCallback, useEffect, useState } from "react"
+import { getAllProjectsEx } from "@/api/project"
+import { setProjectSelected } from "@/store/project/project.actions"
+import { useDispatch } from "react-redux"
 
 export const Projects = () => {
   const params = useParams()
   const location = useLocation()
   const [activeKey, setActiveKey] = useState("experiments")
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const getProjectById = useCallback(
+    (pid: string) => {
+      getAllProjectsEx({
+        stats_for_state: "active",
+        include_stats: true,
+        size: 1,
+        permission_roots_only: true,
+        search_hidden: true,
+        shallow_search: true,
+        allow_public: false,
+        id: [pid],
+        only_fields: [
+          "name",
+          "company",
+          "user",
+          "created",
+          "default_output_destination",
+          "basename",
+        ],
+      }).then(({ data, meta }) => {
+        if (meta.result_code !== 200) {
+          message.error(meta.result_msg)
+          return
+        }
+        if (data.projects.length) {
+          dispatch(setProjectSelected(data.projects[0]))
+        }
+      })
+    },
+    [params],
+  )
+
+  useEffect(() => {
+    if (params["projId"]) {
+      getProjectById(params["projId"])
+    }
+  }, [getProjectById, params])
 
   useEffect(() => {
     if (location.state && location.state.target) {
@@ -29,7 +71,7 @@ export const Projects = () => {
   return (
     <div className={styles.projects}>
       {params["projId"] && (
-        <div>
+        <div className={styles.projectsBody}>
           <header className={styles.tabHeader}>
             <Tabs
               activeKey={activeKey}
