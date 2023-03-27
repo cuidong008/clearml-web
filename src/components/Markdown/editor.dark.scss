@@ -2,6 +2,10 @@
   border-radius: 3px;
   border-width: 2px;
 
+  .editor-container .sec-md .input {
+    overflow-y: auto !important;
+  }
+
   .custom-html-style {
     ol {
       li {
@@ -19,18 +23,45 @@
       }
     }
   }
+}
 
-  .rc-md-editor .drop-wrap {
-    background-color: #fff;
-    border-color: #f1f1f1 #ddd #ddd #f1f1f1;
-  }
+.cheatSheetTitle {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 10px;
+  color: #8492c2;
+  display: block;
+  font-family: Heebo, sans-serif;
+}
+
+.cheatSheetWrap {
+  padding: 12px;
+  height: 700px;
+  overflow-y: auto;
 }
 
 html[data-type="dark"] {
+  .cheatSheetWrap {
+    background: $blue-800;
+  }
+
   .rc-md-editor {
     background: $blue-800 !important;
-    border-color: $blue-300;
+    border-color: $blue-900;
     color: white;
+
+    .button-wrap .button {
+      color: $blue-200;
+
+      &:hover {
+        color: $blue-400;
+      }
+    }
+
+    .header-list .list-item:hover {
+      background: $blue-500 !important;
+      color: $blue-100 !important;
+    }
 
     .rc-md-navigation {
       border-color: $blue-700;
@@ -43,7 +74,7 @@ html[data-type="dark"] {
     }
 
     .editor-container .section {
-      border-color: $blue-700;
+      border-color: $blue-500;
     }
 
     .custom-html-style {
@@ -97,9 +128,9 @@ html[data-type="dark"] {
       }
     }
 
-    .rc-md-editor .drop-wrap {
-      background-color: #fff;
-      border-color: #f1f1f1 #ddd #ddd #f1f1f1;
+    .drop-wrap {
+      background-color: $blue-700 !important;
+      border-color: $blue-900;
     }
   }
 }

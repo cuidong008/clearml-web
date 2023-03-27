@@ -42,8 +42,8 @@
     "web-vitals": "^3.3.0"
   },
   "devDependencies": {
-    "@types/markdown-it": "^12.2.3",
     "@types/lodash": "^4.14.191",
+    "@types/markdown-it": "^12.2.3",
     "@types/node": "^16.18.18",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18.0.28",
