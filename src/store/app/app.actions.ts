@@ -3,7 +3,7 @@ import { ThemeConfigState } from "@/types/store"
 import { RouteObject } from "@/types/router"
 import { ThunkActionDispatch } from "redux-thunk"
 import { CurrentUser, User } from "@/types/user"
-import { getCurrentUser, getUserAll } from "@/api/user"
+import { getCurrentUser, getUserAll, getUserPreferences } from "@/api/user"
 import { message } from "antd"
 
 export const setLanguage = (language: string) => {
@@ -46,14 +46,22 @@ export const setAllUser = (users: User[]) => {
   }
 }
 
+export const setUserPreferences = (preferences: object) => {
+  return {
+    type: types.SET_USER_PREFERENCE,
+    preferences,
+  }
+}
+
 export const getLoginUser =
   () =>
   (dispatch: ThunkActionDispatch<any>): Promise<CurrentUser | undefined> => {
     return new Promise((resolve, reject) => {
-      getCurrentUser()
-        .then(({ data }) => {
-          dispatch(setUser(data.user))
-          resolve(data.user)
+      Promise.all([getCurrentUser(), getUserPreferences()])
+        .then(([userResp, refResp]) => {
+          dispatch(setUser(userResp.data.user))
+          dispatch(setUserPreferences(refResp.data.preferences ?? {}))
+          resolve(userResp.data.user)
         })
         .catch((err) => {
           localStorage.removeItem("authTk")

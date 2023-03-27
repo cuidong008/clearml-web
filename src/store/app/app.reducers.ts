@@ -16,6 +16,7 @@ const initState: AppStoreState = {
   menuList: [],
   user: undefined,
   users: [],
+  preferences: {},
 }
 
 export default function app(state = initState, action: AnyAction) {
@@ -38,6 +39,9 @@ export default function app(state = initState, action: AnyAction) {
         break
       case types.SET_USER_LIST:
         draftState.users = action.users
+        break
+      case types.SET_USER_PREFERENCE:
+        draftState.preferences = action.preferences
         break
       default:
         return draftState
