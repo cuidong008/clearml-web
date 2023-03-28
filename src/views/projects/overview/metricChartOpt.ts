@@ -26,7 +26,6 @@ export const option = {
       formatter: (value: number) => {
         return dayjs(value).format("DD/MM/YYYY")
       },
-      interval: 3,
     },
     min: function (value: { min: number }) {
       return value.min - 3600 * 60 * 24 * 2
@@ -48,6 +47,12 @@ export const option = {
       show: true,
     },
     scale: true,
+    min: function (value: { min: number }) {
+      return value.min - 1
+    },
+    max: function (value: { max: number }) {
+      return value.max + 1
+    },
     splitLine: {
       lineStyle: {
         color: "#aaaaaa",

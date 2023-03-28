@@ -41,18 +41,24 @@ export const MetricsSelectDialog = (props: {
     onClose(selectVariant)
   }
 
-  function getHash(val: string, field: keyof MetricVariantResult): string {
-    const variant = variants.filter((v) => v[field] === val)
+  function getHash(
+    group: string,
+    val: string,
+    field: keyof MetricVariantResult,
+  ): string {
+    const variant = variants.filter(
+      (v) => v[field] === val && v.metric === group,
+    )
     return variant?.[0][`${field}_hash` as keyof MetricVariantResult] ?? ""
   }
 
   function setVariant(group: string, value: string) {
     setSelectVariant({
       metric: group,
-      metricHash: getHash(group, "metric"),
+      metricHash: getHash(group, group, "metric"),
       valueType: "value",
-      variant: value,
-      variantHash: getHash(value, "variant"),
+      variant: value.split("/")[1],
+      variantHash: getHash(group, value.split("/")[1], "variant"),
     })
   }
 
@@ -87,26 +93,29 @@ export const MetricsSelectDialog = (props: {
           {map(metricTree, (metrics, group) => (
             <Collapse.Panel key={group} header={group}>
               <Radio.Group
-                value={selectVariant?.variant}
+                value={`${selectVariant?.metric}/${selectVariant?.variant}`}
                 onChange={(e) => setVariant(group, e.target.value)}
               >
                 <Space direction="vertical">
                   {metrics.map((m) => (
                     <li key={m.variant}>
-                      <Radio value={m.variant}>{m.variant}</Radio>
-                      {selectVariant?.variant === m.variant && (
-                        <div style={{ paddingLeft: 30 }}>
-                          <Radio.Group
-                            defaultValue="value"
-                            value={selectVariant?.valueType}
-                            onChange={(e) => setValueType(e.target.value)}
-                          >
-                            <Radio value="value">LAST</Radio>
-                            <Radio value="min_value">MIN</Radio>
-                            <Radio value="max_value">MAX</Radio>
-                          </Radio.Group>
-                        </div>
-                      )}
+                      <Radio value={`${m.metric}/${m.variant}`}>
+                        {m.variant}
+                      </Radio>
+                      {selectVariant?.variantHash === m.variant_hash &&
+                        selectVariant?.metric === group && (
+                          <div style={{ paddingLeft: 30 }}>
+                            <Radio.Group
+                              defaultValue="value"
+                              value={selectVariant?.valueType}
+                              onChange={(e) => setValueType(e.target.value)}
+                            >
+                              <Radio value="value">LAST</Radio>
+                              <Radio value="min_value">MIN</Radio>
+                              <Radio value="max_value">MAX</Radio>
+                            </Radio.Group>
+                          </div>
+                        )}
                     </li>
                   ))}
                 </Space>
