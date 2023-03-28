@@ -34,18 +34,6 @@
       .metricSelect {
         position: absolute;
         left: calc(50% - 90px);
-
-        :global(.ant-btn) {
-          background-color: $blue-600;
-          border-color: $blue-600;
-          color: $blue-50;
-
-          &:hover {
-            background-color: $blue-500;
-            border-color: $blue-500;
-            color: $blue-200;
-          }
-        }
       }
     }
 
@@ -109,5 +97,21 @@
     width: 100%;
     min-height: 300px;
     margin: 0 auto;
+  }
+}
+
+html[data-type="dark"] {
+  .metricSelect {
+    :global(.ant-btn) {
+      background-color: $blue-600;
+      border-color: $blue-600;
+      color: $blue-50;
+
+      &:hover {
+        background-color: $blue-500;
+        border-color: $blue-500;
+        color: $blue-200;
+      }
+    }
   }
 }
