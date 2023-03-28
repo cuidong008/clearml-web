@@ -7,6 +7,8 @@ import {
   ProjectsDeleteResponse,
   ProjectsGetAllExRequest,
   ProjectsGetAllExResponse,
+  ProjectsGetUniqueMetricVariantsRequest,
+  ProjectsGetUniqueMetricVariantsResponse,
   ProjectsSharedGetAllResponse,
   ProjectsUpdateRequest,
   ProjectsUpdateResponse,
@@ -41,6 +43,15 @@ export function projectDelete(request: ProjectsDeleteRequest) {
 export function projectValidateDelete(request: ProjectsValidateDeleteRequest) {
   return REQ.post<ProjectsValidateDeleteResponse>(
     "/projects.validate_delete",
+    request,
+  )
+}
+
+export function projectsGetUniqueMetricVariants(
+  request: ProjectsGetUniqueMetricVariantsRequest,
+) {
+  return REQ.post<ProjectsGetUniqueMetricVariantsResponse>(
+    "/projects.get_unique_metric_variants",
     request,
   )
 }
