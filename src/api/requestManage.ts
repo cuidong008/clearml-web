@@ -6,7 +6,7 @@ let pendingMap = new Map<string, Canceler>()
 
 // * 序列化参数
 export const getPendingUrl = (config: AxiosRequestConfig) =>
-  [config.method, config.url].join("&")
+  [config.method, config.url, JSON.stringify(config.data ?? {})].join("&")
 
 export class AxiosCanceler {
   /**

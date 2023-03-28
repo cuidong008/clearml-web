@@ -9,6 +9,7 @@ import NotFound from "@/components/errors/404"
 import NotNetwork from "@/components/errors/500"
 import { Overview } from "@/views/projects/overview"
 import progress from "nprogress"
+import { ProjectList } from "@/views/projects/list"
 
 progress.configure({
   easing: "ease", // 动画方式
@@ -60,6 +61,11 @@ export const rootRouter: Array<RouteObject> = [
       icon: "al-ico-projects",
     },
     children: [
+      {
+        path: ":projId/projects",
+        name: "projectsChilds",
+        element: <ProjectList />,
+      },
       {
         path: ":projId/experiments",
         name: "experiments",

@@ -20,9 +20,7 @@ export const Projects = () => {
         stats_for_state: "active",
         include_stats: true,
         size: 1,
-        permission_roots_only: true,
         search_hidden: true,
-        shallow_search: true,
         allow_public: false,
         id: [pid],
         only_fields: [
@@ -50,8 +48,16 @@ export const Projects = () => {
   useEffect(() => {
     if (params["projId"]) {
       getProjectById(params["projId"])
+    } else {
+      dispatch(setProjectSelected(undefined))
     }
   }, [getProjectById, params])
+
+  useEffect(() => {
+    return () => {
+      dispatch(setProjectSelected(undefined))
+    }
+  }, [])
 
   useEffect(() => {
     if (location.state && location.state.target) {
@@ -71,7 +77,7 @@ export const Projects = () => {
 
   return (
     <div className={styles.projects}>
-      {params["projId"] && (
+      {params["projId"] && !location.pathname.endsWith("/projects") && (
         <div className={styles.projectsBody}>
           <header className={styles.tabHeader}>
             <Tabs
@@ -88,6 +94,9 @@ export const Projects = () => {
           </header>
           <Outlet />
         </div>
+      )}
+      {params["projId"] && location.pathname.endsWith("/projects") && (
+        <Outlet />
       )}
       {!params["projId"] && <ProjectList />}
     </div>

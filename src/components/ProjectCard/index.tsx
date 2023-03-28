@@ -11,11 +11,11 @@ import {
   DeleteFilled,
   EditFilled,
   MenuOutlined,
-  ShareAltOutlined,
 } from "@ant-design/icons"
 import { CircleCounter } from "@/components/CircleCounter"
 import { CircleTypeEnum } from "@/types/enums"
 import { DkCard } from "@/components/DkCard"
+import { useNavigate } from "react-router-dom"
 
 export const ProjectCard = (props: {
   project?: Project
@@ -27,6 +27,7 @@ export const ProjectCard = (props: {
   const { project, showMenu, showAdd, dispatch, editProjId } = props
   const [projectNewName, setProjectNewName] = useState("")
   const [showRename, setShowRename] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (project?.id !== editProjId && showRename) {
@@ -241,7 +242,16 @@ export const ProjectCard = (props: {
         subCard={
           <div className={styles.subProjectsList}>
             {project?.sub_projects?.map((p) => (
-              <a key={p.id} style={{ display: "flex", alignItems: "center" }}>
+              <a
+                key={p.id}
+                style={{ display: "flex", alignItems: "center" }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(`/projects/${p.id}/experiments`, {
+                    state: { target: "experiments" },
+                  })
+                }}
+              >
                 <Tooltip title={p.name} placement="bottom" color={"blue"}>
                   {subProjectNameTrans(p.name)}
                 </Tooltip>

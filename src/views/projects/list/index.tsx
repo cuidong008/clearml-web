@@ -14,7 +14,7 @@ import { ProjectDeleteDialog } from "@/views/projects/ProjectDeleteDialog"
 import { ProjectShareDialog } from "@/views/projects/ProjectShareDialog"
 import { useStoreSelector } from "@/store"
 import { StoreState } from "@/types/store"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { setProjectSelected } from "@/store/project/project.actions"
 
@@ -32,6 +32,7 @@ export const ProjectList = () => {
   const [selectProject, setSelectProject] = useState<Project>()
   const [readyDelete, setReadyDelete] = useState<ReadyForDeletion>()
   const navigate = useNavigate()
+  const params = useParams()
 
   const fetchProjects = useCallback(
     (reload: boolean) => {
@@ -45,6 +46,7 @@ export const ProjectList = () => {
       if (showScope === "share" && !sharedProjects.length) {
         return
       }
+
       active_user =
         showScope === "my"
           ? { active_users: [user ? user.id : ""] }
@@ -60,9 +62,7 @@ export const ProjectList = () => {
         include_stats: true,
         order_by: ["featured", sortOrder === "desc" ? "-" + orderBy : orderBy],
         size: 12,
-        permission_roots_only: true,
-        search_hidden: true,
-        shallow_search: true,
+        ...(params["projId"] && { parent: [params["projId"]] }),
         ...(showScope !== "my" && { stats_get_all: true }),
         ...active_user,
         allow_public: false,
@@ -75,23 +75,27 @@ export const ProjectList = () => {
           "default_output_destination",
           "basename",
         ],
-      }).then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
-          return
-        }
-        if (reload) {
-          setProjects(() => data.projects)
-        } else {
-          setProjects(() => projects.concat(data.projects))
-        }
-        setHasMore(data.projects.length >= 12)
-        if (data.scroll_id && data.scroll_id !== scrollId) {
-          setScrollId(data.scroll_id)
-        } else {
-          setScrollId(undefined)
-        }
       })
+        .then(({ data, meta }) => {
+          if (meta.result_code !== 200) {
+            message.error(meta.result_msg)
+            return
+          }
+          if (reload) {
+            setProjects(() => data.projects)
+          } else {
+            setProjects(() => projects.concat(data.projects))
+          }
+          setHasMore(data.projects.length >= 12)
+          if (data.scroll_id && data.scroll_id !== scrollId) {
+            setScrollId(data.scroll_id)
+          } else {
+            setScrollId(undefined)
+          }
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     },
     [
       projects,

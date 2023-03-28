@@ -71,7 +71,7 @@ export const setProjectGroup = (groupId: string) => {
   }
 }
 
-export const setProjectSelected = (project: Project) => {
+export const setProjectSelected = (project?: Project) => {
   return {
     type: types.SET_SELECT_PROJECT,
     project,

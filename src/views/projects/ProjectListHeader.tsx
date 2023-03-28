@@ -12,8 +12,10 @@ import {
   setProjectSort,
 } from "@/store/project/project.actions"
 import { ThunkActionDispatch } from "redux-thunk"
+import { useParams } from "react-router-dom"
 
 export const ProjectListHeader = () => {
+  const params = useParams()
   const { showScope, sortOrder, orderBy, groups, groupId } = useStoreSelector(
     (state: StoreState) => state.project,
   )
@@ -70,43 +72,45 @@ export const ProjectListHeader = () => {
             },
           ]}
         />
-        <Select
-          size="small"
-          bordered={false}
-          value={showScope}
-          dropdownStyle={{ minWidth: 130 }}
-          onChange={(e) => dispatch(changeScope(e))}
-          options={[
-            {
-              label: (
-                <div className={styles.filterItem}>
-                  <i className={classNames("al-icon", "al-ico-me")} />
-                  My Work
-                </div>
-              ),
-              value: "my",
-            },
-            {
-              label: (
-                <div className={styles.filterItem}>
-                  <i className={classNames("al-icon", "al-ico-team")} />
-                  Public Work
-                </div>
-              ),
-              value: "public",
-            },
-            // {
-            //   label: (
-            //     <div className={styles.filterItem}>
-            //       <i className={classNames("al-icon", "al-ico-publish")} />
-            //       Shared Work
-            //     </div>
-            //   ),
-            //   value: "share",
-            // },
-          ]}
-        />
-        {groups.length > 0 && showScope === "public" && (
+        {!params["projId"] && (
+          <Select
+            size="small"
+            bordered={false}
+            value={showScope}
+            dropdownStyle={{ minWidth: 130 }}
+            onChange={(e) => dispatch(changeScope(e))}
+            options={[
+              {
+                label: (
+                  <div className={styles.filterItem}>
+                    <i className={classNames("al-icon", "al-ico-me")} />
+                    My Work
+                  </div>
+                ),
+                value: "my",
+              },
+              {
+                label: (
+                  <div className={styles.filterItem}>
+                    <i className={classNames("al-icon", "al-ico-team")} />
+                    Public Work
+                  </div>
+                ),
+                value: "public",
+              },
+              // {
+              //   label: (
+              //     <div className={styles.filterItem}>
+              //       <i className={classNames("al-icon", "al-ico-publish")} />
+              //       Shared Work
+              //     </div>
+              //   ),
+              //   value: "share",
+              // },
+            ]}
+          />
+        )}
+        {!params["projId"] && groups.length > 0 && showScope === "public" && (
           <Select
             size="small"
             dropdownStyle={{ minWidth: 130 }}
