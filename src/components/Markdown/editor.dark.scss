@@ -6,6 +6,10 @@
     overflow-y: auto !important;
   }
 
+  .section.sec-html.visible {
+    border: none;
+  }
+
   .custom-html-style {
     ol {
       li {
@@ -46,7 +50,7 @@ html[data-type="dark"] {
   }
 
   .rc-md-editor {
-    background: $blue-800 !important;
+    background: $blue-900 !important;
     border-color: $blue-900;
     color: white;
 
@@ -69,7 +73,7 @@ html[data-type="dark"] {
     }
 
     .editor-container .sec-md .input {
-      background: $blue-800;
+      background: $blue-900;
       color: white;
     }
 

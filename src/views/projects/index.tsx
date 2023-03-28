@@ -32,6 +32,7 @@ export const Projects = () => {
           "created",
           "default_output_destination",
           "basename",
+          "description",
         ],
       }).then(({ data, meta }) => {
         if (meta.result_code !== 200) {
