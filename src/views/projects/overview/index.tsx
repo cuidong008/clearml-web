@@ -247,20 +247,14 @@ export const Overview = () => {
                     }}
                   >
                     <Tooltip
-                      title={
-                        graphVariant.metric +
-                        " \u203A " +
-                        graphVariant.variant +
-                        " \u203A " +
-                        getValueName(graphVariant.valueType)
-                      }
+                      title={`${graphVariant.metric} > ${
+                        graphVariant.variant
+                      } > ${getValueName(graphVariant.valueType)}`}
                     >
                       <Typography.Text ellipsis>
-                        {graphVariant.metric +
-                          " \u203A " +
-                          graphVariant.variant +
-                          " \u203A " +
-                          getValueName(graphVariant.valueType)}
+                        {`${graphVariant.metric} > ${
+                          graphVariant.variant
+                        } > ${getValueName(graphVariant.valueType)}`}
                       </Typography.Text>
                     </Tooltip>
                   </Button>
