@@ -46,6 +46,14 @@ export const option = {
     axisLine: {
       show: true,
     },
+    axisLabel: {
+      formatter: (value: number) => {
+        if ((value < 1 && value > 0) || (value > -1 && value < 0)) {
+          return Number(value).toFixed(3)
+        }
+        return Number(value).toFixed(1)
+      },
+    },
     scale: true,
     min: function (value: { min: number }) {
       return value.min - 1
