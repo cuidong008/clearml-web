@@ -13,6 +13,7 @@
     margin: 0 auto 16px;
     overflow: hidden;
     box-sizing: content-box;
+    background: $blue-900;
 
     :global(.ant-collapse-item.ant-collapse-item-active) {
       box-sizing: border-box;
@@ -113,5 +114,32 @@ html[data-type="dark"] {
         color: $blue-200;
       }
     }
+  }
+}
+
+.metricDialog {
+  .metricDialogHeader {
+    font-size: 24px;
+    font-weight: 300;
+    margin-top: 10px;
+    color: #8492c2;
+    display: block;
+    font-family: Heebo, sans-serif;
+  }
+
+  .metricSearch {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .searchInput {
+      flex: 1;
+      margin-right: 10px;
+    }
+  }
+
+  .metricDialogPanel {
+    background: $blue-900;
   }
 }
