@@ -1,17 +1,15 @@
 import { Select, Space } from "antd"
-import { useDispatch } from "react-redux"
 import { StoreState } from "@/types/store"
 import classNames from "classnames"
 import styles from "./index.module.scss"
 import { MouseEvent } from "react"
-import { useStoreSelector } from "@/store"
+import { useThunkDispatch, useStoreSelector } from "@/store"
 import {
   changeScope,
   setProjectGroup,
   setProjectOrder,
   setProjectSort,
 } from "@/store/project/project.actions"
-import { ThunkActionDispatch } from "redux-thunk"
 import { useParams } from "react-router-dom"
 
 export const ProjectListHeader = () => {
@@ -20,7 +18,7 @@ export const ProjectListHeader = () => {
     (state: StoreState) => state.project,
   )
 
-  const dispatch = useDispatch<ThunkActionDispatch<any>>()
+  const dispatch = useThunkDispatch()
 
   function reverseOrder(e: MouseEvent<HTMLElement>) {
     dispatch(setProjectSort(sortOrder === "asc" ? "desc" : "asc"))
