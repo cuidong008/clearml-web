@@ -4,6 +4,8 @@ import {
   UsersGetAllExResponse,
   UsersGetCurrentUserResponse,
   UsersGetPreferencesResponse,
+  UsersSetPreferencesRequest,
+  UsersSetPreferencesResponse,
 } from "./models/user"
 
 export function getCurrentUser() {
@@ -18,4 +20,11 @@ export function getUserAll(request: UsersGetAllExRequest) {
 
 export function getUserPreferences() {
   return REQ.post<UsersGetPreferencesResponse>("/users.get_preferences", {})
+}
+
+export function setUserPreferences(request: UsersSetPreferencesRequest) {
+  return REQ.post<UsersSetPreferencesResponse>(
+    "/users.set_preferences",
+    request,
+  )
 }

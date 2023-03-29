@@ -1,5 +1,5 @@
-import styles from "@/views/projects/index.module.scss"
-import { Collapse, Modal, Radio, Space } from "antd"
+import styles from "./index.module.scss"
+import { Button, Collapse, Input, Modal, Radio, Space } from "antd"
 import { MetricVariantResult } from "@/api/models/project"
 import { useEffect, useState } from "react"
 import { map } from "lodash"
@@ -8,7 +8,7 @@ import { MetricValueType } from "@/types/enums"
 
 export const MetricsSelectDialog = (props: {
   show: boolean
-  onClose: (e?: MetricColumn) => void
+  onClose: (evt: string, e?: MetricColumn) => void
   variants: MetricVariantResult[]
   selectedVariant?: MetricColumn
 }) => {
@@ -38,7 +38,11 @@ export const MetricsSelectDialog = (props: {
   }, [selectedVariant])
 
   function updateChart() {
-    onClose(selectVariant)
+    if (selectVariant) {
+      onClose("update", selectVariant)
+      return
+    }
+    onClose("clear")
   }
 
   function getHash(
@@ -72,11 +76,40 @@ export const MetricsSelectDialog = (props: {
     })
   }
 
+  function filterMetricsTree(value: string) {
+    setSelectVariant(undefined)
+    if (value) {
+      const filteredMetric = Object.entries(metricTree).map<
+        [string, MetricVariantResult[]]
+      >(([f, results]) => [
+        f,
+        results.filter((variant) => variant.variant?.includes(value)),
+      ])
+      const metrics: Record<string, MetricVariantResult[]> = {}
+      filteredMetric.forEach((f) => {
+        if (f[1].length) {
+          metrics[f[0]] = f[1]
+        }
+      })
+      setMetricTree(metrics)
+    } else {
+      setMetricTree(() =>
+        variants.reduce((result, metric) => {
+          result[metric.metric]
+            ? result[metric.metric].push(metric)
+            : (result[metric.metric] = [metric])
+          return result
+        }, {} as Record<string, MetricVariantResult[]>),
+      )
+    }
+  }
+
   return (
     <Modal
+      className={styles.metricDialog}
       open={show}
       onOk={updateChart}
-      onCancel={() => onClose()}
+      onCancel={() => onClose("close")}
       title={<div></div>}
     >
       <div style={{ textAlign: "center" }}>
@@ -86,10 +119,19 @@ export const MetricsSelectDialog = (props: {
             style={{ color: "#8492c2", fontSize: 60 }}
           />
         </div>
-        <span className={styles.projectDialogTitle}>METRIC SNAPSHOT</span>
+        <span className={styles.metricDialogHeader}>METRIC SNAPSHOT</span>
       </div>
+      <div className={styles.metricSearch}>
+        <Input.Search
+          className={styles.searchInput}
+          onSearch={(e) => filterMetricsTree(e)}
+          allowClear
+        />
+        <Button onClick={() => setSelectVariant(undefined)}>Clear</Button>
+      </div>
+
       <div style={{ maxHeight: 400, overflowY: "auto" }}>
-        <Collapse>
+        <Collapse bordered={false} className={styles.metricDialogPanel}>
           {map(metricTree, (metrics, group) => (
             <Collapse.Panel key={group} header={group}>
               <Radio.Group

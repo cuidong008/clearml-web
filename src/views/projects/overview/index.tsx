@@ -2,11 +2,10 @@ import styles from "./index.module.scss"
 import { Button, Collapse, message, Tooltip, Typography } from "antd"
 import { Markdown } from "@/components/Markdown"
 import { useEffect, useRef, useState } from "react"
-import { useStoreSelector } from "@/store"
+import { useStoreSelector, useThunkDispatch } from "@/store"
 import { MetricColumn } from "@/types/common"
 import { MetricValueType } from "@/types/enums"
 import { projectsGetUniqueMetricVariants, projectUpdate } from "@/api/project"
-import { useDispatch } from "react-redux"
 import { setProjectSelected } from "@/store/project/project.actions"
 import { getTasksAllEx } from "@/api/task"
 import { createMetricColumn } from "@/utils/metric"
@@ -16,12 +15,14 @@ import * as echarts from "echarts/core"
 import { getItemStyle, option } from "./metricChartOpt"
 import { MetricsSelectDialog } from "./MetricsSelectDialog"
 import { MetricVariantResult } from "@/api/models/project"
+import { uploadUserPreference } from "@/store/app/app.actions"
+import { UserPreference } from "@/types/store"
 
 export const Overview = () => {
   const projectSelected = useStoreSelector(
     (state) => state.project.selectedProject,
   )
-  const rootProjects = useStoreSelector(
+  const rootProjects: UserPreference["rootProjects"] = useStoreSelector(
     (state) => state.app.preferences.rootProjects,
   )
   const [graphVariant, setGraphVariant] = useState<MetricColumn>()
@@ -32,7 +33,7 @@ export const Overview = () => {
   const refChartIns = useRef<echarts.ECharts>()
   const refChart = useRef<HTMLDivElement>(null)
 
-  const dispatch = useDispatch()
+  const dispatch = useThunkDispatch()
 
   useEffect(() => {
     if (projectSelected && rootProjects) {
@@ -194,11 +195,25 @@ export const Overview = () => {
       })
   }
 
-  function resetMetricSelect(e?: MetricColumn) {
+  function resetMetricSelect(evt: string, e?: MetricColumn) {
     setShowMetricDialog(false)
-    if (e) {
+    setGraphData([])
+    if (evt === "update" && e) {
       setGraphVariant(e)
+      if (rootProjects && projectSelected) {
+        const newRootProject = cloneDeep(rootProjects)
+        newRootProject.graphVariant[projectSelected.id] = e
+        dispatch(uploadUserPreference("rootProjects", { ...newRootProject }))
+      }
       fetchGraphData(e)
+    }
+    if (evt === "clear") {
+      if (rootProjects && projectSelected) {
+        const newRootProject = cloneDeep(rootProjects)
+        delete newRootProject.graphVariant[projectSelected.id]
+        dispatch(uploadUserPreference("rootProjects", { ...newRootProject }))
+      }
+      setGraphVariant(undefined)
     }
   }
 
@@ -206,11 +221,12 @@ export const Overview = () => {
     <div className={styles.overview}>
       <MetricsSelectDialog
         show={showMetricDialog}
-        onClose={(e) => resetMetricSelect(e)}
+        onClose={(evt, e) => resetMetricSelect(evt, e)}
         variants={variants}
         selectedVariant={graphVariant}
       />
       <Collapse
+        bordered={false}
         className={styles.metricPanel}
         expandIconPosition="end"
         onChange={(e) => e.length > 0 && fetchGraphData(graphVariant)}
@@ -256,7 +272,10 @@ export const Overview = () => {
           {!graphVariant && (
             <div className={styles.placeholder}>
               <i className="al-icon al-ico-no-scatter-graph xxl"></i>
-              <div className={styles.noDataTitle}>
+              <div
+                onClick={() => openSelectVariantsDialog()}
+                className={styles.noDataTitle}
+              >
                 Select Metric &amp; Variant
               </div>
             </div>
