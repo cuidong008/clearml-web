@@ -240,13 +240,13 @@ export const Overview = () => {
                 {graphVariant && (
                   <Button
                     style={{ maxWidth: 200 }}
-                    type="primary"
                     onClick={(e) => {
                       e.stopPropagation()
                       openSelectVariantsDialog()
                     }}
                   >
                     <Tooltip
+                      color="blue"
                       title={`${graphVariant.metric} > ${
                         graphVariant.variant
                       } > ${getValueName(graphVariant.valueType)}`}
