@@ -38,6 +38,25 @@
       }
     }
 
+    .legend {
+      margin-top: -4px;
+      text-align: center;
+      color: $blue-100;
+
+      .entry {
+        margin: 0 12px;
+
+        &:before {
+          content: " ";
+          display: inline-block;
+          border-radius: 50%;
+          width: 12px;
+          height: 12px;
+          margin-right: 6px;
+        }
+      }
+    }
+
     .placeholder {
       display: flex;
       flex-direction: column;
@@ -133,6 +152,7 @@ html[data-type="dark"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .searchInput {
       flex: 1;
       margin-right: 10px;

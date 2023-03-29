@@ -4,7 +4,7 @@ import { Markdown } from "@/components/Markdown"
 import { useEffect, useRef, useState } from "react"
 import { useStoreSelector, useThunkDispatch } from "@/store"
 import { MetricColumn } from "@/types/common"
-import { MetricValueType } from "@/types/enums"
+import { MetricValueType, TaskStatusEnum } from "@/types/enums"
 import { projectsGetUniqueMetricVariants, projectUpdate } from "@/api/project"
 import { setProjectSelected } from "@/store/project/project.actions"
 import { getTasksAllEx } from "@/api/task"
@@ -12,7 +12,7 @@ import { createMetricColumn } from "@/utils/metric"
 import { ProjectStatsGraphData } from "@/types/project"
 import { cloneDeep, get, sortBy } from "lodash"
 import * as echarts from "echarts/core"
-import { getItemStyle, option } from "./metricChartOpt"
+import { getItemStyle, option, statusToColor } from "./metricChartOpt"
 import { MetricsSelectDialog } from "./MetricsSelectDialog"
 import { MetricVariantResult } from "@/api/models/project"
 import { uploadUserPreference } from "@/store/app/app.actions"
@@ -280,13 +280,30 @@ export const Overview = () => {
               </div>
             </div>
           )}
-          <div
-            ref={refChart}
-            style={{
-              height: "257px",
-              visibility: graphData.length ? "visible" : "hidden",
-            }}
-          ></div>
+          <div style={{ visibility: graphData.length ? "visible" : "hidden" }}>
+            <div ref={refChart} style={{ height: "250px" }} />
+            <div className={styles.legend}>
+              {[
+                {
+                  label: "Completed or Stopped",
+                  type: TaskStatusEnum.Completed,
+                },
+                { label: "Published", type: TaskStatusEnum.Published },
+                { label: "Failed", type: TaskStatusEnum.Failed },
+              ].map((s) => (
+                <span
+                  key={s.label}
+                  id={`entry-${s.type}`}
+                  className={styles.entry}
+                >
+                  <style>{`#entry-${
+                    s.type
+                  }:before{background-color:${statusToColor(s.type)}`}</style>
+                  {s.label}
+                </span>
+              ))}
+            </div>
+          </div>
         </Collapse.Panel>
       </Collapse>
       {!showOverview && (

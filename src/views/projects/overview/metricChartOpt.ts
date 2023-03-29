@@ -87,8 +87,10 @@ export function getItemStyle(t: string) {
   }
 }
 
-function statusToColor(status: string) {
+export function statusToColor(status: string) {
   switch (status) {
+    case TaskStatusEnum.Completed:
+    case TaskStatusEnum.Stopped:
     case `${TaskStatusEnum.Completed} or ${TaskStatusEnum.Stopped}`:
       return "#009aff"
     case TaskStatusEnum.Failed:
