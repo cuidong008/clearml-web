@@ -24,6 +24,7 @@ export default function project(state = initState, action: AnyAction) {
           draftState.groups = []
           draftState.groupId = ""
           draftState.sharedProjects = []
+          draftState.selectedProject = undefined
         }
         break
       case types.PROJECT_CHANGE_ORDER:
@@ -44,6 +45,9 @@ export default function project(state = initState, action: AnyAction) {
         break
       case types.PROJECT_SET_SHARED:
         draftState.sharedProjects = action.shared
+        break
+      case types.SET_SELECT_PROJECT:
+        draftState.selectedProject = action.project
         break
       default:
         return draftState

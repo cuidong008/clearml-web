@@ -117,13 +117,10 @@ export const LayoutMenu = (props: { setBreadCrumbList?: any }) => {
     const handleBreadcrumbList: any = {}
     const loop = (menuItem: any) => {
       // 下面判断代码解释 *** !item?.children?.length   ==>   (item.children && item.children.length > 0)
-      if (menuItem?.children?.length)
-        menuItem.children.forEach((item: any) => loop(item))
-      else
-        handleBreadcrumbList[menuItem.path] = getBreadcrumbList(
-          menuItem.path,
-          menuList,
-        )
+      handleBreadcrumbList[menuItem.path] = getBreadcrumbList(
+        menuItem.path,
+        menuList,
+      )
     }
     menuList.forEach((item) => loop(item))
     return handleBreadcrumbList

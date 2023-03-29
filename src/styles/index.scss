@@ -1,6 +1,7 @@
 @import "@/assets/fonts/trains-icons.scss";
 @import "@/assets/fonts/heebo.scss";
 @import "./status.scss";
+@import "@/assets/icons/icon-svg.scss";
 
 html,
 body,
@@ -36,7 +37,7 @@ ul {
 ::-webkit-scrollbar {
   width: 4px;
   height: 6px;
-  background-color: $blue-200;
+  background-color: $blue-800;
 }
 
 ::-webkit-scrollbar-thumb {

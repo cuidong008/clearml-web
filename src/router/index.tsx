@@ -7,8 +7,20 @@ import WorkerAndQueues from "@/views/workerAndQueues"
 import NotAuth from "@/components/errors/403"
 import NotFound from "@/components/errors/404"
 import NotNetwork from "@/components/errors/500"
+import { Overview } from "@/views/projects/overview"
+import progress from "nprogress"
+import { ProjectList } from "@/views/projects/list"
+
+progress.configure({
+  easing: "ease", // 动画方式
+  speed: 500, // 递增进度条的速度
+  showSpinner: false, // 是否显示加载ico
+  trickleSpeed: 200, // 自动递增间隔
+  minimum: 0.3, // 初始化时的最小百分比
+})
 
 export const AuthRouter = (props: { children: JSX.Element }) => {
+  progress.start()
   const { children } = props
   const { pathname } = useLocation()
   if (pathname.includes("/share")) {
@@ -19,6 +31,7 @@ export const AuthRouter = (props: { children: JSX.Element }) => {
   if (!token) return <Navigate to="/login" replace />
   // todo add auth logic
   // * 当前账号有权限返回 Router，正常访问页面
+  progress.done()
   return children
 }
 
@@ -49,9 +62,24 @@ export const rootRouter: Array<RouteObject> = [
     },
     children: [
       {
+        path: ":projId/projects",
+        name: "projectsChilds",
+        element: <ProjectList />,
+      },
+      {
         path: ":projId/experiments",
-        name: "a",
-        element: <div id="2"></div>,
+        name: "experiments",
+        element: <div id="1"></div>,
+      },
+      {
+        path: ":projId/overview",
+        name: "overview",
+        element: <Overview />,
+      },
+      {
+        path: ":projId/models",
+        name: "models",
+        element: <div id="3"></div>,
       },
     ],
   },

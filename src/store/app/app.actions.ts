@@ -1,10 +1,16 @@
 import * as types from "./app.actions-types"
-import { ThemeConfigState } from "@/types/store"
+import { AppStoreState, ThemeConfigState, UserPreference } from "@/types/store"
 import { RouteObject } from "@/types/router"
 import { ThunkActionDispatch } from "redux-thunk"
 import { CurrentUser, User } from "@/types/user"
-import { getCurrentUser, getUserAll } from "@/api/user"
+import {
+  getCurrentUser,
+  getUserAll,
+  getUserPreferences,
+  setUserPreferences,
+} from "@/api/user"
 import { message } from "antd"
+import { PersistPartial } from "redux-persist/es/persistReducer"
 
 export const setLanguage = (language: string) => {
   return {
@@ -46,14 +52,48 @@ export const setAllUser = (users: User[]) => {
   }
 }
 
+export const setUserPreferencesAll = (preferences: UserPreference) => {
+  return {
+    type: types.SET_USER_PREFERENCE,
+    preferences,
+  }
+}
+
+export const uploadUserPreference =
+  (
+    field: keyof UserPreference,
+    newValue: UserPreference[keyof UserPreference],
+  ) =>
+  (dispatch: ThunkActionDispatch<any>, getState: () => AppStoreState) => {
+    return new Promise((resolve, reject) => {
+      setUserPreferences({
+        preferences: { [field]: newValue },
+      })
+        .then(({ data, meta }) => {
+          if (meta.result_code !== 200) {
+            message.error(meta.result_msg)
+            reject(new Error(meta.result_msg))
+            return
+          }
+          const { preferences } = getState()
+          dispatch(setUserPreferencesAll({ ...preferences, [field]: newValue }))
+          resolve({})
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  }
+
 export const getLoginUser =
   () =>
   (dispatch: ThunkActionDispatch<any>): Promise<CurrentUser | undefined> => {
     return new Promise((resolve, reject) => {
-      getCurrentUser()
-        .then(({ data }) => {
-          dispatch(setUser(data.user))
-          resolve(data.user)
+      Promise.all([getCurrentUser(), getUserPreferences()])
+        .then(([userResp, refResp]) => {
+          dispatch(setUser(userResp.data.user))
+          dispatch(setUserPreferencesAll(refResp.data.preferences ?? {}))
+          resolve(userResp.data.user)
         })
         .catch((err) => {
           localStorage.removeItem("authTk")

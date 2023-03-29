@@ -1,4 +1,5 @@
-import { Group, Project, StatsForStateEnum } from "@/types/project"
+import { Group, Project } from "@/types/project"
+import { StatsForStateEnum } from "@/types/enums"
 
 export interface MultiFieldPatternData {
   pattern?: string
@@ -106,4 +107,20 @@ export interface ProjectsValidateDeleteResponse {
 
 export interface ProjectsSharedGetAllResponse {
   project_list: { id: string }[]
+}
+
+export interface MetricVariantResult {
+  metric: string
+  metric_hash?: string
+  variant?: string
+  variant_hash?: string
+}
+
+export interface ProjectsGetUniqueMetricVariantsRequest {
+  project?: string
+  include_subprojects?: boolean
+}
+
+export interface ProjectsGetUniqueMetricVariantsResponse {
+  metrics: Array<MetricVariantResult>
 }

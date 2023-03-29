@@ -1,6 +1,6 @@
 import * as types from "@/store/project/project.actions-types"
 import { projectGroupsGetAll, projectsShareGetAll } from "@/api/project"
-import { Group } from "@/types/project"
+import { Group, Project } from "@/types/project"
 import { ThunkActionDispatch } from "redux-thunk"
 
 export const setProjectScope = (scope: string) => {
@@ -68,6 +68,13 @@ export const setProjectGroup = (groupId: string) => {
   return {
     type: types.PROJECT_SET_GROUP,
     groupId,
+  }
+}
+
+export const setProjectSelected = (project?: Project) => {
+  return {
+    type: types.SET_SELECT_PROJECT,
+    project,
   }
 }
 

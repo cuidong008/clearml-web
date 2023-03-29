@@ -1,8 +1,8 @@
-import { TaskTypeEnum } from "@/types/enums"
+import { TaskTypeEnumType } from "@/types/enums"
 import classNames from "classnames"
 
 export const TaskIconLabel = (props: {
-  type: TaskTypeEnum
+  type: TaskTypeEnumType
   iconClass?: string
   showLabel?: boolean
 }) => {

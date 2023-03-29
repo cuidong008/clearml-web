@@ -72,4 +72,13 @@ export interface ReadyForDeletion {
   }
 }
 
-export type StatsForStateEnum = "active" | "archived"
+export interface ProjectStatsGraphData {
+  id: string
+  x: number
+  y: number
+  name: string
+  type: string
+  status: string
+  user: string
+  nameExt: string
+}

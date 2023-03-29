@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { Button, message, Table, Tooltip } from "antd"
 import { getAllProjectsEx } from "@/api/project"
 import Column from "antd/es/table/Column"
-import { getAllTasksEx } from "@/api/task"
+import { getTasksAllEx } from "@/api/task"
 import { Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
@@ -96,7 +96,7 @@ export const Dashboard = () => {
               ? sharedProjects.map((r) => r.id)
               : ["none"],
           }
-    getAllTasksEx({
+    getTasksAllEx({
       page: 0,
       page_size: 5,
       order_by: ["-last_update"],
@@ -178,7 +178,11 @@ export const Dashboard = () => {
           {projects.map((p) => (
             <div
               key={p.id}
-              onClick={() => navigate(`/projects/${p.id}/experiments`)}
+              onClick={() =>
+                navigate(`/projects/${p.id}/experiments`, {
+                  state: { target: "experiments" },
+                })
+              }
             >
               <ProjectCard project={p} />
             </div>

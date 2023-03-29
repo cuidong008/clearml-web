@@ -7,7 +7,7 @@ export enum CircleTypeEnum {
   "model-labels" = "model-labels",
 }
 
-export type TaskStatusEnum =
+export type TaskStatusEnumType =
   | "created"
   | "queued"
   | "in_progress"
@@ -32,7 +32,7 @@ export const TaskStatusEnum = {
   Unknown: "unknown",
 }
 
-export type TaskTypeEnum =
+export type TaskTypeEnumType =
   | "training"
   | "testing"
   | "inference"
@@ -46,17 +46,17 @@ export type TaskTypeEnum =
   | "custom"
 
 export const TaskTypeEnum = {
-  Training: "training" as TaskTypeEnum,
-  Testing: "testing" as TaskTypeEnum,
-  Inference: "inference" as TaskTypeEnum,
-  DataProcessing: "data_processing" as TaskTypeEnum,
-  Application: "application" as TaskTypeEnum,
-  Monitor: "monitor" as TaskTypeEnum,
-  Controller: "controller" as TaskTypeEnum,
-  Optimizer: "optimizer" as TaskTypeEnum,
-  Service: "service" as TaskTypeEnum,
-  Qc: "qc" as TaskTypeEnum,
-  Custom: "custom" as TaskTypeEnum,
+  Training: "training" as TaskTypeEnumType,
+  Testing: "testing" as TaskTypeEnumType,
+  Inference: "inference" as TaskTypeEnumType,
+  DataProcessing: "data_processing" as TaskTypeEnumType,
+  Application: "application" as TaskTypeEnumType,
+  Monitor: "monitor" as TaskTypeEnumType,
+  Controller: "controller" as TaskTypeEnumType,
+  Optimizer: "optimizer" as TaskTypeEnumType,
+  Service: "service" as TaskTypeEnumType,
+  Qc: "qc" as TaskTypeEnumType,
+  Custom: "custom" as TaskTypeEnumType,
 }
 
 export type ArtifactModeEnum = "input" | "output"
@@ -89,3 +89,28 @@ export const EXPERIMENTS_TYPE_LABELS = {
   [TaskTypeEnum.Custom]: "Custom",
 }
 export type CloudProviders = "fs" | "gc" | "s3" | "azure" | "misc"
+
+export type MetricValueType = "min_value" | "max_value" | "value"
+
+declare type FilterMatchModeEnum =
+  | "startsWith"
+  | "contains"
+  | "endsWidth"
+  | "equals"
+  | "notEquals"
+  | "in"
+
+export type StatsForStateEnum = "active" | "archived"
+
+export enum ColHeaderTypeEnum {
+  sort = "sort",
+  sortFilter = "sort-filter",
+  checkBox = "checkbox",
+  title = "none",
+}
+
+export enum ColHeaderFilterTypeEnum {
+  duration = "duration", // days-hours-minutes
+  durationNumeric = "duration-numeric", // number
+  durationDate = "duration-date", // DD-MM-YYYY hours:minutes
+}
