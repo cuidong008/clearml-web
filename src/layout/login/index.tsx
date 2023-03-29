@@ -20,12 +20,12 @@ export function Login() {
         .then(({ data }) => {
           document.cookie = `access_token=${data.data.access_token}`
           localStorage.setItem("authTk", data.data.access_token)
-          setError(undefined)
-          message.success(
+          const msg =
             location === "/"
               ? "登录成功，即将跳转到主页..."
-              : "登录成功，即将返回之前页面...",
-          )
+              : "登录成功，即将返回之前页面..."
+          setError(undefined)
+          message.success(msg)
           setTimeout(() => {
             navigate(location)
           }, 1000)

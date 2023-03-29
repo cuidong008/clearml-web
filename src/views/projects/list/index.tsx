@@ -242,9 +242,14 @@ export const ProjectList = () => {
           <div
             key={r.id}
             onClick={() => {
-              navigate(`/projects/${r.id}/experiments`, {
-                state: { target: "experiments" },
-              })
+              navigate(
+                `/projects/${r.id}/${
+                  r.sub_projects?.length ? "projects" : "experiments"
+                }`,
+                {
+                  state: { target: "experiments" },
+                },
+              )
               dispatch(setProjectSelected(r))
             }}
           >
