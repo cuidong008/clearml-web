@@ -17,7 +17,12 @@ export const NavHeader = (props: {
   const { breadCrumbList } = props
   const { pathname } = useLocation()
   const [full, setFull] = useState(false)
-  const breadCrumbs = breadCrumbList[pathname] || []
+  const breadCrumbs =
+    breadCrumbList[
+      Object.keys(breadCrumbList).filter(
+        (k: string) => k !== "/" && pathname.startsWith(k),
+      )?.[0]
+    ] || []
 
   function fullScreen() {
     const element = document.documentElement

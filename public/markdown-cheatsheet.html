@@ -1,0 +1,573 @@
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --blue-25: #f9fafb;
+        --blue-50: #f2f4fc;
+        --blue-100: #dce0ee;
+        --blue-200: #c3cdf0;
+        --blue-250: #A4ADCD;
+        --blue-280: #a7b2d8;
+        --blue-300: #8492c2;
+        --blue-400: #5a658e;
+        --blue-450: #657099;
+        --blue-480: #707ba3;
+        --blue-500: #384161;
+        --blue-550: #47527A;
+        --blue-600: #2c3246;
+        --blue-650: #24293c;
+        --blue-700: #202432;
+        --blue-800: #1a1e2c;
+        --blue-900: #141722;
+        --blue-950: #0d0e15;
+        --purple: #4d66ff;
+        --dark-border: #303443;
+    }
+
+    /* LAYOUT */
+    .modal-content {
+        font-family: "Heebo", sans-serif;
+        color: var(--blue-500);
+        font-size: 14px;
+        max-width: 640px;
+        margin: 0 auto;
+    }
+
+    .modal-content .intro {
+        margin-bottom: 32px;
+    }
+
+    .modal-content .link {
+        color: var(--purple);
+        text-decoration: none;
+    }
+
+    .modal-content .link:hover {
+        text-decoration: underline;
+    }
+
+    .modal-content h3 {
+        font-size: 16px;
+        font-weight: 500;
+        margin: 0 0 6px 0;
+    }
+
+    .modal-content .graph {
+        max-width: 100%;
+        border: 1px solid var(--dark-border);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .modal-content figcaption {
+        color: var(--blue-400);
+    }
+
+
+    .modal-content section::after {
+        content: "✦ ✦ ✦";
+        text-align: center;
+        display: block;
+        padding: 24px 0;
+        font-size: 11px;
+        color: var(--blue-300);
+    }
+
+    .modal-content p > small {
+        display: block;
+        margin: 6px 0;
+    }
+
+    /* HEADING */
+    .modal-content h1 {
+        font-size: 28px;
+        font-weight: 500;
+    }
+
+    .modal-content h2 {
+        font-size: 22px;
+        font-weight: 500;
+        color: #70a798;
+    }
+
+    .modal-content h3 {
+        font-size: 16px;
+        font-weight: 500;
+        color: #7dafdb;
+    }
+
+    /* BLOCKQUOTE */
+    .modal-content blockquote {
+        padding: 4px 16px;
+        border-left: 3px solid var(--purple);
+    }
+
+    .modal-content blockquote p {
+        margin: 0;
+        color: var(--blue-500);
+    }
+
+    /* LIST */
+    .modal-content ul,
+    .modal-content ol {
+        margin-bottom: 14px;
+        padding-left: 40px;
+    }
+
+    /* TABLES */
+    .modal-content .table {
+        background-color: var(--blue-900);
+        border: 1px solid var(--dark-border);
+        border-collapse: collapse;
+        margin-bottom: 12px;
+    }
+
+    .modal-content .table thead {
+        color: var(--blue-300);
+        background-color: var(--blue-800);
+    }
+
+    .modal-content .table th {
+        font-weight: 500;
+    }
+
+    .modal-content .table th,
+    .modal-content .table td {
+        border: 1px solid var(--dark-border);
+        padding: 8px 16px;
+    }
+
+    .modal-content .table td {
+        color: var(--blue-100);
+    }
+
+
+    /* COLLAPSIBLE SECTIONS */
+    .modal-content details {
+        margin-bottom: 2px;
+        padding: 6px 28px;
+        color: var(--blue-250);
+        background-color: var(--blue-900);
+        border: 1px solid var(--dark-border);
+        border-radius: 4px;
+        transition: margin 0.35s;
+    }
+
+    .modal-content details summary {
+        cursor: pointer;
+        color: #90bce3;
+        margin-left: -24px;
+    }
+
+    .modal-content summary::marker {
+        content: "";
+    }
+
+    .modal-content summary::before {
+        content: "\e9af";
+        color: var(--blue-300);
+        display: inline-block;
+        vertical-align: middle;
+        font-family: "trains";
+        font-size: 18px;
+        margin: -3px 6px 0 0;
+        transform: rotate(0deg);
+        transition: transform 0.35s;
+    }
+
+    .modal-content summary:hover {
+        color: var(--blue-100);
+    }
+
+    .modal-content details[open] summary {
+        color: #e1edf8;
+        margin-bottom: 12px;
+    }
+
+    .modal-content details[open] summary::before {
+        transform: rotate(90deg);
+    }
+
+
+    /* CODE */
+    .modal-content code {
+        margin: 0;
+        padding: 1px 4px;
+        font-size: 12px;
+        line-height: 18px;
+        border-radius: 4px;
+        color: var(--blue-100);
+        background-color: var(--blue-600);
+        border: 1px solid var(--blue-500);
+    }
+
+    .modal-content .md-code {
+        display: block;
+        position: relative;
+        margin-bottom: 12px;
+        padding: 16px;
+        font-size: 13px;
+        background-color: var(--blue-900);
+        white-space: pre;
+        overflow-x: auto;
+    }
+
+    .modal-content .md-code.word-break {
+        white-space: normal;
+        word-break: break-word;
+    }
+
+
+    /* HORIZONTAL RULES */
+    .modal-content hr {
+        margin: 24px 0;
+        border: none;
+        border-bottom: 1px solid #0000001a;
+    }
+
+
+</style>
+
+
+<div class="modal-content">
+
+    <p class="intro">The following is a quick reference for the Markdown syntax that can be used in ClearML Reports.</p>
+
+    <!-- EMBEDDED VISUALIZATIONS -->
+    <section>
+        <h2>Embedded Visualizations</h2>
+        <p>You can embed most ClearML plots and images appearing in experiments (or experiment comparison). Each such
+            asset will show a "<b>Copy embed code</b>" button on hover, which will copy specific HTML embed code that,
+            pasted in a report, will embed that asset.</p>
+        <code class="md-code hljs html word-break"><span class="hljs-tag">&lt;<span
+                class="hljs-name">iframe</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/widgets?type=scalar&amp;tasks=e-f6b6632fdd3648d1948fb311baaa3d03&amp;metrics=train&amp;company=aec6c91852c548158a76778aa40c1772"</span> <span
+                class="hljs-attr">name</span>=<span
+                class="hljs-string">"c66c0fda-5196-4d5f-ab0d-50ead9cb8738"</span> <span
+                class="hljs-attr">width</span>=<span class="hljs-string">"100%"</span> <span
+                class="hljs-attr">height</span>=<span class="hljs-string">"400"</span>&gt;</span><span class="hljs-tag">&lt;/<span
+                class="hljs-name">iframe</span>&gt;</span></code>
+        <p><small>The rendered output looks like this:</small></p>
+        <figure>
+            <img class="graph"
+                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+QAAAJYCAMAAADc/NyZAAABFFBMVEUVFyJI/yA5QF/AzvM9xSk0iywmUind4O5I8CQeNCYaJSQiQik2mixA1Cc6qCt
+                 HoE8tbiwxfSw8typD4ScXGSSMlbMqYCu5xuogIi68ye5CcVhF4ie0weRKzz6Tnr1eZHscHyojJjM3O0uxveBJUGNGS16ptdehrM1vdo9C1Ck5pyxI3Dqoq7m+y+9SWW0qLjw8TF5Gh1TY3eqtu
+                 d0ZHCiDjqmXocGBiqVVW3AnKzd1fZdkan8+WF1AZFtJ8yvV2OabpsZ8hZ9IuEhKw0SmstOHkKx2eYZNU2dCRVRYXnNGlFLN0t9qcopDfFdJ5zJIrEsxNEN5gpxBRlhVWGSzt8QzN0XBxdIvfC
+                 yJjJk/QEyYm6iQlKHSykbWAAAg6klEQVR42uzBgQAAAACAoP2pF6kCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGB27NimASAAguC
+                 +hRACEvpvlgQ6cOL7mQpWFx4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA82+PRaxAqlPEBhQplfEChQhkfUKhQxgcUKpTxAYUKZXxAoUIZH1CoUMYHFCqU8QGFCmV8QKFC
+                 GR9QqFDGBxQqlPEBhQplfEChQhkfUKjQdV/9uXVAoULHnfNZVdcOKFTouHPeq+raAYUKHXfOT1VdO6BQoePO+a6qawcUKnTcOW9Vde2AQoWOO+ejqq4dUKjQcef/Xr92QKG/7N3LSpthFEbht
+                 btrJ1J1IJiA4IGmpYPqIMXjxAxEAg70/m9Gjf7oNbzfWlfwsOGF8BESoeHV9Lw+7AGFCg2vpuf1YQ8oVGh4NT2vD3tAoULDq+l5fdgDChUaniMXKjQ8Ry5UaHiOXKjQ8By5UKHhOXKhQsNz5E
+                 KFhlfTl9eHPaBQoeHVawAMe0ChQsNz5EKFhufIhQoNz5ELFRqeIxcqNDxHLlRoeI5cqNDwHLlQoeHV9CNvwx5QqNDwvk8/8saoBxQqNDxHLlRoeI5cqNDwHLlQoYEdn91frB4cudBNQgNb9abf5
+                 45cKCA0r+e3gd/Nu5eOXCggNK6T7oNrOD7sXjhyoSA0rqPuM4Cb7htHLhSExnXfPQN46l4BO1W1x6ZBDyhUaGrr7l/AVlVtATDqAYUKTe2w//135EJBaGqX3Y8Au1W1+83MPstY/1H3EkduFjvy
+                 Rff8BPy4LhSERnba3ac4cqEAQhM7n3cvcORCNwkNbHbQvcaRC31PaF77y+5bHLnQj4Tm9af7cvbePuxV1Q4Aox5QqNC0HvqzNfyY/ruYUQ8oVGhaX0d+5ciFIjQ9Ry5UaHiOXKjQ8By5UKHhOXK
+                 hQsNz5EKFhufIhQoNz5ELFRredlX9BGDUAwoVml69BjDsAYUKTc+RCxUaniMXKjQ8Ry5UaHiOXKjQ8By5UKHhOXKhQsNz5EKFhufIhQoNz5ELFRre36raBhj1gEKFvrBvRy1RhFEcxp/TUamIKF
+                 oZBQlbcbcb9WbV1m4MCgu6aIO+/1dJdNtkxPt5zzzPJ/jtgT87FzPV24qIHYCxHlCo0Oo5cqFCi+fIhQotniMXKrR4jlyo0OI5cqFCi+fIhQotniMXKrR4jlyo0OK9jog3AGM9oFCh1duOiG2As
+                 R5QqNDqOXKhQovnyIUKLZ4jFyq0eI5cqNDiOXKhQovnyIUKLZ4jFyq0eI5cqNDiOXKhQou3ExFbAGM9oFCh1XPkQoUWz5ELFVo8Ry5UaPEcuVChxXPkQoUWz5ELFVo8Ry5UaPEcuVChxXPkQoU2
+                 3+LzMQ+bflx3CvAiIt4BjPWAQoW23vF15jkPO891MwDiNgBGekChQptuedll9kd+kevmjlwoCG27VWZ2/ZF/zSPuc+RCQWjbrU4ujg/7Iz/IuSMXuklo2x1O4NHI93PXkQvdJLT9Ho0888vp1c+l
+                 Ixd6l9D264/8Q97XTR25UEBo+/VH/jtvO8nMbnn3O+O2Z2a2qbn190f+a76/mvBnljl35GYVR75ur8sOgOcR8RKAcT4KCRXafE+MnPeZewBbEbEDjPWAQoU231Mjv8r87siFIrT9+iOfH1z8+ydf
+                 OHKhCG2//sivM6fAossORy4Uoe33f+TfZjfAj8yjT5OzeeauIxcKQttvM/Jp5tHDr9BmE0cuFIS23yLzEoDD9Uvrk9XdqzDXezhyoSC0UpMz1p3dLAFHLhQQWj9HThsJHS3UkQsdWEIH16uIeAuM9YB
+                 ChZZvOyK2gbEeUKjQ8jly2kjoaKGOXOjAEjq4HDltJHS0UEcudGAJHVyOnDYSOlqoIxc6sIQOLkdOGwkdLdSRCx1YQgfXX3brHjeqMAbDqD13MgIKggDx05AG6BA11ImUMvtfTaIoc6PUafzZ51nBkaV
+                 X8ofMfB8RUw8ICtq+U2YeI2LqAUFB22fksUagY6FGDlos0HIZeawR6FiokYMWC7RcRh5rBDoWauSgxQItl5HHGoGOhRo5aLFAy2XksUagY6GvLx+KGHtAUND+GfkagY6FGjlosUDrZeRrBDoWauSgxQK
+                 tl5GvEehYqJGDFgu0Xka+RqBjoUYOWizQehn5GoGOhb6+N5n5LmLqAUFB+3fMzFPE1AOCgvbPyNcIdCzUyEGLBVovI18j0LFQIwctFmi9jHyNQMdCjRy0WKD1MvI1Ah0LNXLQYoHWy8jXCHQs1MhBiwV
+                 aLyNfI9CxUCMHLRZojf79/xvnLjLzImLqAUFBG/b56ve2/TRy0MdA+3X748+2GTnoOdB+XW/b9t3IQc+B9uv6683dlZGDngPt17eIMHLQPdCeGTnoHmjPjBx0D7RnRg66B9qz55EfDofLzLw8SHqqxfq
+                 NXBozcu86KGjLjBx0D7RnL0b+JTM/Rkw9IChoy16M/JSZx4ipBwQFbZmRg+6B9szIQfdAe/Yw8l9GDvoY6ICMfI1Ax0KNHLRYoPUy8jUCHQs1ctBigdbLyNcIdCzUyEGLBVovI18j0LFQIwctFmi93mb
+                 mp4ipB7xn545RFAiAIIpSMA67BqKJife/px5igm7q/RM8GiptUNCC8qv3gKCgBRn5ikBroUYOOizQgRn5ikBroUYOOizQgX2S/NceEBS0oCPJWXtAUNCCjHxFoLVQIwcdFujAjHxFoLXQC3okedUeEBS
+                 0oFuSW+0BQUELMvIVgdZCjRx0WKADM/IVgdZCL+id5Kg9IChoQaeRbwi0FmrkoMMCHZiRrwi0FmrkoMMCnVh+1R4QFLQhI98QaC3UyEGHBToxI98QaC30iv6S3FsPCAra0JHkbD0gKGhDRr4h0FqokYMO
+                 C3RiRr4h0FroVf+fnq0HBAVt6Mve3bS0EYVRHD/jmQy2BgQZuQlNpSaasYUopTHWrFIwpIUuasDv/1WaSebmrWmkkMW9fc5vkcWs/jxwUIzR+QfKrR5QoQq1QCOPgULNhmrkCg2MQkOkkcdAoWZDD/X3n
+                 86sHlChCrVg/oFyqwdUqEIt0MhjoFCzoRq5QgOj0BAtRp7VarXM3gEVqlAL3iYz2afZS93eARWq0Ni1h4Nhe/PJTeUWXuKl9g6oUIXGre1Yci9YuWelq5ErFFBo3PpN0hWOdDmWBqwUGrlCAYXGbUgOAI
+                 zIGyw9sYMtyZK9AypUoVHrstcAcEk+YanFAltSjTx8CjUbulePX1DqsImlJs/3jHz+RpqlAypUoVEjRygV5PrDb7fDn4+7R34y/7CKpQMqVKEx65NjlM7JHJVLLrj2rpFndY08UAo1G7pPg3xAaUz2UZl
+                 ypkfSPcI7S7ws1cgDpVCzof888l9F8znHS5csABzNnSbe5/ezl9MjEdMQjV0j9xqObsfITzVykYhGnpMXKF2QWOOfNVCpJV5N366HSqFmQ/fy748/kdg2JL+jkiVevRz5maUDKlShUXNsodSig1e0Bv4r
+                 ef/PkR8fz15SSwdUqEKjNiCvAFyRF/BGZBtA39HBe5OsaOSBUqjZ0L2uSTfF1JHXAMbdCYAfZOdrfleQ51jSyMOnULOh+w24MALQJjvrz7r55n8of6eRB02hZkNf8dAi2brHzIfql9bz5x5JN2pgZfEzd
+                 Y08ZAo1G/qqxsSvOb9D5W7yiA21NE0zjTxoCjUbekgfNfKAKdRs6CGlfxn5SZqm9f/1gAr9zd655bwJxGB0LNlWhlxE8ku8ZAf/hrr/nXSqAgGacGlNOhN/5y0RJEe2zgtCAFFPMLU08ucjmz91gBCFqCcu
+                 1BMReW5A1K2oJUI9NSLPDYi6Fd0p8lMY0CDyDICoW1FL6hc3vQkizwCIuhW1ROnBNHL61AFCFKKeGEauiDwzIOpW1JIjPbgi8syAqFtRU+jBBZFnBkTdiu4VOSPyzICoW1FT7uPIT8x8ROSZAFG3oqYw9X
+                 D7UZcj/yEi8e8GqImwFaebhqhbUVNkHDklmuXIKaFzA1w6dRteNw1Rt6KmNNRzDpVSQhB5JkDUragpke/UIUyjyL9FBJGvB6LZU4yoMUIP+shP1ILI1wPR7ClG9B2RM7XoHpFL2IbXTUPUrejekZ8WI4+
+                 I/BkQzZ5iRI2p+U4juIv8ZY+KyJ8B0ewpRtScei7yXyDyVUA0e4oRNUdnIuf2K9PIb2EbXjcNUbei4Z2RH4wjr9qf24bTTUPUrWjYOfLzMHIyjlwROURX41fUnIrGLEZ+pYTsHnnV3+budNMQdStqD42R
+                 eiFy+cfID+u1hC8heN00RN2K2kMTvqaRn20jp01a0cGmj6palSBazEQLF7XnJjKueho5/a/Iuz+qRGr94E0zETUliBYz0cJFrem7vajq4XeE55WRf/NN4t6Rd6d98KaZiKQE0WImWrjoLkRVjf0Vt0jLk
+                 X8xc0MJnRlg9+7ESeTHsIJqEPkVkecMRIuC6SkvDrpT4jozwDZrnkSuYQU6iFx8RE6JOBTN4Dk6hU60cNFl7COXxKuD5A2Rs5/If7J3dtlOwkAAznhm5vATKiXn8KDHBdhFuAA34P53ItgMYVISSitaqt
+                 +LeEnSuQlfEkjK5XmgMGBenxes0YMHuisWkvTM1QOStwDg7pbcIjq+ldzBwD2m8DFbugEATEhem5fnBWv04IHuCkEOpFE+cqBwts5UICk/zzByzokqZ1m9e25vyUsian03U7AxmecLOwAJyV/gFRtv5c5
+                 hAt0VgjzLSWhd8pKZa8lM2SGNHpNclgTs9paWuwrdzeRvPXaQvIo6wA+fYKA3L89h3DlMoLvSQp7KmBPcgP4xERHXCcnHf7p1yaW0JclLk0fSP9TSPQAUUkr3dyRnXzdB8hf4Yu5buXOYQHeFIQ8bg0nJ
+                 T3IYdnFNkncA4ETyy/XUArP9dedYcl6+iScqn5bcByaluEwXWJgHsEVeVhgoXkFyHHhjdw4TaJ79JXdJyQulmE/u7UEYqLzkCWX1vJxC4XU6h5z4fZLLQTrRdhDWJYdr5dtY8m7v3bNxIPX7unOYQHfE64R
+                 ZySEl+aegWEkX1JK7638JhN5wfMmFeXkkOU+Syx9yEvi3Sl4vS14xc70keUnUWRqQk5SRHO+THGPJ8feu1PGq5Py+7hwm0H1ZlbxKSv49zLU5mt2XBkZoJjktXlCSKyl5IQfqW6+/SXKWUuqbc7gkOctrNR
+                 YlPyNim5NcdhrmJW/+oOTVf8n/FQiSnMVfRcHcmw8fYURJ3nvJ2cBIdyN5vyQ5qSiKIHlNl+gq7LTkQYraAeCGlrZKcr5Xck/tDbKJOXpiM4/0DCWMlMuSw6P31vXi+kO7erdG7+vOYQLdn7PsWqXPEEGmh
+                 2XwyzcYUSWQSM7ePwLB6nc69oho/dVudVczSS4/uoRn+E5LHnUzG1oa/fIVJyR3VN5K3oKHZbROSF7ojExE/dS3dPKhpL5sL3Mj+H1jtlY4JblDbJ9wpyciNi+x8EcAYKNASyI6wILF7vDkIcoG9WKyliCPE
+                 jSSHGa50YjPU47PdPGn8pIHmarZyM9RBGHRrbxXckpKPnD2B5U6kZKcLBbh95NE0dRAMonk2mmZG9W5/YFYL/rsA85K3iIiJbYSPyG5HfPX0JXPP7iP72sekRyjQPkgW4X3pp6aumauCAYwKbkFDSLOZ+XOwU
+                 DReBlCaqx/nUBrTE89nyDg9ObZsE+O4rdY9NcQUpJzmNPTJsn7WWX01PhfnRvt6iweG0le6t5IF0qj/u5uyTk/Xs/2vdNAGXTOSS4KZCQXtzZILkGdGKD4YRTPyUWrXY8DAI7iWJX8jERjJvvvDe4wwEQcruT
+                 zbHDXGNgANSAU7dQICBFa8rCF5gSCsgxTkvuWa+6VvJNSSN3HSqAyalufQs1LjLqiOJY8FMrOhylli+T9tbgqLbmDBmvZXVvyr5IoSO5T80BacqQ2LXlo5tlM6R7JmYg41CRKH+uDlRqpnpL8tGlhwOUl17dU
+                 //rgfp2jipoOIsxXeIxChu2qgAjLS5IDFrHkuCT55SJBnkLzW1kLiyUvAZx0NCilXFrqyFocAKHxHrXkpOgOhCKSnGLJgzkYHtaBkpxInNaSk5oetP6h/jToFlpymh3FM3N92dtwnAjb8Oq6uVgdattNkpP0G
+                 yhF8eY1fTn8KlHdLTlskLz+LznAVwMpDMJW1gtwRNRoyTXlYKxzl1k7EtyCwQ0MF5yWvL1+BATJhcSc5RSKnqVQC+xBf3cdzZbC5Nb6DkIk77KSy3qhD5nnUVKIGy2o4Vg/34t7yGZV8nUzm9sODRHmsx2nit
+                 r8RiycfQCXOcnbW8mLSHJScfh64jeQ/Cd3Z7cqNQwE4Bk7E/LT1DaViqx/qCBWBMELERVEFG9E8Grf/01c06RN2m6r1hv9Ls7u9vRsh2y+ybRT9tx68vr+2zfwZ9QnxArotyWv8NcocQe1IrC16QsDAKuHAwB9
+                 PmdS2lTymsq0xSe324fB21+RfArPjEWGDboFuMUA2XTARPSrvfdt2D4/AeAoeSQKnEMQUORXV3VeSo6/IDnrMzsHV8GATF7aPKtRz/1vSt5mp1seEr1Eq2c3KQXMlFZ0Ftau5PRfSP6g8Hx6CH+KTufzCRPkVck
+                 Z15H4m/RM+3lgPQwzymGhVjBI9O4iuchOFKLkSF6HX8la7UxyLbIZhSNiEjT/E4czLHoa8DQzWcV0YF78ObG9KnlMLJLw9ySPQVSbi7BgzHuXswDGODffxMCcld6oZT8+WbR20eLXKOsg/a7k6r+R/NFF8MdPXx
+                 TFh2PfJvFsbbITkN/mzXf+IdDgDIqT++9jNVhcoZvmrRotuvmeSr/VnDEgNO6T+898FsvSAgDOzK5P9psmPjMLwj0YtI09+dWOYtkuTibI4obkEnOcX9jnzfssBaXSkwj1xETeRoyIXPKY1RJ46x6cmqltl/80T4
+                 kp8Pw9/ETUsxZ/I3zVEuPYlFz1sTb65yV/WhRvAW7dLopHcAj0POO4elSISGGo3TB2tZ8PPh0A5pxK9PDOes4VHiMXZmnVvY/L/Sz+HUAozGkdc5/6tQcbi00mR5Ap5xnuQXqoZmtcRYT0oOCCYid5LrkSPnDJ/
+                 mcids/KJKZFOghH25a8ZmaVZYpkStTR2bWLLTRsVKFlTumiXObL/SS5v81qktz5najzinva/0HyongFF74UxXc4RMVx5KdxpOE2lpgghX/gVHI5Xfbyroe219XCnhn3kPiLWK7wKIS/gWnl0chJIrZLyas/Cx5A
+                 E25SAdTDu7O10yE19zL7fGoQ3WBXj631Wd4Rp3HyPBlZNysjOJ5t11r1NYCKto60qeRWcAfVbPSojHWFTBuT+edVQpe+tvNTIHRpRjPlvy75pVr/HGR/CsdQcVTxgsk6mIz4vAlnQkYMi1pDsbp30+dA7DcaGD8
+                 Ql3fhWOBA3ZjVqX2SVP188L97ZkR3JCnsU/pAry2cJ8yw+CtUWu4dVGGG8lOy+X3Tu77FHZjQzndSvZwXDbJ23p48aSiLI+TACMoPD5jSKwCdnWK3FlW2Tw2COzMWBNIQ4nKM5VgzEFgB3MnZPqLP40BLvXA4I
+                 k2Wfv51yS8r+Ff/5E7xCo7hbWx8IVdz2tE00NUvb8SSHjRRxWP37UJyvZOasPHk1wgnSg3u5yZyTHiBtZ9YwsCFbkVVBqPGy1mlj2oT2ZSEuzxzo4K5uF1YPtZL5VE7SXKZWE7rMjNUV4K4lpekfy26g6XHcUh
+                 bvI5bbADMkOUyI7ac7SEkplwpjWQfvbbYtriHwznWYMK/LvmDovjinzwu7sJBlNq7t1HobH9RCxjx8lTxKxP90tTBgGh0rBQakMnlFZygIB/P7g2BEjfh5NpTKTGjHPXSgsMzcJlkwked6nVKFG3StTaButD6Xq
+                 MBWNeVcRP9g52zaXEbBsJwZxKC3YbMOoctTBA9lB4WXSR6KVTWwboJZP//f9ORbK8SSLsLIYcsfSBGmsyHfXgHyUT5Au+gu2sfEGW+Q1IPwMWDPLrIf282P8rg520iv/0Y32HfvXHIoDs8tfO5i11dJhyzrtoy6
+                 S6OUIJQ7O3T1WX90hXas93Y874uvJvTft8VRxnnpMdt/Yn8drtmKeJt22MDjexJm7I5+fy87w7FYzfX2B7qHu9lt9s9fWobiX1eVFvTQbPtlg6VqdYmX1r4J/Ud1fHa425PL/I57eANmn17usPWprKb362cbk5au
+                 +od+MAix4fDWZoSXqNnrhNLRHYAUImZKSht0BEpHTDDhWhkOIEeQfzmFIMHg9xjQcxRfImIWSnlFzfXF9d8VWKyOMNS0ljKYMYMkwQNBpfMnENZg1BuINngoV+DhXIzglbTanW5ZAkZrIYLksk1xBqswQBC5Cix
+                 xEwqEOMKCOOkgNhDQVFG6USD8iMERFIDBTWKH6woGJWiHvtadqpDD5d4P9axnuMXxslJHSlil7mLzsO70Nf9FC/34wJcQCPcROQYw3+RPxikGN/EIIFPrzOLr3jd4xmWEhu8kaF0ihWHlxAI50abDKasccQI4CenwY
+                 O2pAc8Jymx43Wy3GjJXujxb5jeYT+3lRgNFoIU7wMIiC7CmNN5S7QqPpjX5iueYp3QcLKrqE1NPjewuUPm8BRKt9B2UAMUBheyBYhK5hRByIWUZdcz9WMRN5YrG3QsBp8iUQBFjGYCgoIyS6hFghUVR5BSFW3JIiI
+                 vLg4Fk8LDi/zXZvOtDL5uvl/7/kP968Yf9u5mNWIQigLwuST3otdBNIt0IS2dRQuhFLrrpn3/16okBodpJ8wMHZi/D2KyEHM0RAJC1P2C9qu/KwbFCag47CLM7LEtEefy6zFMdSwOY+PQT3c23nHnsYzJYkWCIrLm
+                 UkOXkAkcx7EDOrTSM0dU0QJMPD96T63pUIVgUWnONBB3g5Z17egpwLKG1iFSNw6+GCOBWkHhDHnDGHx0pU0y05XVqQKYph//pRTVUsDEtGlsJR9jevIi9PaBglPLwc3JkrmALSyWvMzr403zii1X95JfSdBV+KegF
+                 ntQzkV/9BQq/RxUvaost9CqK62ksDl9qZ0vHKygCh2sQ6XJYUuofa3dENhf2bvvHSMqF7AX1aJ10zwhey7nDbf27tyDjs4jqMVx9BZG9GAPzfs6nz7LZ3t1Bk96D/egZ+8e9Ie9u1lNHI7CMH7guYWUJPDHr1TNJu
+                 MirZ3ajYJSBRet0Pu/lTEfZpyBAQsDPdr3t+kwq4cT3ra2Qr/cCtZv0Q6KxM591wMqVKE3Jwo09vaH73pAhSr09iTzGChf7E/f9YAKVehNmo0j+9t3PaBCFSo3fkCFKlRu/IAKVajc+AEVqlC58QMqVKFy4wdUqE
+                 Llxg+oUIXKjR9QoQqVGz+gQhUqIiIiIiIiIiIiIiIiIvJ/9PsjuwoK/bahjWG/PzS52Nt+frdvLgZ35lq0LPtXEbrt5w/+Q0d5b/Mjcf7oR4uzf84XI6v8hB8mF5rF1Pa+n3TrCbIrCN2kwLP30GhJpRg7Dh0uAlh
+                 jFFOJPzTyz288LNfAvd8n3RlxDSN/mHIUJ95Dp5AuS2DsNfTnmkp71hTiaQxxpJF/Sg8Wzd9bK70+6TPZNYw8KqF8HZjz74ItgWxQP/qe19CCmtUWMDezJeQa+acEMqukFF6f9G8LrmHk1WoiM/cj78POjgLBa2iR
+                 5UnvNPJJ83cHhrDWyD8jOj3bKXRP+hXSZ/NnBvNAZs5DS+Jm485DF7BtelOvodWou5EXlFbJSLuRr6A0uVD4/e36ARibQxPSpBq579A3yEf5Jv8w56EfsDKzQcHUc2g3clievh6dRp5D7OhzknM7eG+f9Khw+p3QC
+                 /StGrnv0GNmSeXJeagFyIeHEnaeQ08jf4CNVe4gakb+AunM5DKzlDhqnvRbWm3JoWHB2uqR+w595ygOwM53qA0zai+uL3oaeQJPVtnAQz3yHRRX9Q6eL/UQ2s/g0Ithbx5NYVaP3HnoHRRbsy0QuQ7tRt53fdF/jn
+                 wFbE0u38+7VajE5tEOcqtH7jx02b6sXcHBdegwhsfXfQa554v+a+SVd5PLzzi3GrV78ydJyaKjUH3wHFqN3CojyF2H5s0LikEg9fzoTyOPoNf9RzvyVO9fv9ATrKNu5BOfp3vkzMxxqG2qvqMBPHq+qK1JT2MfOQ49
+                 ++n6uuk+jXwCE5NL7KGMrAHYyuXpepyZOQ6t7tm3ozH0PV/UAuH064Cd49Bu5DGh7Y7rkfdsAiuTi17rhuT8rRs+TxcNGoEwGHgOtVn7SbMHz65DezBsPyaOQ7uRz5tXE/fQa39PPkz9/VrfozGkb0ntoXnSvk8XyM
+                 x8h85hPksWkPkO3UEY2cB7aDfyMcQHO8Qwbkdu9y5fYLiT0QnNk/Z9unrkvkOfA7X02Xdo1KNRHDyHdiO3OY2lNSNvf55k8umRN6ebmk/1yJ2HDqZAMR25D13EHE1mrkNPI6/iAhAe7ehHM3KbQG4iX2B7Je/SGNx/
+                 2DVJXhMTERERERERERERERERERERERERERERERERERERERERERERERERERERERER+cWuHau2DYVhGP47/TegwVud0myGgMkSMmgTKloKtoWd3P999Ei4xVqioR4O5nmGo+9ofzEIAwAAAAAAAAAAAAAAAAAAAAAAAAA
+                 AAAAAAAAAAAAAAAAAAAAAAABALb79hwDqJ3J4cCKHBydyeHB3ivz77jOAGt0p8l3uA6iRyOHBiRwe3L0jby6n+Gd72Sw2sK7uyJ+HLI5vMenasve7ZrGBNTVH3uVVXy7n6x4WG1hVb+S/M/N9c/nIHJrYlvPQnI6ZPx
+                 cb+FrNkZeI+yhK5V0cpiOi2edusYEVFUe+zzEmpywx95nDc7lsnjY328c3WFVv5JvMz5jlVHubme2xe4q42cCqeiPvM7uYtTlEvIw5O74uNrCi3sgvfyN/zRyjeDmP+6nsxQZW1Bt5k7mLyWEaPw79dediAyvqjTza3
+                 DfXr+vv5U1Ol/l5s/0dBlbUHHmXOW7nH+x2vnxExFub7WIDKyqOvBkyc2jL8atcyrMdpzfdYgNfqzbytpzbY07aPorLkLPzYvOnPTu0ASAEggBIETTwdeDRn7x5oP8+MJDgsITMqLsC1uzCzpkhn97Uconj+XL907Pc
+                 dnIIe2eHPETNGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcLUOWZwtnnRfOVsAAAAASUVORK5CYII="
+                 alt="Training loss">
+
+            <figcaption><small>Training loss from the Pytorch MNIST example</small></figcaption>
+        </figure>
+    </section>
+
+    <!-- HEADING -->
+    <section>
+        <h2>Heading</h2>
+        <code class="md-code"># H1
+            ## H2
+            ### H3
+            #### H4
+            ##### H5
+            ###### H6
+        </code>
+        <p><small>The rendered output looks like this:</small></p>
+        <h1>H1</h1>
+        <h2>H2</h2>
+        <h3>H3</h3>
+        <h4>H4</h4>
+        <h5>H5</h5>
+        <h6>H6</h6>
+    </section>
+
+    <!-- EMPHASIS -->
+    <section>
+        <h2>Emphasis</h2>
+        <code class="md-code">**This is bold text** and __so is this__
+            *This is italic text* and _so is this_
+            ~~Strikethrough~~</code>
+        <p><small>The rendered output looks like this:</small></p>
+        <p><strong>This is bold text</strong> and <strong>so is this</strong></p>
+        <p><em>This is italic text</em> and <em>so is this</em></p>
+        <p>
+            <del>Strikethrough</del>
+        </p>
+    </section>
+
+    <!-- BLOCKQUOTES -->
+    <section>
+        <h2>Blockquotes</h2>
+        <code class="md-code">> Blockquotes can be nested...
+            >> ...by using additional greater-than signs right next to each other...
+            > > > ...or with spaces between arrows.</code>
+        <p><small>The rendered output looks like this:</small></p>
+        <blockquote>
+            <p>Blockquotes can be nested...</p>
+            <blockquote>
+                <p>...by using additional greater-than signs right next to each other...</p>
+                <blockquote>
+                    <p>...or with spaces between arrows.</p>
+                </blockquote>
+            </blockquote>
+        </blockquote>
+    </section>
+
+    <!-- LIST -->
+    <section>
+        <h2>List</h2>
+
+        <h3>Unordered</h3>
+        <code class="md-code">+ Create a list by starting a line with `+`, `-`, or `*`
+            + Sub-lists are made by indenting 2 spaces:
+            - Marker character change forces new list start:
+            * Ac tristique libero volutpat at
+            + Facilisis in pretium nisl aliquet
+            - Nulla volutpat aliquam velit
+            + [x] Checkmarks are supported as well.
+        </code>
+        <p><small>The rendered output looks like this:</small></p>
+        <ul>
+            <li>Create a list by starting a line with <code>+</code>, <code>-</code>, or <code>*</code></li>
+            <li>Sub-lists are made by indenting 2 spaces:
+                <ul>
+                    <li>Marker character change forces new list start:
+                        <ul>
+                            <li>Ac tristique libero volutpat at</li>
+                            <li>Facilisis in pretium nisl aliquet</li>
+                            <li>Nulla volutpat aliquam velit</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><i class="fa-solid fa-check-square"></i> Checkmarks are supported as well.</li>
+        </ul>
+        <hr />
+        <h3>Ordered</h3>
+        <code class="md-code">1. Start with a numbered element...
+            2. And just keep going.
+            1. You can use sequential numbers...
+            1. ...or keep all the numbers as `1.`
+        </code>
+        <p><small>The rendered output looks like this:</small></p>
+        <ol>
+            <li>Start with a numbered element...</li>
+            <li>And just keep going.</li>
+            <li>You can use sequential numbers...</li>
+            <li>...or keep all the numbers as <code>1.</code></li>
+        </ol>
+    </section>
+
+
+    <!-- TABLES -->
+    <section>
+        <h2>Tables</h2>
+        <code class="md-code">| | Align Right | Align Left | Align Center |
+            | —————-—— | —————————-—:|:—————————- |:—————————-——:|
+            | 1 | 1 | 1 | 1 |
+            | 11 | 11 | 11 | 11 |
+        </code>
+        <p><small>The rendered output looks like this:</small></p>
+
+        <table class="table" style="width: 100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th style="text-align: right;">Align Right</th>
+                <th style="text-align: left;">Align Left</th>
+                <th style="text-align: center;">Align Center</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td style="text-align: right;">1</td>
+                <td>1</td>
+                <td style="text-align: center;">1</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td style="text-align: right;">11</td>
+                <td>11</td>
+                <td style="text-align: center;">11</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+    <!-- COLLAPSIBLE SECTIONS -->
+    <section>
+        <h2>Collapsible sections</h2>
+        <code class="md-code hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">details</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">summary</span>&gt;</span>Extra detailed information<span
+                    class="hljs-tag">&lt;/<span class="hljs-name">summary</span>&gt;</span>
+            All the gory details!
+            <span class="hljs-tag">&lt;/<span class="hljs-name">details</span>&gt;</span></code>
+
+        <p><small>The rendered output looks like this:</small></p>
+        <details>
+            <summary>Extra detailed information</summary>
+            All the gory details!
+        </details>
+    </section>
+
+
+    <!-- CODE -->
+    <section>
+        <h2>Code</h2>
+
+        <h3>Inline code</h3>
+        <code class="md-code">Putting `code` in the middle of the sentence</code>
+        <p><small>The rendered output looks like this:</small></p>
+        <p>Putting <code>code</code> in the middle of the sentence</p>
+        <hr />
+        <h3>Block code with indentation</h3>
+        <pre>
+    // Comment
+    line 1
+    line 2
+    line 3</pre>
+        <p><small>The rendered output looks like this:</small></p>
+        <code class="md-code">// Comment
+            line 1
+            line 2
+            line 3</code>
+        <hr />
+        <h3>Block code using "fences"</h3>
+        <pre>```
+Meaningful code
+```</pre>
+        <p><small>The rendered output looks like this:</small></p>
+        <code class="md-code">Meaningful code</code>
+        <hr />
+        <h3>Syntax highlighting</h3>
+
+        <code class="md-code">```py
+            from clearml import task
+            t = task.Init(project_name='Groundbreaking research', task_name='Baseline')
+            ```</code>
+        <p><small>The rendered output looks like this:</small></p>
+        <code class="md-code"><span class="hljs-keyword">from</span> clearml <span class="hljs-keyword">import</span>
+            task
+            t = task.Init(project_name=<span class="hljs-string">'Groundbreaking research'</span>, task_name=<span
+                    class="hljs-string">'Baseline'</span>)
+        </code>
+    </section>
+
+
+    <!-- LINKS -->
+    <section>
+        <h2>Links</h2>
+        <code class="md-code hljs md">[<span class="hljs-string">link text</span>](<span class="hljs-link">http://ww.clear.ml</span>)
+            [<span class="hljs-string">link with tooltip</span>](<span class="hljs-link">http://www.clear.ml/docs/latest/docs/ "ClearML Documentation"</span>)</code>
+        <p><small>The rendered output looks like this:</small></p>
+        <p><a href="http://www.clear.ml" target="_blank">link text</a></p>
+        <p><a href="http://www.clear.ml/docs/latest/docs/" target="_blank" title="ClearML Documentation">link with
+            tooltip</a></p>
+    </section>
+
+    <!-- HORIZONTAL RULES -->
+    <section>
+        <h2>Horizontal Rules</h2>
+        <code class="md-code">___
+            ---
+            ***</code>
+        <p><small>The rendered output looks like this:</small></p>
+        <hr>
+        <hr>
+        <hr>
+    </section>
+
+
+    <!-- IMAGES -->
+    <section>
+        <h2>Images</h2>
+        <code class="md-code">![Logo with text](c-logomark.svg "ClearML Logo with title")</code>
+        <p><small>The rendered output looks like this:</small></p>
+        <p class="text-center">
+            <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 width="50" height="50">
+                <path d="M904.533333 740.693333c32.426667-58.026667 8.533333-141.653333-63.146666-230.4 75.093333-90.453333 98.986667-172.373333 66.56-232.106666-32.426667-58.026667-116.053333-76.8-230.4-56.32-39.253333-109.226667-98.986667-170.666667-163.84-170.666667s-126.293333 63.146667-165.546667 174.08C237.226667 204.8 151.893333 225.28 119.466667 283.306667c-34.133333 58.026667-8.533333 141.653333 63.146666 230.4-75.093333 90.453333-98.986667 172.373333-66.56 232.106666 10.24 17.066667 25.6 30.72 40.96 40.96 42.666667 23.893333 107.52 30.72 187.733334 17.066667 27.306667 78.506667 64.853333 131.413333 107.52 155.306667 17.066667 10.24 35.84 15.36 56.32 15.36 64.853333 0 126.293333-63.146667 165.546666-174.08 114.346667 18.773333 197.973333-3.413333 230.4-59.733334z"
+                      fill="#00B2D8" />
+                <path d="M389.12 527.36c15.36-29.013333-17.066667-51.2-37.546667-64.853333-3.413333 0-6.826667-1.706667-10.24-1.706667-5.12 0-10.24 1.706667-13.653333 6.826667-5.12 6.826667-3.413333 15.36 3.413333 20.48h1.706667c6.826667 5.12 27.306667 17.066667 27.306667 23.893333-1.706667 1.706667-3.413333 3.413333-8.533334 3.413333-6.826667 0-17.066667-1.706667-23.893333-5.12-1.706667 0-3.413333-1.706667-5.12-1.706666-6.826667 0-11.946667 3.413333-13.653333 10.24-3.413333 8.533333 0 17.066667 8.533333 20.48 3.413333 1.706667 18.773333 6.826667 35.84 6.826666 13.653333 0 27.306667-3.413333 35.84-18.773333z m327.68-8.533333c-1.706667-5.12-8.533333-10.24-13.653333-10.24-1.706667 0-3.413333 0-5.12 1.706666-8.533333 3.413333-17.066667 5.12-23.893334 5.12-5.12 0-8.533333 0-8.533333-3.413333 0-5.12 20.48-18.773333 27.306667-23.893333h1.706666c6.826667-5.12 8.533333-13.653333 3.413334-20.48-5.12-5.12-10.24-6.826667-15.36-6.826667-3.413333 0-5.12 0-8.533334 1.706667-20.48 13.653333-52.906667 34.133333-37.546666 64.853333 8.533333 13.653333 22.186667 18.773333 35.84 18.773333 17.066667 0 34.133333-6.826667 35.84-6.826666 6.826667-3.413333 10.24-13.653333 8.533333-20.48z m-68.266667 117.76c0-3.413333-1.706667-6.826667-1.706666-6.826667s-25.6-73.386667-68.266667-104.106667c1.706667-5.12 1.706667-8.533333 1.706667-13.653333 0-5.12 0-8.533333-1.706667-11.946667 40.96-30.72 68.266667-104.106667 68.266667-104.106666s0-1.706667 1.706666-3.413334h1.706667c18.773333 0 34.133333-15.36 34.133333-34.133333s-15.36-34.133333-34.133333-34.133333-34.133333 15.36-34.133333 34.133333c0 11.946667 5.12 22.186667 13.653333 27.306667-3.413333 39.253333-37.546667 69.973333-64.853333 88.746666-5.12-5.12-11.946667-8.533333-17.066667-10.24 3.413333-25.6-6.826667-54.613333-15.36-73.386666 8.533333-3.413333 15.36-11.946667 20.48-20.48 8.533333-15.36 11.946667-34.133333 11.946667-37.546667 1.706667-8.533333-5.12-17.066667-13.653334-18.773333-6.826667-1.706667-13.653333 1.706667-15.36 8.533333-1.706667 1.706667-1.706667 3.413333-1.706666 5.12-1.706667 8.533333-5.12 18.773333-8.533334 25.6-1.706667 3.413333-5.12 6.826667-6.826666 6.826667-5.12-3.413333-6.826667-27.306667-6.826667-37.546667v-1.706667c-1.706667-8.533333-8.533333-13.653333-17.066667-13.653333-5.12 0-10.24 3.413333-13.653333 8.533333-3.413333 1.706667-3.413333 5.12-3.413333 8.533334 1.706667 23.893333 3.413333 63.146667 35.84 66.56 10.24 22.186667 8.533333 49.493333 3.413333 69.973333-8.533333 1.706667-17.066667 6.826667-22.186667 11.946667-5.12-44.373333-73.386667-78.506667-102.4-92.16 0-1.706667 1.706667-5.12 1.706667-6.826667 0-18.773333-15.36-34.133333-34.133333-34.133333s-34.133333 15.36-34.133334 34.133333 15.36 34.133333 34.133334 34.133333c10.24 0 18.773333-5.12 25.6-11.946666 58.026667 18.773333 93.866667 98.986667 93.866666 98.986666s0 1.706667 1.706667 3.413334c-3.413333 5.12-3.413333 8.533333-3.413333 13.653333 0 5.12 0 8.533333 1.706666 11.946667 0 1.706667-1.706667 3.413333-1.706666 3.413333S430.08 631.466667 358.4 631.466667c-18.773333 0-34.133333 15.36-34.133333 34.133333s15.36 34.133333 34.133333 34.133333 34.133333-15.36 34.133333-34.133333c0-8.533333-3.413333-15.36-8.533333-22.186667 23.893333-8.533333 104.106667-44.373333 109.226667-93.866666 6.826667 6.826667 15.36 10.24 25.6 11.946666 3.413333 23.893333 0 49.493333-18.773334 69.973334-13.653333 1.706667-22.186667 11.946667-27.306666 22.186666-8.533333 15.36-11.946667 34.133333-11.946667 37.546667-1.706667 8.533333 5.12 17.066667 13.653333 18.773333 6.826667 1.706667 13.653333-1.706667 15.36-8.533333 1.706667-1.706667 1.706667-3.413333 1.706667-5.12 1.706667-8.533333 5.12-18.773333 8.533333-25.6 1.706667-3.413333 5.12-6.826667 6.826667-6.826667 5.12 3.413333 6.826667 27.306667 6.826667 37.546667v1.706667c1.706667 8.533333 8.533333 13.653333 17.066666 13.653333 5.12 0 10.24-3.413333 13.653334-8.533333 1.706667-1.706667 1.706667-5.12 1.706666-8.533334-1.706667-22.186667-3.413333-54.613333-25.6-64.853333 5.12-10.24 22.186667-44.373333 23.893334-75.093333 6.826667-1.706667 13.653333-5.12 18.773333-10.24 25.6 17.066667 58.026667 46.08 64.853333 81.92-17.066667 1.706667-30.72 15.36-30.72 34.133333s15.36 34.133333 34.133334 34.133333 34.133333-15.36 34.133333-34.133333c0-13.653333-6.826667-23.893333-17.066667-29.013333z"
+                      fill="#FFFFFF" />
+            </svg>
+        </p>
+    </section>
+
+</div>

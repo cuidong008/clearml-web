@@ -1,24 +1,12 @@
 import REQ from "@/api"
-import { CurrentUser, User } from "@/types/user"
-
-export interface UsersGetCurrentUserResponse {
-  user?: CurrentUser
-  getting_started?: object
-}
-
-export interface UsersGetAllExRequest {
-  name?: string
-  id?: Array<string>
-  only_fields?: Array<string>
-  page?: number
-  page_size?: number
-  order_by?: Array<string>
-  active_in_projects?: Array<string>
-}
-
-export interface UsersGetAllExResponse {
-  users?: Array<User>
-}
+import {
+  UsersGetAllExRequest,
+  UsersGetAllExResponse,
+  UsersGetCurrentUserResponse,
+  UsersGetPreferencesResponse,
+  UsersSetPreferencesRequest,
+  UsersSetPreferencesResponse,
+} from "./models/user"
 
 export function getCurrentUser() {
   return REQ.post<UsersGetCurrentUserResponse>("/users.get_current_user", {
@@ -27,7 +15,16 @@ export function getCurrentUser() {
 }
 
 export function getUserAll(request: UsersGetAllExRequest) {
-  return REQ.post<UsersGetAllExResponse>("/users.get_all_ex", {
-    get_supported_features: true,
-  })
+  return REQ.post<UsersGetAllExResponse>("/users.get_all_ex", request)
+}
+
+export function getUserPreferences() {
+  return REQ.post<UsersGetPreferencesResponse>("/users.get_preferences", {})
+}
+
+export function setUserPreferences(request: UsersSetPreferencesRequest) {
+  return REQ.post<UsersSetPreferencesResponse>(
+    "/users.set_preferences",
+    request,
+  )
 }

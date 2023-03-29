@@ -8,7 +8,28 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { LayoutIndex } from "@/layout"
 import { Login } from "@/layout/login"
 import { useStoreSelector } from "@/store"
-
+import { CanvasRenderer } from "echarts/renderers"
+import { LabelLayout, UniversalTransition } from "echarts/features"
+import * as echarts from "echarts/core"
+import {
+  DatasetComponent,
+  GridComponent,
+  TitleComponent,
+  TooltipComponent,
+  TransformComponent,
+} from "echarts/components"
+import { ScatterChart } from "echarts/charts"
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  ScatterChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer,
+])
 const { darkAlgorithm, defaultAlgorithm } = theme
 export const App = () => {
   const themeConfig = useStoreSelector((state) => state.app.themeConfig)

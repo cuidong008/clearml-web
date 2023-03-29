@@ -6,9 +6,7 @@ import { AuthRouter, rootRouter } from "@/router"
 import { NavHeader } from "@/layout/nav"
 import { LayoutMenu } from "@/layout/sidebar"
 import { getAllUser, getLoginUser } from "@/store/app/app.actions"
-import { useStoreSelector } from "@/store"
-import { ThunkActionDispatch } from "redux-thunk"
-import { useDispatch } from "react-redux"
+import { useStoreSelector, useThunkDispatch } from "@/store"
 
 const { Header, Sider, Content } = Layout
 
@@ -18,7 +16,7 @@ export const LayoutIndex = () => {
   )
   const themeConfig = useStoreSelector((state) => state.app.themeConfig)
   const user = useStoreSelector((state) => state.app.user)
-  const dispatch = useDispatch<ThunkActionDispatch<any>>()
+  const dispatch = useThunkDispatch()
   const [breadCrumbList, setBreadCrumbList] = useState<Record<any, any>>({})
 
   useEffect(() => {

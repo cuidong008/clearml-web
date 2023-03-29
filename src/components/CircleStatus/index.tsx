@@ -1,15 +1,15 @@
 import {
   EXPERIMENTS_STATUS_LABELS,
   EXPERIMENTS_TYPE_LABELS,
-  TaskStatusEnum,
-  TaskTypeEnum,
+  TaskStatusEnumType,
+  TaskTypeEnumType,
 } from "@/types/enums"
 import styles from "./index.module.scss"
 import classNames from "classnames"
 
 export const CircleStatus = (props: {
-  status?: TaskStatusEnum
-  type?: TaskTypeEnum
+  status?: TaskStatusEnumType
+  type?: TaskTypeEnumType
   defaultStatus?: string
 }) => {
   const { status, type, defaultStatus } = props

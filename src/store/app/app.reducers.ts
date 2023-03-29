@@ -2,6 +2,7 @@ import * as types from "./app.actions-types"
 import produce from "immer"
 import { AnyAction } from "redux"
 import { AppStoreState } from "@/types/store"
+import { cloneDeep } from "lodash"
 
 const initState: AppStoreState = {
   language: "",
@@ -16,6 +17,7 @@ const initState: AppStoreState = {
   menuList: [],
   user: undefined,
   users: [],
+  preferences: {},
 }
 
 export default function app(state = initState, action: AnyAction) {
@@ -38,6 +40,9 @@ export default function app(state = initState, action: AnyAction) {
         break
       case types.SET_USER_LIST:
         draftState.users = action.users
+        break
+      case types.SET_USER_PREFERENCE:
+        draftState.preferences = action.preferences
         break
       default:
         return draftState

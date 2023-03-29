@@ -1,4 +1,8 @@
-import { ArtifactModeEnum, TaskStatusEnum, TaskTypeEnum } from "@/types/enums"
+import {
+  ArtifactModeEnum,
+  TaskStatusEnumType,
+  TaskTypeEnumType,
+} from "@/types/enums"
 import { Project } from "@/types/project"
 import { Model } from "@/types/model"
 import { User } from "@/types/user"
@@ -122,12 +126,12 @@ export interface ConfigurationItem {
 }
 
 export interface Task {
-  id?: string
+  id: string
   name?: string
   user?: { id: string; name?: string }
   company?: { id: string; name?: string }
-  type?: TaskTypeEnum
-  status?: TaskStatusEnum
+  type?: TaskTypeEnumType
+  status?: TaskStatusEnumType
   comment?: string
   created?: string
   started?: string
@@ -156,4 +160,20 @@ export interface Task {
   hyperparams?: { [key: string]: any }
   configuration?: { [key: string]: ConfigurationItem }
   runtime?: { [key: string]: string }
+}
+
+export interface ITask
+  extends Omit<
+    Task,
+    "user" | "parent" | "project" | "execution" | "output" | "company"
+  > {
+  user?: User
+  parent?: string | ITask
+  project?: Project
+  execution?: IExecution
+  output: ItaskOutput
+  company: {
+    id?: string
+    name?: string
+  }
 }

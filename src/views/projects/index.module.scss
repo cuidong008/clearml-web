@@ -38,6 +38,11 @@ html[data-type="light"] {
 .projects {
   display: block;
   height: 100%;
+
+  .projectsBody {
+    height: calc(100%);
+    overflow-y: auto;
+  }
 }
 
 .projectDialogTitle {
@@ -47,4 +52,33 @@ html[data-type="light"] {
   color: #8492c2;
   display: block;
   font-family: Heebo, sans-serif;
+}
+
+.tabHeader {
+  :global(.ant-tabs-tab) {
+    padding: 16px 0;
+  }
+
+  :global(.ant-tabs-ink-bar) {
+    top: 0;
+    height: 4px !important;
+  }
+}
+
+html[data-type="dark"] {
+  .tabHeader {
+    :global(.ant-tabs-tab.ant-tabs-tab-active) {
+      :global(.ant-tabs-tab-btn) {
+        color: $neon-yellow !important;
+      }
+    }
+
+    :global(.ant-tabs-tab:hover) {
+      color: $neon-yellow !important;
+    }
+
+    :global(.ant-tabs-ink-bar) {
+      background: $neon-yellow;
+    }
+  }
 }
