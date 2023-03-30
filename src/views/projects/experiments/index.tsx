@@ -62,7 +62,7 @@ export const Experiments = () => {
     if (selectedProject?.id) {
       fetchExperiments(true)
     }
-  }, [fetchExperiments, selectedProject?.id, showCols.length])
+  }, [selectedProject?.id, showCols.length])
 
   function handleFilter(
     col: ColumnDefine<Task>,
