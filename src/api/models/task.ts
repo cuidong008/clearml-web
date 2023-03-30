@@ -30,6 +30,6 @@ export interface TasksGetAllExRequest {
 }
 
 export interface TasksGetAllExResponse {
-  tasks?: Array<Task>
+  tasks: Array<Task>
   scroll_id?: string
 }
