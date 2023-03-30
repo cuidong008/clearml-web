@@ -19,8 +19,14 @@ import { useDispatch } from "react-redux"
 import { setProjectSelected } from "@/store/project/project.actions"
 
 export const ProjectList = () => {
-  const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
-    useStoreSelector((state: StoreState) => state.project)
+  const {
+    showScope,
+    sortOrder,
+    orderBy,
+    groupId,
+    sharedProjects,
+    selectedProject,
+  } = useStoreSelector((state: StoreState) => state.project)
   const user = useStoreSelector((state) => state.app.user)
   const dispatch = useDispatch()
   const [newProjDialog, setNewProjDialog] = useState(false)
@@ -203,6 +209,13 @@ export const ProjectList = () => {
       })
   }
 
+  function navigateProject(r: Project, toSelf: boolean) {
+    navigate(`/projects/${r.id}/${toSelf ? "projects" : "experiments"}`, {
+      state: { target: "experiments" },
+    })
+    dispatch(setProjectSelected(r))
+  }
+
   return (
     <div className={styles.projectList}>
       <ProjectDeleteDialog
@@ -238,20 +251,22 @@ export const ProjectList = () => {
             NEW PROJECT
           </Button>
         </header>
+        {!!selectedProject?.sub_projects?.length && (
+          <div onClick={() => navigateProject(selectedProject, false)}>
+            <ProjectCard
+              showMenu={false}
+              project={{
+                ...selectedProject,
+                name: `[${selectedProject.name}]`,
+                sub_projects: [],
+              }}
+            />
+          </div>
+        )}
         {projects.map((r) => (
           <div
             key={r.id}
-            onClick={() => {
-              navigate(
-                `/projects/${r.id}/${
-                  r.sub_projects?.length ? "projects" : "experiments"
-                }`,
-                {
-                  state: { target: "experiments" },
-                },
-              )
-              dispatch(setProjectSelected(r))
-            }}
+            onClick={() => navigateProject(r, !!r.sub_projects?.length)}
           >
             <ProjectCard
               project={r}
