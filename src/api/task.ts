@@ -4,7 +4,7 @@ import { SortMeta } from "@/types/common"
 import {
   ColumnDefine,
   SP_TOKEN,
-} from "@/views/projects/experiments/tableColumns"
+} from "@/views/projects/experiments/columnFilterLibs"
 import { FilterMap, Task } from "@/types/task"
 import { flatten } from "lodash"
 import { TaskStatusEnumType } from "@/types/enums"
