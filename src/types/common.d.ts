@@ -64,3 +64,8 @@ export interface ISmCol {
   type?: string
   showInCardFilters?: boolean
 }
+
+export interface SortMeta {
+  field: string
+  order: number
+}

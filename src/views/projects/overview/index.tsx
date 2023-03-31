@@ -197,8 +197,8 @@ export const Overview = () => {
 
   function resetMetricSelect(evt: string, e?: MetricColumn) {
     setShowMetricDialog(false)
-    setGraphData([])
     if (evt === "update" && e) {
+      setGraphData([])
       setGraphVariant(e)
       if (rootProjects && projectSelected) {
         const newRootProject = cloneDeep(rootProjects)
@@ -208,6 +208,7 @@ export const Overview = () => {
       fetchGraphData(e)
     }
     if (evt === "clear") {
+      setGraphData([])
       if (rootProjects && projectSelected) {
         const newRootProject = cloneDeep(rootProjects)
         delete newRootProject.graphVariant[projectSelected.id]
@@ -240,13 +241,13 @@ export const Overview = () => {
                 {graphVariant && (
                   <Button
                     style={{ maxWidth: 200 }}
-                    type="primary"
                     onClick={(e) => {
                       e.stopPropagation()
                       openSelectVariantsDialog()
                     }}
                   >
                     <Tooltip
+                      color="blue"
                       title={`${graphVariant.metric} > ${
                         graphVariant.variant
                       } > ${getValueName(graphVariant.valueType)}`}

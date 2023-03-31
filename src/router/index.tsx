@@ -10,6 +10,7 @@ import NotNetwork from "@/components/errors/500"
 import { Overview } from "@/views/projects/overview"
 import progress from "nprogress"
 import { ProjectList } from "@/views/projects/list"
+import { Experiments } from "@/views/projects/experiments"
 
 progress.configure({
   easing: "ease", // 动画方式
@@ -69,7 +70,7 @@ export const rootRouter: Array<RouteObject> = [
       {
         path: ":projId/experiments",
         name: "experiments",
-        element: <div id="1"></div>,
+        element: <Experiments />,
       },
       {
         path: ":projId/overview",

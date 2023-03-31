@@ -1,0 +1,52 @@
+html[data-type="dark"] {
+  .taskTable {
+    :global(.ant-table-cell) {
+      color: #dce0ee;
+      font-family: Heebo, sans-serif;
+
+      span {
+        color: #dce0ee;
+        font-family: Heebo, sans-serif;
+      }
+    }
+
+    :global(.ant-table-filter-trigger.active) {
+      span {
+        color: $neon-yellow !important;
+      }
+    }
+
+    :global(.ant-table-column-sorter-down.active) {
+      color: $neon-yellow !important;
+    }
+
+    :global(.ant-table-column-sorter-up.active) {
+      color: $neon-yellow !important;
+    }
+  }
+}
+
+.customFilterDropdown {
+  .dropdownBody {
+    padding: 10px 10px 0 10px;
+
+    .switch {
+      margin: 5px;
+      text-align: right;
+    }
+
+    li {
+      padding: 4px;
+    }
+  }
+
+  .filterBtn {
+    margin-top: 6px;
+    border-top: 1px solid #dddddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 6px;
+  }
+}

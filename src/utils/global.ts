@@ -1,4 +1,5 @@
 import { CloudProviders } from "@/types/enums"
+import { isNil, isUndefined } from "lodash"
 
 /**
  * @description 获取浏览器默认语言
@@ -19,6 +20,10 @@ export const getBrowserLang = () => {
     defaultBrowserLang = "en"
   }
   return defaultBrowserLang
+}
+
+export function hasValue(value: any): boolean {
+  return !isUndefined(value) && !isNil(value)
 }
 
 export function is(val: unknown, type: string) {
