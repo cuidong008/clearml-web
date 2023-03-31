@@ -13,7 +13,6 @@
     margin: 0 auto 16px;
     overflow: hidden;
     box-sizing: content-box;
-    background: $blue-900;
 
     :global(.ant-collapse-item.ant-collapse-item-active) {
       box-sizing: border-box;
@@ -41,7 +40,6 @@
     .legend {
       margin-top: -4px;
       text-align: center;
-      color: $blue-100;
 
       .entry {
         margin: 0 12px;
@@ -121,18 +119,30 @@
 }
 
 html[data-type="dark"] {
-  .metricSelect {
-    :global(.ant-btn) {
-      background-color: $blue-600;
-      border-color: $blue-600;
-      color: $blue-50;
+  .metricPanel {
+    background: $blue-900;
 
-      &:hover {
-        background-color: $blue-500;
-        border-color: $blue-500;
-        color: $blue-200;
+    .legend {
+      color: $blue-100;
+    }
+
+    .metricSelect {
+      :global(.ant-btn) {
+        background-color: $blue-600;
+        border-color: $blue-600;
+        color: $blue-50;
+
+        &:hover {
+          background-color: $blue-500;
+          border-color: $blue-500;
+          color: $blue-200;
+        }
       }
     }
+  }
+
+  .metricDialogPanel {
+    background: $blue-900;
   }
 }
 
@@ -157,9 +167,5 @@ html[data-type="dark"] {
       flex: 1;
       margin-right: 10px;
     }
-  }
-
-  .metricDialogPanel {
-    background: $blue-900;
   }
 }

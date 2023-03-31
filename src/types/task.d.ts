@@ -7,6 +7,7 @@ import { Project } from "@/types/project"
 import { Model } from "@/types/model"
 import { User } from "@/types/user"
 import { Queue } from "@/types/queue"
+import { FilterValue } from "antd/es/table/interface"
 
 export interface Output {
   destination?: string
@@ -177,3 +178,8 @@ export interface ITask
     name?: string
   }
 }
+
+export type FilterMap = Record<
+  string,
+  { value: FilterValue | null; path: string }
+>
