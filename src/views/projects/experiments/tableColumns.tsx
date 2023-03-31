@@ -1,20 +1,28 @@
 import {
   Button,
+  Checkbox,
   DatePicker,
+  Input,
   InputNumber,
+  Radio,
   Space,
   Tag,
   Tooltip,
   Typography,
 } from "antd"
 import dayjs from "dayjs"
-import * as React from "react"
 import { ColumnType } from "antd/es/table"
-import { FilterDropdownProps } from "antd/es/table/interface"
+import { ColumnFilterItem, FilterDropdownProps } from "antd/es/table/interface"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
 import { Task } from "@/types/task"
+import styles from "./index.module.scss"
+import React, { FormEvent, useEffect, useState } from "react"
+import { SearchOutlined } from "@ant-design/icons"
+import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
+import { map } from "lodash"
+import { hasValue } from "@/utils/global"
 
 export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
   dataIndex: keyof T
@@ -22,8 +30,11 @@ export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
   title: string
   filterable?: boolean
   valuePath?: string
+  labelPath?: string
 }
+
 export const SP_TOKEN = "$-$"
+
 export const parseTimeVal = (selectedKeys: React.Key[], index: number) => {
   return selectedKeys[0] && selectedKeys[0].toString().split(SP_TOKEN)[index]
     ? dayjs(selectedKeys[0].toString().split(SP_TOKEN)[index])
@@ -36,83 +47,83 @@ export const timeFilter = ({
   confirm,
   clearFilters,
 }: FilterDropdownProps) => (
-  <div style={{ padding: 10, background: "#47527a" }}>
-    <div>
-      <div>From</div>
-      <Space>
-        <DatePicker
-          showTime={{ format: "HH:mm" }}
-          format="YYYY-MM-DD HH:mm"
-          allowClear
-          value={parseTimeVal(selectedKeys, 0)}
-          onChange={(e) => {
-            e
-              ? selectedKeys.length
+  <div className={styles.customFilterDropdown}>
+    <div className={styles.dropdownBody}>
+      <div>
+        <div>From</div>
+        <Space>
+          <DatePicker
+            showTime={{ format: "HH:mm" }}
+            format="YYYY-MM-DD HH:mm"
+            allowClear
+            value={parseTimeVal(selectedKeys, 0)}
+            onChange={(e) => {
+              e
+                ? selectedKeys.length
+                  ? setSelectedKeys([
+                      `${e.format("YYYY-MM-DDTHH:mm:ss")}${SP_TOKEN}${
+                        selectedKeys[0].toString().split(SP_TOKEN)[1]
+                      }`,
+                    ])
+                  : setSelectedKeys([
+                      `${e.format("YYYY-MM-DDTHH:mm:ss")}${SP_TOKEN}`,
+                    ])
+                : selectedKeys.length
                 ? setSelectedKeys([
-                    `${e.format("YYYY-MM-DD HH:mm")}${SP_TOKEN}${
+                    `${SP_TOKEN}${
                       selectedKeys[0].toString().split(SP_TOKEN)[1]
                     }`,
                   ])
-                : setSelectedKeys([
-                    `${e.format("YYYY-MM-DD HH:mm")}${SP_TOKEN}`,
-                  ])
-              : selectedKeys.length
-              ? setSelectedKeys([
-                  `${SP_TOKEN}${selectedKeys[0].toString().split(SP_TOKEN)[1]}`,
-                ])
-              : setSelectedKeys([SP_TOKEN])
-          }}
-        />
-      </Space>
-    </div>
-    <div>
-      <div>To</div>
-      <Space>
-        <DatePicker
-          showTime={{ format: "HH:mm" }}
-          format="YYYY-MM-DD HH:mm"
-          allowClear
-          value={parseTimeVal(selectedKeys, 1)}
-          onChange={(e) => {
-            e
-              ? selectedKeys.length
+                : setSelectedKeys([SP_TOKEN])
+            }}
+          />
+        </Space>
+      </div>
+      <div>
+        <div>To</div>
+        <Space>
+          <DatePicker
+            showTime={{ format: "HH:mm" }}
+            format="YYYY-MM-DD HH:mm"
+            allowClear
+            value={parseTimeVal(selectedKeys, 1)}
+            onChange={(e) => {
+              e
+                ? selectedKeys.length
+                  ? setSelectedKeys([
+                      `${
+                        selectedKeys[0].toString().split(SP_TOKEN)[0]
+                      }${SP_TOKEN}${e.format("YYYY-MM-DDTHH:mm:ss")}`,
+                    ])
+                  : setSelectedKeys([
+                      `${SP_TOKEN}${e.format("YYYY-MM-DDTHH:mm:ss")}`,
+                    ])
+                : selectedKeys.length
                 ? setSelectedKeys([
                     `${
                       selectedKeys[0].toString().split(SP_TOKEN)[0]
-                    }${SP_TOKEN}${e.format("YYYY-MM-DD HH:mm")}`,
+                    }${SP_TOKEN}`,
                   ])
-                : setSelectedKeys([
-                    `${SP_TOKEN}${e.format("YYYY-MM-DD HH:mm")}`,
-                  ])
-              : selectedKeys.length
-              ? setSelectedKeys([
-                  `${selectedKeys[0].toString().split(SP_TOKEN)[0]}${SP_TOKEN}`,
-                ])
-              : setSelectedKeys([SP_TOKEN])
-          }}
-        />
-      </Space>
+                : setSelectedKeys([SP_TOKEN])
+            }}
+          />
+        </Space>
+      </div>
     </div>
-    <Space
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        width: "100%",
-        padding: 6,
-      }}
-    >
+    <Space className={styles.filterBtn}>
       <Button
-        size={"small"}
+        size="small"
+        type="text"
+        disabled={!selectedKeys.length}
         onClick={() => {
           clearFilters?.()
           confirm()
         }}
       >
-        reset
+        Reset
       </Button>
-      <Button type={"primary"} size={"small"} onClick={() => confirm()}>
-        ok
+      <Button type="primary" size="small" onClick={() => confirm()}>
+        OK
       </Button>
     </Space>
   </div>
@@ -130,77 +141,164 @@ export const numFilter = ({
   confirm,
   clearFilters,
 }: FilterDropdownProps) => (
-  <div style={{ padding: 10, background: "#47527a" }}>
-    <div>
-      <Space>
-        <InputNumber
-          value={parseNumVal(selectedKeys, 0)}
-          onChange={(e) => {
-            e
-              ? selectedKeys.length
+  <div className={styles.customFilterDropdown}>
+    <div className={styles.dropdownBody}>
+      <div>
+        <Space>
+          <InputNumber
+            value={parseNumVal(selectedKeys, 0)}
+            onChange={(e) => {
+              hasValue(e)
+                ? selectedKeys.length
+                  ? setSelectedKeys([
+                      `${e}${SP_TOKEN}${
+                        selectedKeys[0].toString().split(SP_TOKEN)[1]
+                      }`,
+                    ])
+                  : setSelectedKeys([`${e}${SP_TOKEN}`])
+                : selectedKeys.length
                 ? setSelectedKeys([
-                    `${e}${SP_TOKEN}${
+                    `${SP_TOKEN}${
                       selectedKeys[0].toString().split(SP_TOKEN)[1]
                     }`,
                   ])
-                : setSelectedKeys([`${e}${SP_TOKEN}`])
-              : selectedKeys.length
-              ? setSelectedKeys([
-                  `${SP_TOKEN}${selectedKeys[0].toString().split(SP_TOKEN)[1]}`,
-                ])
-              : setSelectedKeys([SP_TOKEN])
-          }}
-        />
-      </Space>
-    </div>
-    <div>-</div>
-    <div>
-      <Space>
-        <InputNumber
-          value={parseNumVal(selectedKeys, 1)}
-          onChange={(e) => {
-            e
-              ? selectedKeys.length
+                : setSelectedKeys([SP_TOKEN])
+            }}
+          />
+        </Space>
+      </div>
+      <div>-</div>
+      <div>
+        <Space>
+          <InputNumber
+            value={parseNumVal(selectedKeys, 1)}
+            onChange={(e) => {
+              hasValue(e)
+                ? selectedKeys.length
+                  ? setSelectedKeys([
+                      `${
+                        selectedKeys[0].toString().split(SP_TOKEN)[0]
+                      }${SP_TOKEN}${e}`,
+                    ])
+                  : setSelectedKeys([`${SP_TOKEN}${e}`])
+                : selectedKeys.length
                 ? setSelectedKeys([
                     `${
                       selectedKeys[0].toString().split(SP_TOKEN)[0]
-                    }${SP_TOKEN}${e}`,
+                    }${SP_TOKEN}`,
                   ])
-                : setSelectedKeys([`${SP_TOKEN}${e}`])
-              : selectedKeys.length
-              ? setSelectedKeys([
-                  `${selectedKeys[0].toString().split(SP_TOKEN)[0]}${SP_TOKEN}`,
-                ])
-              : setSelectedKeys([SP_TOKEN])
-          }}
-        />
-      </Space>
+                : setSelectedKeys([SP_TOKEN])
+            }}
+          />
+        </Space>
+      </div>
     </div>
-    <Space
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        width: "100%",
-        padding: 6,
-      }}
-    >
+    <Space className={styles.filterBtn}>
       <Button
-        size={"small"}
+        size="small"
+        type="text"
+        disabled={!selectedKeys.length}
         onClick={() => {
           clearFilters?.()
           confirm()
         }}
       >
-        reset
+        Reset
       </Button>
-      <Button type={"primary"} size={"small"} onClick={() => confirm()}>
-        ok
+      <Button type="primary" size="small" onClick={() => confirm()}>
+        OK
       </Button>
     </Space>
   </div>
 )
+export const TagsFilter = ({
+  selectedKeys,
+  setSelectedKeys,
+  confirm,
+  clearFilters,
+  filters,
+}: FilterDropdownProps) => {
+  const [items, setItems] = useState<ColumnFilterItem[] | undefined>(filters)
+  const [joinType, setJoinType] = useState(
+    selectedKeys[0]
+      ? selectedKeys[0].toString().includes("^&")
+        ? "^&"
+        : "^|"
+      : "^|",
+  )
 
+  useEffect(() => {
+    setItems(() => filters)
+  }, [filters])
+
+  return (
+    <div className={styles.customFilterDropdown}>
+      <div className={styles.dropdownBody}>
+        <Input
+          placeholder="Search in filters"
+          prefix={<SearchOutlined style={{ color: "#cacaca" }} />}
+          onInput={(e: FormEvent<HTMLInputElement>) => {
+            e.currentTarget.value
+              ? setItems(
+                  filters?.filter((f) =>
+                    f.value.toString().includes(e.currentTarget.value),
+                  ),
+                )
+              : setItems(filters)
+          }}
+        />
+        <div className={styles.switch}>
+          <Radio.Group
+            value={joinType === "^&" ? "And" : "Any"}
+            size="small"
+            optionType="button"
+            options={["Any", "And"]}
+            onChange={(e) => {
+              const oldType = joinType
+              const newType = e.target.value === "And" ? "^&" : "^|"
+              selectedKeys[0] &&
+                setSelectedKeys([
+                  selectedKeys[0].toString().replaceAll(oldType, newType),
+                ])
+              setJoinType(newType)
+            }}
+          />
+        </div>
+        <Checkbox.Group
+          style={{ display: "block" }}
+          value={selectedKeys[0]?.toString().split(joinType) ?? []}
+          onChange={(e) =>
+            setSelectedKeys(
+              e.length ? [e.map((i) => i.toString()).join(joinType)] : [],
+            )
+          }
+        >
+          {items?.map((f) => (
+            <li key={`tgs-${f.value}`}>
+              <Checkbox value={f.value}>{f.text}</Checkbox>
+            </li>
+          ))}
+        </Checkbox.Group>
+      </div>
+      <Space className={styles.filterBtn}>
+        <Button
+          size="small"
+          type="text"
+          disabled={!selectedKeys.length}
+          onClick={() => {
+            clearFilters?.()
+            confirm()
+          }}
+        >
+          Reset
+        </Button>
+        <Button type="primary" size="small" onClick={() => confirm()}>
+          OK
+        </Button>
+      </Space>
+    </div>
+  )
+}
 export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
   ID: {
     getter: [],
@@ -237,7 +335,7 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     title: "TAGS",
     sorter: false,
     filterable: true,
-    valuePath: "",
+    filterDropdown: TagsFilter,
     render: (tags: string[]) => (
       <>
         {tags.map((t) => (
@@ -253,7 +351,8 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     title: "USER",
     sorter: false,
     filterable: true,
-    valuePath: "user.name",
+    valuePath: "user.id",
+    labelPath: "user.name",
     filterSearch: true,
     render: (user) => user.name,
     width: 115,
@@ -273,7 +372,7 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     getter: [],
     dataIndex: "status",
     title: "STATUS",
-    filterable: true,
+    filters: map(EXPERIMENTS_STATUS_LABELS, (k, v) => ({ value: v, text: k })),
     sorter: false,
     render: (status) => <TaskStatusLabel status={status} showLabel showIcon />,
     width: 115,
@@ -330,7 +429,8 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     title: "PARENT TASK",
     sorter: false,
     filterable: true,
-    valuePath: "parent.name",
+    valuePath: "parent.id",
+    labelPath: "parent.name",
     filterSearch: true,
     render: (parent) => parent?.name ?? "",
     width: 200,

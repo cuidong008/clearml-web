@@ -16,7 +16,7 @@ export interface TasksGetAllExRequest {
   system_tags?: Array<string>
   status?: Array<TaskStatusEnumType>
   only_fields?: Array<string>
-  parent?: string
+  parent?: Array<string>
   status_changed?: Array<string>
   search_text?: string
   _all_?: MultiFieldPatternData

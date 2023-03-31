@@ -1,17 +1,20 @@
 import { Button, message, Table, TableProps } from "antd"
 import {
+  colsSelectableMap,
   ColumnDefine,
   DEFAULT_COLS,
   getExperimentTableCols,
 } from "@/views/projects/experiments/tableColumns"
-import { useCallback, useEffect, useState } from "react"
-import { Task } from "@/types/task"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { FilterMap, Task } from "@/types/task"
 import { getGetAllQuery, getTasksAllEx } from "@/api/task"
 import { useStoreSelector } from "@/store"
 import { MoreOutlined } from "@ant-design/icons"
 import styles from "./index.module.scss"
-import { ColumnFilterItem, FilterValue } from "antd/es/table/interface"
-import { flatten, get } from "lodash"
+import { ColumnFilterItem } from "antd/es/table/interface"
+import { flatten, get, map } from "lodash"
+import { SortMeta } from "@/types/common"
+import { hasValue } from "@/utils/global"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
@@ -23,9 +26,43 @@ export const Experiments = () => {
   const [scrollId, setScrollId] = useState<string | null>(null)
   const [tasks, setTasks] = useState<Task[]>([])
   const [hasMore, setHasMore] = useState(false)
-  const [filteredInfo, setFilteredInfo] = useState<
-    Record<string, FilterValue | null>
-  >({})
+  const [filteredInfo, setFilteredInfo] = useState<FilterMap>({})
+  const [sorter, setSorter] = useState<SortMeta | undefined>({
+    order: -1,
+    field: "last_update",
+  })
+
+  const injectColsFilters = useCallback(
+    (tasks: Task[]) => {
+      showCols.forEach((col) => {
+        if (col.filterable) {
+          const values: (string | number)[] = []
+          const labels: string[] = []
+          tasks.forEach((t) => {
+            const val = col.valuePath ? get(t, col.valuePath) : t[col.dataIndex]
+            const label = col.labelPath ? get(t, col.labelPath) : val
+            if (hasValue(val) && label) {
+              values.push(val)
+              labels.push(label)
+            }
+          })
+          const filterValues = [...new Set(flatten(values))]
+          const filterTexts = [...new Set(flatten(labels))]
+          const newFilter = filterValues
+            .map<ColumnFilterItem>((v: string | number, i) => ({
+              text: ["user", "tags"].includes(col.dataIndex)
+                ? filterTexts[i]
+                : filterTexts[i].toString().toUpperCase(),
+              value: v,
+            }))
+            .filter((f) => !col.filters?.some((i) => i.value === f.value))
+          col.filters = [...(col.filters ?? []), ...newFilter]
+        }
+        col.filteredValue = filteredInfo[col.dataIndex]?.value || null
+      })
+    },
+    [showCols, filteredInfo],
+  )
 
   const fetchExperiments = useCallback(
     (reload: boolean) => {
@@ -34,10 +71,11 @@ export const Experiments = () => {
         scrollId: reload ? null : scrollId,
         projectId: selectedProject?.id ?? "",
         archived: false,
-        orderFields: [{ field: "last_update", order: -1 }],
+        orderFields: sorter ? [sorter] : [],
         isCompare: false,
         pageSize: 15,
         cols: showCols,
+        filters: filteredInfo,
       })
       getTasksAllEx(request).then(({ data, meta }) => {
         if (meta.result_code !== 200) {
@@ -58,50 +96,62 @@ export const Experiments = () => {
         }
       })
     },
-    [selectedProject, scrollId, showCols, injectColsFilters],
+    [
+      sorter,
+      tasks,
+      filteredInfo,
+      selectedProject,
+      scrollId,
+      showCols,
+      injectColsFilters,
+    ],
   )
+  const fetchDataRef = useRef(fetchExperiments)
+
+  useEffect(() => {
+    fetchDataRef.current = fetchExperiments
+  }, [fetchExperiments])
+
+  useEffect(() => {
+    fetchDataRef.current(true)
+  }, [])
 
   useEffect(() => {
     if (selectedProject?.id) {
-      fetchExperiments(true)
+      fetchDataRef.current(true)
     }
-  }, [selectedProject?.id, showCols.length])
-
-  function injectColsFilters(tasks: Task[]) {
-    showCols.forEach((col) => {
-      if (col.filterable) {
-        const values: (string | number)[] = tasks
-          .map((t) => {
-            return col.valuePath ? get(t, col.valuePath) : t[col.dataIndex]
-          })
-          .filter((v) => !!v)
-        const filters = [...new Set(flatten(values))]
-        col.filters = filters.map<ColumnFilterItem>((v: string | number) => ({
-          text: v.toString().toUpperCase(),
-          value: v,
-        }))
-        col.filteredValue =
-          filteredInfo[col.valuePath ? col.valuePath : col.dataIndex] || null
-      }
-    })
-  }
-
-  useEffect(() => {
-    setShowCols(() =>
-      showCols.map((col) => {
-        col.filteredValue =
-          filteredInfo[col.valuePath ? col.valuePath : col.dataIndex] || null
-        return col
-      }),
-    )
-  }, [filteredInfo])
+  }, [filteredInfo, sorter, selectedProject?.id, showCols.length])
 
   const handleChange: TableProps<Task>["onChange"] = (
     pagination,
     filters,
     sorter,
   ) => {
-    setFilteredInfo(filters)
+    const filterMap: FilterMap = {}
+    map(filters, (f, r) => {
+      const col = colsSelectableMap[r.toUpperCase()]
+      filterMap[r] = { value: f, path: col.valuePath ?? col.dataIndex }
+    })
+    setFilteredInfo(filterMap)
+    setShowCols(() =>
+      showCols.map((col) => {
+        col.filteredValue = filterMap[col.dataIndex]?.value || null
+        return col
+      }),
+    )
+    if (!(sorter instanceof Array)) {
+      setSorter(
+        sorter && sorter.field && sorter.order
+          ? {
+              field:
+                sorter.field instanceof Array
+                  ? sorter?.field[0].toString()
+                  : sorter.field.toString(),
+              order: sorter.order === "descend" ? -1 : 1,
+            }
+          : undefined,
+      )
+    }
   }
 
   return (

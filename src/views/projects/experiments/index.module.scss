@@ -25,3 +25,28 @@ html[data-type="dark"] {
     }
   }
 }
+
+.customFilterDropdown {
+  .dropdownBody {
+    padding: 10px 10px 0 10px;
+
+    .switch {
+      margin: 5px;
+      text-align: right;
+    }
+
+    li {
+      padding: 4px;
+    }
+  }
+
+  .filterBtn {
+    margin-top: 6px;
+    border-top: 1px solid #dddddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 6px;
+  }
+}
