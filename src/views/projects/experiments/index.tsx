@@ -4,7 +4,7 @@ import {
   ColumnDefine,
   DEFAULT_COLS,
   getExperimentTableCols,
-} from "@/views/projects/experiments/tableColumns"
+} from "./columnFilterLibs"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { FilterMap, Task } from "@/types/task"
 import { getGetAllQuery, getTasksAllEx } from "@/api/task"
