@@ -36,22 +36,20 @@ export const TimeFilter = ({
             value={parseTimeVal(selectedKeys, 0)}
             onChange={(e) => {
               e
-                ? selectedKeys.length
+                ? parseTimeVal(selectedKeys, 1)
                   ? setSelectedKeys([
                       `${e.format("YYYY-MM-DDTHH:mm:ss")}${SP_TOKEN}${
-                        selectedKeys[0].toString().split(SP_TOKEN)[1]
+                        `${selectedKeys[0]}`.split(SP_TOKEN)[1]
                       }`,
                     ])
                   : setSelectedKeys([
                       `${e.format("YYYY-MM-DDTHH:mm:ss")}${SP_TOKEN}`,
                     ])
-                : selectedKeys.length
+                : parseTimeVal(selectedKeys, 1)
                 ? setSelectedKeys([
-                    `${SP_TOKEN}${
-                      selectedKeys[0].toString().split(SP_TOKEN)[1]
-                    }`,
+                    `${SP_TOKEN}${`${selectedKeys[0]}`.split(SP_TOKEN)[1]}`,
                   ])
-                : setSelectedKeys([SP_TOKEN])
+                : setSelectedKeys([])
             }}
           />
         </Space>
@@ -66,22 +64,20 @@ export const TimeFilter = ({
             value={parseTimeVal(selectedKeys, 1)}
             onChange={(e) => {
               e
-                ? selectedKeys.length
+                ? parseTimeVal(selectedKeys, 0)
                   ? setSelectedKeys([
                       `${
-                        selectedKeys[0].toString().split(SP_TOKEN)[0]
+                        `${selectedKeys[0]}`.split(SP_TOKEN)[0]
                       }${SP_TOKEN}${e.format("YYYY-MM-DDTHH:mm:ss")}`,
                     ])
                   : setSelectedKeys([
                       `${SP_TOKEN}${e.format("YYYY-MM-DDTHH:mm:ss")}`,
                     ])
-                : selectedKeys.length
+                : parseTimeVal(selectedKeys, 0)
                 ? setSelectedKeys([
-                    `${
-                      selectedKeys[0].toString().split(SP_TOKEN)[0]
-                    }${SP_TOKEN}`,
+                    `${`${selectedKeys[0]}`.split(SP_TOKEN)[0]}${SP_TOKEN}`,
                   ])
-                : setSelectedKeys([SP_TOKEN])
+                : setSelectedKeys([])
             }}
           />
         </Space>
@@ -120,20 +116,18 @@ export const NumFilter = ({
             value={parseNumVal(selectedKeys, 0)}
             onChange={(e) => {
               hasValue(e)
-                ? selectedKeys.length
+                ? parseNumVal(selectedKeys, 1)
                   ? setSelectedKeys([
                       `${e}${SP_TOKEN}${
-                        selectedKeys[0].toString().split(SP_TOKEN)[1]
+                        `${selectedKeys[0]}`.split(SP_TOKEN)[1]
                       }`,
                     ])
                   : setSelectedKeys([`${e}${SP_TOKEN}`])
-                : selectedKeys.length
+                : parseNumVal(selectedKeys, 1)
                 ? setSelectedKeys([
-                    `${SP_TOKEN}${
-                      selectedKeys[0].toString().split(SP_TOKEN)[1]
-                    }`,
+                    `${SP_TOKEN}${`${selectedKeys[0]}`.split(SP_TOKEN)[1]}`,
                   ])
-                : setSelectedKeys([SP_TOKEN])
+                : setSelectedKeys([])
             }}
           />
         </Space>
@@ -145,20 +139,18 @@ export const NumFilter = ({
             value={parseNumVal(selectedKeys, 1)}
             onChange={(e) => {
               hasValue(e)
-                ? selectedKeys.length
+                ? parseNumVal(selectedKeys, 0)
                   ? setSelectedKeys([
                       `${
-                        selectedKeys[0].toString().split(SP_TOKEN)[0]
+                        `${selectedKeys[0]}`.split(SP_TOKEN)[0]
                       }${SP_TOKEN}${e}`,
                     ])
                   : setSelectedKeys([`${SP_TOKEN}${e}`])
-                : selectedKeys.length
+                : parseNumVal(selectedKeys, 0)
                 ? setSelectedKeys([
-                    `${
-                      selectedKeys[0].toString().split(SP_TOKEN)[0]
-                    }${SP_TOKEN}`,
+                    `${`${selectedKeys[0]}`.split(SP_TOKEN)[0]}${SP_TOKEN}`,
                   ])
-                : setSelectedKeys([SP_TOKEN])
+                : setSelectedKeys([])
             }}
           />
         </Space>

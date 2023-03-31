@@ -26,14 +26,14 @@ export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
 export const SP_TOKEN = "$-$"
 
 export const parseTimeVal = (selectedKeys: React.Key[], index: number) => {
-  return selectedKeys[0] && selectedKeys[0].toString().split(SP_TOKEN)[index]
-    ? dayjs(selectedKeys[0].toString().split(SP_TOKEN)[index])
+  return selectedKeys[0] && `${selectedKeys[0]}`.split(SP_TOKEN)[index]
+    ? dayjs(`${selectedKeys[0]}`.split(SP_TOKEN)[index])
     : null
 }
 
 export const parseNumVal = (selectedKeys: React.Key[], index: number) => {
-  return selectedKeys[0] && selectedKeys[0].toString().split(SP_TOKEN)[index]
-    ? selectedKeys[0].toString().split(SP_TOKEN)[index]
+  return selectedKeys[0] && `${selectedKeys[0]}`.split(SP_TOKEN)[index]
+    ? `${selectedKeys[0]}`.split(SP_TOKEN)[index]
     : null
 }
 

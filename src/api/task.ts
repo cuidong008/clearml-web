@@ -43,7 +43,7 @@ export const createFiltersFromStore = (
       }
       if (Array.isArray(value) && value[0]) {
         const filter = value[0].toString()
-        if (filter.includes(SP_TOKEN)) {
+        if (filter.includes(SP_TOKEN) && filter !== SP_TOKEN) {
           const part = filter.split(SP_TOKEN)
           returnTableFilters[currentFilterName] = part.map((p) =>
             p !== "" ? p : null,
