@@ -10,8 +10,8 @@ import { getGetAllQuery, getTasksAllEx } from "@/api/task"
 import { useStoreSelector } from "@/store"
 import { MoreOutlined } from "@ant-design/icons"
 import styles from "./index.module.scss"
-import { ColumnFilterItem } from "antd/es/table/interface"
-import { debounce, flatten, get } from "lodash"
+import { ColumnFilterItem, FilterValue } from "antd/es/table/interface"
+import { flatten, get } from "lodash"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
@@ -23,6 +23,9 @@ export const Experiments = () => {
   const [scrollId, setScrollId] = useState<string | null>(null)
   const [tasks, setTasks] = useState<Task[]>([])
   const [hasMore, setHasMore] = useState(false)
+  const [filteredInfo, setFilteredInfo] = useState<
+    Record<string, FilterValue | null>
+  >({})
 
   const fetchExperiments = useCallback(
     (reload: boolean) => {
@@ -64,15 +67,6 @@ export const Experiments = () => {
     }
   }, [selectedProject?.id, showCols.length])
 
-  function handleFilter(
-    col: ColumnDefine<Task>,
-    value: string | number | boolean,
-  ) {
-    console.log(col, value)
-  }
-
-  const handleFilterDeb = debounce(handleFilter, 200)
-
   function injectColsFilters(tasks: Task[]) {
     showCols.forEach((col) => {
       if (col.filterable) {
@@ -86,20 +80,28 @@ export const Experiments = () => {
           text: v.toString().toUpperCase(),
           value: v,
         }))
-        col.onFilter = (value) => {
-          handleFilterDeb(col, value)
-          return true
-        }
+        col.filteredValue =
+          filteredInfo[col.valuePath ? col.valuePath : col.dataIndex] || null
       }
     })
   }
+
+  useEffect(() => {
+    setShowCols(() =>
+      showCols.map((col) => {
+        col.filteredValue =
+          filteredInfo[col.valuePath ? col.valuePath : col.dataIndex] || null
+        return col
+      }),
+    )
+  }, [filteredInfo])
 
   const handleChange: TableProps<Task>["onChange"] = (
     pagination,
     filters,
     sorter,
   ) => {
-    console.log("Various parameters", pagination, filters, sorter)
+    setFilteredInfo(filters)
   }
 
   return (

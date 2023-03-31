@@ -1,4 +1,12 @@
-import { Button, DatePicker, Space, Tag, Tooltip, Typography } from "antd"
+import {
+  Button,
+  DatePicker,
+  InputNumber,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd"
 import dayjs from "dayjs"
 import * as React from "react"
 import { ColumnType } from "antd/es/table"
@@ -15,13 +23,18 @@ export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
   filterable?: boolean
   valuePath?: string
 }
+export const SP_TOKEN = "$-$"
+export const parseTimeVal = (selectedKeys: React.Key[], index: number) => {
+  return selectedKeys[0] && selectedKeys[0].toString().split(SP_TOKEN)[index]
+    ? dayjs(selectedKeys[0].toString().split(SP_TOKEN)[index])
+    : null
+}
 
 export const timeFilter = ({
   setSelectedKeys,
   selectedKeys,
   confirm,
   clearFilters,
-  close,
 }: FilterDropdownProps) => (
   <div style={{ padding: 10, background: "#47527a" }}>
     <div>
@@ -31,26 +44,23 @@ export const timeFilter = ({
           showTime={{ format: "HH:mm" }}
           format="YYYY-MM-DD HH:mm"
           allowClear
+          value={parseTimeVal(selectedKeys, 0)}
           onChange={(e) => {
-            if (e) {
-              if (selectedKeys.length === 0) {
-                setSelectedKeys([`${e.format("YYYY-MM-DD HH:mm")},`])
-              } else {
-                setSelectedKeys([
-                  `${e.format("YYYY-MM-DD HH:mm")},${
-                    selectedKeys[0].toString().split(",")[1]
-                  }`,
+            e
+              ? selectedKeys.length
+                ? setSelectedKeys([
+                    `${e.format("YYYY-MM-DD HH:mm")}${SP_TOKEN}${
+                      selectedKeys[0].toString().split(SP_TOKEN)[1]
+                    }`,
+                  ])
+                : setSelectedKeys([
+                    `${e.format("YYYY-MM-DD HH:mm")}${SP_TOKEN}`,
+                  ])
+              : selectedKeys.length
+              ? setSelectedKeys([
+                  `${SP_TOKEN}${selectedKeys[0].toString().split(SP_TOKEN)[1]}`,
                 ])
-              }
-            } else {
-              if (selectedKeys.length > 0) {
-                setSelectedKeys([
-                  `,${selectedKeys[0].toString().split(",")[1]}`,
-                ])
-              } else {
-                setSelectedKeys([","])
-              }
-            }
+              : setSelectedKeys([SP_TOKEN])
           }}
         />
       </Space>
@@ -62,26 +72,106 @@ export const timeFilter = ({
           showTime={{ format: "HH:mm" }}
           format="YYYY-MM-DD HH:mm"
           allowClear
+          value={parseTimeVal(selectedKeys, 1)}
           onChange={(e) => {
-            if (e) {
-              if (selectedKeys.length === 0) {
-                setSelectedKeys([`,${e.format("YYYY-MM-DD HH:mm")}`])
-              } else {
-                setSelectedKeys([
-                  `${selectedKeys[0].toString().split(",")[0]},${e.format(
-                    "YYYY-MM-DD HH:mm",
-                  )}`,
+            e
+              ? selectedKeys.length
+                ? setSelectedKeys([
+                    `${
+                      selectedKeys[0].toString().split(SP_TOKEN)[0]
+                    }${SP_TOKEN}${e.format("YYYY-MM-DD HH:mm")}`,
+                  ])
+                : setSelectedKeys([
+                    `${SP_TOKEN}${e.format("YYYY-MM-DD HH:mm")}`,
+                  ])
+              : selectedKeys.length
+              ? setSelectedKeys([
+                  `${selectedKeys[0].toString().split(SP_TOKEN)[0]}${SP_TOKEN}`,
                 ])
-              }
-            } else {
-              if (selectedKeys.length > 0) {
-                setSelectedKeys([
-                  `${selectedKeys[0].toString().split(",")[0]}, `,
+              : setSelectedKeys([SP_TOKEN])
+          }}
+        />
+      </Space>
+    </div>
+    <Space
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        width: "100%",
+        padding: 6,
+      }}
+    >
+      <Button
+        size={"small"}
+        onClick={() => {
+          clearFilters?.()
+          confirm()
+        }}
+      >
+        reset
+      </Button>
+      <Button type={"primary"} size={"small"} onClick={() => confirm()}>
+        ok
+      </Button>
+    </Space>
+  </div>
+)
+
+export const parseNumVal = (selectedKeys: React.Key[], index: number) => {
+  return selectedKeys[0] && selectedKeys[0].toString().split(SP_TOKEN)[index]
+    ? selectedKeys[0].toString().split(SP_TOKEN)[index]
+    : null
+}
+
+export const numFilter = ({
+  setSelectedKeys,
+  selectedKeys,
+  confirm,
+  clearFilters,
+}: FilterDropdownProps) => (
+  <div style={{ padding: 10, background: "#47527a" }}>
+    <div>
+      <Space>
+        <InputNumber
+          value={parseNumVal(selectedKeys, 0)}
+          onChange={(e) => {
+            e
+              ? selectedKeys.length
+                ? setSelectedKeys([
+                    `${e}${SP_TOKEN}${
+                      selectedKeys[0].toString().split(SP_TOKEN)[1]
+                    }`,
+                  ])
+                : setSelectedKeys([`${e}${SP_TOKEN}`])
+              : selectedKeys.length
+              ? setSelectedKeys([
+                  `${SP_TOKEN}${selectedKeys[0].toString().split(SP_TOKEN)[1]}`,
                 ])
-              } else {
-                setSelectedKeys([","])
-              }
-            }
+              : setSelectedKeys([SP_TOKEN])
+          }}
+        />
+      </Space>
+    </div>
+    <div>-</div>
+    <div>
+      <Space>
+        <InputNumber
+          value={parseNumVal(selectedKeys, 1)}
+          onChange={(e) => {
+            e
+              ? selectedKeys.length
+                ? setSelectedKeys([
+                    `${
+                      selectedKeys[0].toString().split(SP_TOKEN)[0]
+                    }${SP_TOKEN}${e}`,
+                  ])
+                : setSelectedKeys([`${SP_TOKEN}${e}`])
+              : selectedKeys.length
+              ? setSelectedKeys([
+                  `${selectedKeys[0].toString().split(SP_TOKEN)[0]}${SP_TOKEN}`,
+                ])
+              : setSelectedKeys([SP_TOKEN])
           }}
         />
       </Space>
@@ -207,6 +297,7 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     dataIndex: "last_iteration",
     title: "ITERATION",
     filterable: true,
+    filterDropdown: numFilter,
     sorter: true,
     width: 115,
   },
@@ -230,6 +321,7 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     title: "RUN TIME",
     sorter: true,
     filterable: true,
+    filterDropdown: numFilter,
     width: 150,
   },
   PARENT: {

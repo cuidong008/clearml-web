@@ -9,5 +9,19 @@ html[data-type="dark"] {
         font-family: Heebo, sans-serif;
       }
     }
+
+    :global(.ant-table-filter-trigger.active) {
+      span {
+        color: $neon-yellow !important;
+      }
+    }
+
+    :global(.ant-table-column-sorter-down.active) {
+      color: $neon-yellow !important;
+    }
+
+    :global(.ant-table-column-sorter-up.active) {
+      color: $neon-yellow !important;
+    }
   }
 }
