@@ -3,7 +3,7 @@ import React from "react"
 import dayjs from "dayjs"
 import { Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
-import { Tag, Tooltip, Typography } from "antd"
+import { Tooltip, Typography } from "antd"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
 import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
@@ -13,6 +13,7 @@ import {
   TagsFilter,
   TimeFilter,
 } from "@/views/projects/experiments/tableColumns"
+import { TagList } from "@/components/TagList"
 
 export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
   dataIndex: keyof T
@@ -36,20 +37,6 @@ export const parseNumVal = (selectedKeys: React.Key[], index: number) => {
     ? `${selectedKeys[0]}`.split(SP_TOKEN)[index]
     : null
 }
-
-export const DEFAULT_COLS: string[] = [
-  "type",
-  "name",
-  "tags",
-  "user",
-  "started",
-  "status",
-  "last_update",
-  "last_iteration",
-  "comment",
-  "active_duration",
-  "parent",
-]
 
 export function getExperimentTableCols(cols: string[]) {
   const columns: ColumnDefine<Task>[] = []
@@ -99,13 +86,7 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: false,
     filterable: true,
     filterDropdown: TagsFilter,
-    render: (tags: string[]) => (
-      <>
-        {tags.map((t) => (
-          <Tag key={t}>{t}</Tag>
-        ))}
-      </>
-    ),
+    render: (tags: string[]) => <TagList style={{ width: 300 }} tags={tags} />,
     width: 300,
   },
   USER: {
@@ -137,7 +118,14 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     title: "STATUS",
     filters: map(EXPERIMENTS_STATUS_LABELS, (k, v) => ({ value: v, text: k })),
     sorter: false,
-    render: (status) => <TaskStatusLabel status={status} showLabel showIcon />,
+    render: (status, exp) => (
+      <TaskStatusLabel
+        progress={exp?.runtime?.progress}
+        status={status}
+        showLabel
+        showIcon
+      />
+    ),
     width: 115,
   },
   LAST_UPDATE: {

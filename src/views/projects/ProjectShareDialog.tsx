@@ -1,7 +1,5 @@
 import { Form, Modal, Select } from "antd"
-import styles from "./index.module.scss"
 import { ShareAltOutlined } from "@ant-design/icons"
-import * as React from "react"
 import { useEffect, useRef } from "react"
 
 export const ProjectShareDialog = (props: {
@@ -31,7 +29,7 @@ export const ProjectShareDialog = (props: {
         <div>
           <ShareAltOutlined style={{ color: "#8492c2", fontSize: 60 }} />
         </div>
-        <span className={styles.projectDialogTitle}>Share Project</span>
+        <span className="commonDialogTitle">Share Project</span>
       </div>
       <Form
         layout="vertical"

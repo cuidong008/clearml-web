@@ -72,7 +72,7 @@ export const EXPERIMENTS_STATUS_LABELS = {
   [TaskStatusEnum.Completed]: "Completed",
   [TaskStatusEnum.Published]: "Published",
   [TaskStatusEnum.Failed]: "Failed",
-  [TaskStatusEnum.Stopped]: "Completed",
+  [TaskStatusEnum.Stopped]: "Stopped",
   [TaskStatusEnum.Closed]: "Closed",
 }
 export const EXPERIMENTS_TYPE_LABELS = {

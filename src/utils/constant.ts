@@ -132,3 +132,9 @@ export const NAVIGATION_ACTIONS = {
 }
 
 export const AUTO_REFRESH_INTERVAL = 10 * 1000
+
+export const urls = {
+  WEB_SERVER_URL: "",
+  API_BASE_URL: "",
+  FIlE_SERVER_URL: "",
+}

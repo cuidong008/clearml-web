@@ -1,5 +1,5 @@
 import styles from "./index.module.scss"
-import { Button, Collapse, message, Tooltip, Typography } from "antd"
+import { Button, Collapse, Empty, message, Tooltip, Typography } from "antd"
 import { Markdown } from "@/components/Markdown"
 import { useEffect, useRef, useState } from "react"
 import { useStoreSelector, useThunkDispatch } from "@/store"
@@ -275,6 +275,7 @@ export const Overview = () => {
               </div>
             </div>
           )}
+          {graphVariant && !graphData.length && <Empty></Empty>}
           <div style={{ visibility: graphData.length ? "visible" : "hidden" }}>
             <div ref={refChart} style={{ height: "250px" }} />
             <div className={styles.legend}>

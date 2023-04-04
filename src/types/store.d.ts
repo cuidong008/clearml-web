@@ -1,7 +1,7 @@
 import { Group, Project } from "@/types/project"
 import { CurrentUser, User } from "@/types/user"
 import { RouteObject } from "@/types/router"
-import { MetricColumn } from "@/types/common"
+import { MetricColumn, TagColor } from "@/types/common"
 import { PersistPartial } from "redux-persist/es/persistReducer"
 
 export interface ThemeConfigState {
@@ -12,7 +12,7 @@ export interface ThemeConfigState {
 export interface UserPreference {
   rootProjects?: {
     graphVariant: Record<string, MetricColumn>
-    tagsColors: Record<string, any>
+    tagsColors: { [p: string]: TagColor }
   }
   version?: number
   firstLogin?: boolean
@@ -59,7 +59,12 @@ export interface ProjectConfState {
   selectedProject?: Project
 }
 
+export interface ExperimentState {
+  cols: string[]
+}
+
 export interface StoreState {
   app: AppStoreState & PersistPartial
   project: ProjectConfState
+  experiment: ExperimentState
 }
