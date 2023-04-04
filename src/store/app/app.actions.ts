@@ -1,7 +1,6 @@
 import * as types from "./app.actions-types"
 import { AppStoreState, ThemeConfigState, UserPreference } from "@/types/store"
 import { RouteObject } from "@/types/router"
-import { ThunkActionDispatch } from "redux-thunk"
 import { CurrentUser, User } from "@/types/user"
 import {
   getCurrentUser,
@@ -11,6 +10,9 @@ import {
 } from "@/api/user"
 import { message } from "antd"
 import { PersistPartial } from "redux-persist/es/persistReducer"
+import { TagColor, ThunkDispatcher } from "@/types/common"
+import { cloneDeep } from "lodash"
+import { tagColorManager } from "@/components/TagList/tagColors"
 
 export const setLanguage = (language: string) => {
   return {
@@ -59,12 +61,20 @@ export const setUserPreferencesAll = (preferences: UserPreference) => {
   }
 }
 
+export const setTagColors =
+  (colors: { [p: string]: TagColor }) =>
+  (dispatch: ThunkDispatcher, getState: () => AppStoreState) => {
+    const { preferences } = getState()
+    if (preferences.rootProjects) {
+      const temp = cloneDeep(preferences.rootProjects)
+      temp.tagsColors = { ...preferences.rootProjects?.tagsColors, ...colors }
+      dispatch(uploadUserPreference("rootProjects", temp))
+    }
+  }
+
 export const uploadUserPreference =
-  (
-    field: keyof UserPreference,
-    newValue: UserPreference[keyof UserPreference],
-  ) =>
-  (dispatch: ThunkActionDispatch<any>, getState: () => AppStoreState) => {
+  (field: keyof UserPreference, newValue: object) =>
+  (dispatch: ThunkDispatcher, getState: () => AppStoreState) => {
     return new Promise((resolve, reject) => {
       setUserPreferences({
         preferences: { [field]: newValue },
@@ -87,12 +97,17 @@ export const uploadUserPreference =
 
 export const getLoginUser =
   () =>
-  (dispatch: ThunkActionDispatch<any>): Promise<CurrentUser | undefined> => {
+  (dispatch: ThunkDispatcher): Promise<CurrentUser | undefined> => {
     return new Promise((resolve, reject) => {
       Promise.all([getCurrentUser(), getUserPreferences()])
         .then(([userResp, refResp]) => {
           dispatch(setUser(userResp.data.user))
           dispatch(setUserPreferencesAll(refResp.data.preferences ?? {}))
+          if (refResp.data.preferences?.rootProjects?.tagsColors) {
+            tagColorManager.tagsColorMap =
+              refResp.data.preferences.rootProjects.tagsColors
+          }
+
           resolve(userResp.data.user)
         })
         .catch((err) => {
@@ -106,7 +121,7 @@ export const getLoginUser =
 
 export const getAllUser =
   () =>
-  (dispatch: ThunkActionDispatch<any>): Promise<User[] | undefined> => {
+  (dispatch: ThunkDispatcher): Promise<User[] | undefined> => {
     return new Promise((resolve, reject) => {
       getUserAll({
         only_fields: ["id", "name"],

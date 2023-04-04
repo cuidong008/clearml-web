@@ -4,6 +4,14 @@ import {
   FilterMatchModeEnum,
   MetricValueType,
 } from "@/types/enums"
+import { ThunkActionDispatch } from "redux-thunk"
+
+export type ThunkDispatcher = ThunkActionDispatch<any>
+
+export interface TagColor {
+  foreground: string
+  background: string
+}
 
 export interface MultiFieldPatternData {
   pattern?: string
