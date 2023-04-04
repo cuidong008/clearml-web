@@ -1,27 +1,41 @@
-import { Button, message, Table, TableProps } from "antd"
+import {
+  Button,
+  Checkbox,
+  message,
+  Popover,
+  Space,
+  Table,
+  TableProps,
+} from "antd"
 import {
   colsSelectableMap,
   ColumnDefine,
-  DEFAULT_COLS,
   getExperimentTableCols,
 } from "./columnFilterLibs"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { Key, useCallback, useEffect, useRef, useState } from "react"
 import { FilterMap, Task } from "@/types/task"
 import { getGetAllQuery, getTasksAllEx } from "@/api/task"
-import { useStoreSelector } from "@/store"
-import { MoreOutlined } from "@ant-design/icons"
+import { useStoreSelector, useThunkDispatch } from "@/store"
+import { MoreOutlined, PlusOutlined, SettingFilled } from "@ant-design/icons"
 import styles from "./index.module.scss"
 import { ColumnFilterItem } from "antd/es/table/interface"
 import { flatten, get, map } from "lodash"
 import { SortMeta } from "@/types/common"
 import { hasValue } from "@/utils/global"
+import classNames from "classnames"
+import { setTableColumn } from "@/store/experiment/experiment.actions"
+import { CheckboxValueType } from "antd/es/checkbox/Group"
+import { uploadUserPreference } from "@/store/app/app.actions"
+import { NewExperimentDialog } from "@/views/projects/experiments/NewExperimentDialog"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
     (state) => state.project.selectedProject,
   )
+  const userViewsConf = useStoreSelector((state) => state.app.preferences.views)
+  const cols = useStoreSelector((state) => state.experiment.cols)
   const [showCols, setShowCols] = useState<ColumnDefine<Task>[]>(
-    getExperimentTableCols(DEFAULT_COLS),
+    getExperimentTableCols(cols),
   )
   const [scrollId, setScrollId] = useState<string | null>(null)
   const [tasks, setTasks] = useState<Task[]>([])
@@ -31,6 +45,11 @@ export const Experiments = () => {
     order: -1,
     field: "last_update",
   })
+  const [selectExpKeys, setSelectExpKeys] = useState<Key[]>([])
+  const [showArchive, setShowArchive] = useState(false)
+  const [showNewDialog, setShowNewDialog] = useState(false)
+
+  const dispatch = useThunkDispatch()
 
   const injectColsFilters = useCallback(
     (tasks: Task[]) => {
@@ -70,7 +89,7 @@ export const Experiments = () => {
         refreshScroll: false,
         scrollId: reload ? null : scrollId,
         projectId: selectedProject?.id ?? "",
-        archived: false,
+        archived: showArchive,
         orderFields: sorter ? [sorter] : [],
         isCompare: false,
         pageSize: 15,
@@ -99,6 +118,7 @@ export const Experiments = () => {
     [
       sorter,
       tasks,
+      showArchive,
       filteredInfo,
       selectedProject,
       scrollId,
@@ -120,7 +140,16 @@ export const Experiments = () => {
     if (selectedProject?.id) {
       fetchDataRef.current(true)
     }
-  }, [filteredInfo, sorter, selectedProject?.id, showCols.length])
+  }, [showArchive, filteredInfo, sorter, selectedProject?.id, showCols.length])
+
+  useEffect(() => {
+    setShowCols(() =>
+      showCols.map((col) => {
+        col.filteredValue = filteredInfo[col.dataIndex]?.value || null
+        return col
+      }),
+    )
+  }, [filteredInfo, sorter])
 
   const handleChange: TableProps<Task>["onChange"] = (
     pagination,
@@ -133,12 +162,6 @@ export const Experiments = () => {
       filterMap[r] = { value: f, path: col.valuePath ?? col.dataIndex }
     })
     setFilteredInfo(filterMap)
-    setShowCols(() =>
-      showCols.map((col) => {
-        col.filteredValue = filterMap[col.dataIndex]?.value || null
-        return col
-      }),
-    )
     if (!(sorter instanceof Array)) {
       setSorter(
         sorter && sorter.field && sorter.order
@@ -154,31 +177,123 @@ export const Experiments = () => {
     }
   }
 
+  function changeShowCols(e: CheckboxValueType[]) {
+    const colIndex = e.map((e) => e.toString())
+    const oldCols = showCols.filter((c) => colIndex.includes(c.dataIndex))
+    const newCols = getExperimentTableCols(colIndex)
+    setShowCols([
+      ...oldCols,
+      ...newCols.filter(
+        (v) => !oldCols.some((c) => v.dataIndex === c.dataIndex),
+      ),
+    ])
+    dispatch(setTableColumn(colIndex))
+  }
+
   return (
-    <div style={{ overflow: "auto", height: "calc(100% - 70px)" }}>
-      <div style={{ width: "max-content" }}>
-        <Table
-          rowKey={"id"}
-          className={styles.taskTable}
-          size="small"
-          pagination={false}
-          scroll={{ x: "max-content" }}
-          rowSelection={{}}
-          columns={showCols.concat([
-            {
-              dataIndex: "id",
-              title: "",
-              getter: [],
-              fixed: "right",
-              render: () => <Button icon={<MoreOutlined />} />,
-            },
-          ])}
-          dataSource={tasks}
-          onChange={handleChange}
-        />
-        {hasMore && !!scrollId && (
-          <Button onClick={() => fetchExperiments(false)}>Load More</Button>
-        )}
+    <div className={styles.experiments}>
+      <NewExperimentDialog
+        show={showNewDialog}
+        onClose={() => setShowNewDialog(false)}
+      />
+      <Space className={styles.headerLeft}>
+        <Button icon={<PlusOutlined />} onClick={() => setShowNewDialog(true)}>
+          New Experiment
+        </Button>
+        <Button
+          icon={
+            <span className="anticon">
+              <i
+                className={classNames({
+                  "al-ico-exit-archive": showArchive,
+                  "al-ico-archive": !showArchive,
+                })}
+              />
+            </span>
+          }
+          onClick={() => setShowArchive(!showArchive)}
+        >
+          {showArchive ? "Exit" : "Open"} Archive
+        </Button>
+      </Space>
+      <Space className={styles.headerRight}>
+        <i
+          className={classNames("al-icon al-ico-filter-reset", {
+            disabled: !Object.values(filteredInfo).some((v) => v && v.value),
+          })}
+          onClick={() => setFilteredInfo({})}
+        >
+          <span className="path1"></span>
+          <span className="path2"></span>
+        </i>
+        <Popover
+          trigger="click"
+          content={
+            <div>
+              <Checkbox.Group
+                style={{ display: "block" }}
+                value={cols}
+                onChange={(e) => changeShowCols(e)}
+              >
+                {map(colsSelectableMap, (v) => (
+                  <li key={v.dataIndex}>
+                    <Checkbox value={v.dataIndex}>{v.title}</Checkbox>
+                  </li>
+                ))}
+              </Checkbox.Group>
+            </div>
+          }
+        >
+          <Button type="text" icon={<SettingFilled />} />
+        </Popover>
+        <i
+          className={classNames("al-icon", {
+            "al-ico-auto-refresh-play": userViewsConf?.autoRefresh,
+            "al-ico-auto-refresh-pause": !userViewsConf?.autoRefresh,
+          })}
+          onClick={() =>
+            dispatch(
+              uploadUserPreference("views", {
+                ...userViewsConf,
+                autoRefresh: !userViewsConf?.autoRefresh,
+              }),
+            )
+          }
+        >
+          <span className="path1"></span>
+          <span className="path2"></span>
+        </i>
+      </Space>
+      <div className={styles.experimentTable}>
+        <div style={{ width: "max-content" }}>
+          <Table
+            rowKey={"id"}
+            className={styles.taskTable}
+            size="small"
+            pagination={false}
+            scroll={{ x: "max-content" }}
+            rowSelection={{
+              selectedRowKeys: selectExpKeys,
+              onChange: (selectedRowKeys: Key[]) => {
+                setSelectExpKeys(selectedRowKeys)
+              },
+            }}
+            columns={showCols.concat([
+              {
+                dataIndex: "id",
+                title: "",
+                getter: [],
+                fixed: "right",
+                render: () => <Button icon={<MoreOutlined />} />,
+              },
+            ])}
+            dataSource={tasks}
+            onChange={handleChange}
+          />
+          {hasMore && !!scrollId && (
+            <Button onClick={() => fetchExperiments(false)}>Load More</Button>
+          )}
+        </div>
       </div>
     </div>
   )
