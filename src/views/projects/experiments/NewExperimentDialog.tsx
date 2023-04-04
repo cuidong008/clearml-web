@@ -4,6 +4,7 @@ import styles from "./index.module.scss"
 import classNames from "classnames"
 import { CopyToClipboard } from "@/components/CopyToClipboard"
 import YouTube from "react-youtube"
+import { urls } from "@/utils/constant"
 
 interface StepObject {
   header?: string
@@ -102,7 +103,16 @@ export const NewExperimentDialog = (props: {
                 {subActive === "jupyter" && (
                   <div className={styles.code}>
                     <CopyToClipboard className={styles.copy}>
-                      <div className={styles.content}></div>
+                      <div
+                        className={styles.content}
+                        dangerouslySetInnerHTML={{
+                          __html: `%env CLEARML_WEB_HOST=${urls.WEB_SERVER_URL}
+%env CLEARML_API_HOST=${urls.API_BASE_URL}
+%env CLEARML_FILES_HOST=${urls.FIlE_SERVER_URL}
+%env CLEARML_API_ACCESS_KEY=${"< "}You’re API access key>
+%env CLEARML_API_SECRET_KEY=${"< "}You’re API secret key>`,
+                        }}
+                      />
                     </CopyToClipboard>
                   </div>
                 )}

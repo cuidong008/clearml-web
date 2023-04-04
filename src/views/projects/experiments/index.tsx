@@ -86,7 +86,7 @@ export const Experiments = () => {
   const fetchExperiments = useCallback(
     (reload: boolean) => {
       const request = getGetAllQuery({
-        refreshScroll: false,
+        refreshScroll: userViewsConf?.autoRefresh,
         scrollId: reload ? null : scrollId,
         projectId: selectedProject?.id ?? "",
         archived: showArchive,
@@ -118,6 +118,7 @@ export const Experiments = () => {
     [
       sorter,
       tasks,
+      userViewsConf,
       showArchive,
       filteredInfo,
       selectedProject,
