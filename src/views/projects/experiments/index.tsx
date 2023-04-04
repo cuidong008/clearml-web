@@ -85,10 +85,13 @@ export const Experiments = () => {
   )
 
   const fetchExperiments = useCallback(
-    (reload: boolean) => {
+    (reload: boolean, allowRefresh: boolean) => {
+      if (!scrollId && allowRefresh) {
+        return
+      }
       const request = getGetAllQuery({
-        refreshScroll: !!scrollId && userViewsConf?.autoRefresh,
-        scrollId: reload && !userViewsConf?.autoRefresh ? null : scrollId,
+        refreshScroll: allowRefresh && !!scrollId && userViewsConf?.autoRefresh,
+        scrollId: !allowRefresh && reload ? null : scrollId,
         projectId: selectedProject?.id ?? "",
         archived: showArchive,
         orderFields: sorter ? [sorter] : [],
@@ -135,12 +138,12 @@ export const Experiments = () => {
   }, [fetchExperiments])
 
   useEffect(() => {
-    fetchDataRef.current(true)
+    fetchDataRef.current(true, false)
   }, [])
 
   useEffect(() => {
     if (selectedProject?.id) {
-      fetchDataRef.current(true)
+      fetchDataRef.current(true, false)
     }
   }, [showArchive, filteredInfo, sorter, selectedProject?.id, showCols.length])
 
@@ -156,17 +159,16 @@ export const Experiments = () => {
   useEffect(() => {
     let clearTimer: NodeJS.Timer | null = null
     if (userViewsConf?.autoRefresh) {
-      clearTimer = setInterval(
-        () => scrollId && fetchDataRef.current(true),
-        AUTO_REFRESH_INTERVAL,
-      )
+      clearTimer = setInterval(() => {
+        if (!!scrollId) fetchDataRef.current(true, true)
+      }, AUTO_REFRESH_INTERVAL)
     }
     return () => {
       if (clearTimer) {
         clearInterval(clearTimer)
       }
     }
-  }, [userViewsConf])
+  }, [scrollId, userViewsConf])
 
   const handleChange: TableProps<Task>["onChange"] = (
     pagination,
@@ -308,7 +310,9 @@ export const Experiments = () => {
             onChange={handleChange}
           />
           {hasMore && !!scrollId && (
-            <Button onClick={() => fetchExperiments(false)}>Load More</Button>
+            <Button onClick={() => fetchExperiments(false, false)}>
+              Load More
+            </Button>
           )}
         </div>
       </div>
