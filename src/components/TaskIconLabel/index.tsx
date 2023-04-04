@@ -21,7 +21,7 @@ export const TaskIconLabel = (props: {
         <span className="ellipsis" style={{ marginLeft: "0.5rem" }}>
           {type?.length < 4
             ? type?.toUpperCase()
-            : type.replace(/[_-]/g, " ").toUpperCase()}
+            : type?.replace(/[_-]/g, " ").toUpperCase()}
         </span>
       )}
     </div>
