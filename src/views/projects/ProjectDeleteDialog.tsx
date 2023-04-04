@@ -3,7 +3,6 @@ import { ReadyForDeletion } from "@/types/project"
 import { useEffect, useState } from "react"
 import { projectDelete } from "@/api/project"
 import { getUrlsPerProvider } from "@/utils/global"
-import styles from "./index.module.scss"
 
 export const ProjectDeleteDialog = (props: {
   show: boolean
@@ -113,7 +112,7 @@ export const ProjectDeleteDialog = (props: {
             <div className="i-alert" style={{ width: 60, height: 60 }}></div>
           )}
         </div>
-        <span className={styles.projectDialogTitle}>
+        <span className="commonDialogTitle">
           {isDeletable === 0
             ? ""
             : isDeletable === 1

@@ -1,9 +1,7 @@
 import { Project } from "@/types/project"
-import * as React from "react"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import classNames from "classnames"
 import styles from "./index.module.scss"
-
 import { Button, Input, Menu, Popover, Space, Tooltip } from "antd"
 import {
   CheckOutlined,
@@ -16,6 +14,14 @@ import { CircleCounter } from "@/components/CircleCounter"
 import { CircleTypeEnum } from "@/types/enums"
 import { DkCard } from "@/components/DkCard"
 import { useNavigate } from "react-router-dom"
+
+export interface MenuInfo {
+  key: string
+  keyPath: string[]
+  /** @deprecated This will not support in future. You should avoid to use this */
+  item: React.ReactInstance
+  domEvent: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
+}
 
 export const ProjectCard = (props: {
   project?: Project
@@ -35,7 +41,8 @@ export const ProjectCard = (props: {
     }
   }, [editProjId, project, showRename])
 
-  function startRename() {
+  function startRename(e: MenuInfo) {
+    e.domEvent.stopPropagation()
     setProjectNewName(project?.name ?? "")
     setShowRename(true)
     dispatch?.("setEditProj", project)
@@ -45,7 +52,8 @@ export const ProjectCard = (props: {
     dispatch?.("share", project)
   }
 
-  function startDelete() {
+  function startDelete(e: MenuInfo) {
+    e.domEvent.stopPropagation()
     dispatch?.("delete", project)
   }
 
@@ -151,7 +159,7 @@ export const ProjectCard = (props: {
                               key: "rename",
                               icon: <EditFilled />,
                               label: "Rename",
-                              onClick: startRename,
+                              onClick: (e) => startRename(e),
                             },
                             // {
                             //   key: "share",
@@ -164,7 +172,7 @@ export const ProjectCard = (props: {
                               key: "delete",
                               icon: <DeleteFilled />,
                               label: "Delete",
-                              onClick: startDelete,
+                              onClick: (e) => startDelete(e),
                             },
                           ]}
                         />

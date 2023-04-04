@@ -119,7 +119,7 @@ export const MetricsSelectDialog = (props: {
             style={{ color: "#8492c2", fontSize: 60 }}
           />
         </div>
-        <span className={styles.metricDialogHeader}>METRIC SNAPSHOT</span>
+        <span className="commonDialogTitle">METRIC SNAPSHOT</span>
       </div>
       <div className={styles.metricSearch}>
         <Input.Search
