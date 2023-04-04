@@ -33,17 +33,35 @@ ul {
   min-height: 54px;
 }
 
-/* scroll bar */
+html[data-type="dark"] {
+  /* scroll bar */
+  ::-webkit-scrollbar {
+    background-color: $blue-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: $blue-400;
+  }
+}
+
+html[data-type="light"] {
+  /* scroll bar */
+  ::-webkit-scrollbar {
+    background-color: #dedede;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #acacac;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 4px;
   height: 6px;
-  background-color: $blue-800;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: $blue-400;
   border-radius: 20px;
-  box-shadow: inset 0 0 0 $blue-300;
 }
 
 html[data-type="dark"] {
@@ -70,4 +88,30 @@ html[data-type="dark"] {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.commonDialogTitle {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 10px;
+  color: #8492c2;
+  display: block;
+  font-family: Heebo, sans-serif;
+}
+
+.subDialogHeader {
+  font-size: 14px;
+  text-align: center;
+  color: $blue-400;
+  margin-left: auto !important;
+}
+
+html[data-type="dark"] {
+  .commonDialogTitle {
+    color: $blue-50;
+  }
+
+  .subDialogHeader {
+    color: $blue-200;
+  }
 }

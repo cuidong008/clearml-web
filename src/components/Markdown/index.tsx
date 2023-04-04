@@ -120,7 +120,7 @@ export class Markdown extends React.Component<
                 style={{ color: "#8492c2", fontSize: 60 }}
               />
             </div>
-            <span className="cheatSheetTitle">MARKDOWN CHEAT SHEET</span>
+            <span className="commonDialogTitle">MARKDOWN CHEAT SHEET</span>
           </div>
           <div
             className="cheatSheetWrap"

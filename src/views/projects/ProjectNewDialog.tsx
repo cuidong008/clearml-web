@@ -2,7 +2,6 @@ import { Form, Input, message, Modal } from "antd"
 import { projectCreate } from "@/api/project"
 import { URI_REGEX } from "@/utils/constant"
 import { useEffect, useRef } from "react"
-import styles from "./index.module.scss"
 
 export const ProjectNewDialog = (props: {
   show: boolean
@@ -50,7 +49,7 @@ export const ProjectNewDialog = (props: {
             style={{ color: "#8492c2", fontSize: 60 }}
           />
         </div>
-        <span className={styles.projectDialogTitle}>New Project</span>
+        <span className="commonDialogTitle">New Project</span>
       </div>
       <Form layout={"vertical"} ref={formRef} form={form}>
         <Form.Item
