@@ -27,6 +27,7 @@ import { setTableColumn } from "@/store/experiment/experiment.actions"
 import { CheckboxValueType } from "antd/es/checkbox/Group"
 import { uploadUserPreference } from "@/store/app/app.actions"
 import { NewExperimentDialog } from "@/views/projects/experiments/NewExperimentDialog"
+import { AUTO_REFRESH_INTERVAL } from "@/utils/constant"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
@@ -86,8 +87,8 @@ export const Experiments = () => {
   const fetchExperiments = useCallback(
     (reload: boolean) => {
       const request = getGetAllQuery({
-        refreshScroll: userViewsConf?.autoRefresh,
-        scrollId: reload ? null : scrollId,
+        refreshScroll: !!scrollId && userViewsConf?.autoRefresh,
+        scrollId: reload && !userViewsConf?.autoRefresh ? null : scrollId,
         projectId: selectedProject?.id ?? "",
         archived: showArchive,
         orderFields: sorter ? [sorter] : [],
@@ -151,6 +152,21 @@ export const Experiments = () => {
       }),
     )
   }, [filteredInfo, sorter])
+
+  useEffect(() => {
+    let clearTimer: NodeJS.Timer | null = null
+    if (userViewsConf?.autoRefresh) {
+      clearTimer = setInterval(
+        () => scrollId && fetchDataRef.current(true),
+        AUTO_REFRESH_INTERVAL,
+      )
+    }
+    return () => {
+      if (clearTimer) {
+        clearInterval(clearTimer)
+      }
+    }
+  }, [userViewsConf])
 
   const handleChange: TableProps<Task>["onChange"] = (
     pagination,
