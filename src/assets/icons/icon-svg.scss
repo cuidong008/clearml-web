@@ -52,3 +52,14 @@
 .i-markdown {
   @include icon("@/assets/icons/markdown.svg");
 }
+
+.i-welcome-researcher {
+  @include icon("@/assets/icons/welcome-researcher.svg");
+}
+
+.new-experiment-table {
+  height: 120px;
+  background-image: url("@/assets/icons/new-experiment-table.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}

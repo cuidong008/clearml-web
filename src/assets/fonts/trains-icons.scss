@@ -1327,7 +1327,14 @@
     color: $blue-300; // don't overwrite
   }
 }
-
+.al-ico-filter-reset {
+  &.disabled {
+    .path2:before,
+    .path1:before {
+      color: lighten($blue-600, 5%);
+    }
+  }
+}
 .al-ico-filter-reset .path2 {
   &:before {
     content: $al-ico-filter-reset-path2;
