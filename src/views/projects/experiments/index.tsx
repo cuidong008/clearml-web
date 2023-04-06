@@ -38,6 +38,7 @@ import { AUTO_REFRESH_INTERVAL } from "@/utils/constant"
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
 import { ReactComponent as Split } from "@/assets/icons/split.svg"
 import { ExperimentList } from "@/views/projects/experiments/ExperimentList"
+import { Outlet, useNavigate, useParams } from "react-router-dom"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
@@ -45,6 +46,9 @@ export const Experiments = () => {
   )
   const userViewsConf = useStoreSelector((state) => state.app.preferences.views)
   const cols = useStoreSelector((state) => state.experiment.cols)
+  const navigate = useNavigate()
+  const params = useParams()
+
   const [showCols, setShowCols] = useState<ColumnDefine<Task>[]>(
     getExperimentTableCols(cols),
   )
@@ -59,7 +63,7 @@ export const Experiments = () => {
   const [selectExpKeys, setSelectExpKeys] = useState<Key[]>([])
   const [showArchive, setShowArchive] = useState(false)
   const [showNewDialog, setShowNewDialog] = useState(false)
-  const [viewState, setViewState] = useState("table")
+  const [viewState, setViewState] = useState(params["expId"] ? "list" : "table")
   const [oneTimeAni, setOneTimeAni] = useState(false)
 
   const dispatch = useThunkDispatch()
@@ -228,6 +232,9 @@ export const Experiments = () => {
       setTimeout(() => {
         setOneTimeAni(false)
       }, 1000)
+      navigate(`${tasks[0].id}/info`)
+    } else {
+      navigate(`/projects/${params["projId"]}/experiments`)
     }
   }
 
@@ -251,11 +258,15 @@ export const Experiments = () => {
               />
             </span>
           }
-          onClick={() => setShowArchive(!showArchive)}
+          onClick={() => {
+            setShowArchive(!showArchive)
+            setView("table")
+          }}
         >
           {showArchive ? "Exit" : "Open"} Archive
         </Button>
         <Radio.Group
+          disabled={showArchive}
           value={viewState}
           onChange={(e) => setView(e.target.value)}
           optionType="button"
@@ -333,7 +344,7 @@ export const Experiments = () => {
           })}
         >
           {viewState === "table" ? (
-            <div>
+            <div style={{ width: "max-content" }}>
               <Table
                 rowKey={"id"}
                 className={styles.taskTable}
@@ -360,7 +371,11 @@ export const Experiments = () => {
               />
             </div>
           ) : (
-            <ExperimentList tasks={tasks} />
+            <ExperimentList
+              tasks={tasks}
+              selectedKeys={selectExpKeys}
+              setSelectedKeys={setSelectExpKeys}
+            />
           )}
           {hasMore && !!scrollId && (
             <div className={styles.loadMore}>
@@ -375,7 +390,10 @@ export const Experiments = () => {
             <PanelResizeHandle className={styles.splitBar}>
               <Split />
             </PanelResizeHandle>
-            <Panel className={styles.experimentInfo}>Continue developing</Panel>
+            <Panel collapsible className={styles.experimentInfo}>
+              Continue developing
+              <Outlet />
+            </Panel>
           </>
         )}
       </PanelGroup>
