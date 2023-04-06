@@ -11,6 +11,7 @@ export interface RouteObject {
   caseSensitive?: boolean
   children?: RouteObject[]
   element?: React.ReactNode
+  lazy?: () => Promise<{ Component: () => JSX.Element }>
   index?: boolean
   path?: string
   name?: string

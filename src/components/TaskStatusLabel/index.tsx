@@ -8,8 +8,9 @@ export const TaskStatusLabel = (props: {
   showLabel?: boolean
   showIcon?: boolean
   progress?: string
+  className?: string
 }) => {
-  const { status, showLabel, showIcon, progress } = props
+  const { status, showLabel, showIcon, progress, className } = props
 
   function showSpin() {
     return [TaskStatusEnum.InProgress].includes(status)
@@ -17,8 +18,8 @@ export const TaskStatusLabel = (props: {
 
   return (
     <div
-      style={{ display: "flex", alignItems: "center", width: "100%" }}
-      className={classNames(styles.taskStatusLabel, {
+      style={{ display: "flex", alignItems: "center" }}
+      className={classNames(className, styles.taskStatusLabel, {
         [styles[status]]: showIcon,
       })}
     >

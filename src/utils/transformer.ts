@@ -50,6 +50,7 @@ export function transformDateToPeriod(value: any) {
     return years + " years ago"
   }
 }
+
 function getSecondsUntilUpdate(seconds: number) {
   const min = 60
   const hr = min * 60

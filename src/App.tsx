@@ -4,9 +4,7 @@ import enUS from "antd/es/locale/en_US"
 import zhCN from "antd/es/locale/zh_CN"
 import i18n from "i18next"
 import { useEffect, useState } from "react"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { LayoutIndex } from "@/layout"
-import { Login } from "@/layout/login"
+import { RouterProvider } from "react-router-dom"
 import { useStoreSelector } from "@/store"
 import { CanvasRenderer } from "echarts/renderers"
 import { LabelLayout, UniversalTransition } from "echarts/features"
@@ -19,6 +17,8 @@ import {
   TransformComponent,
 } from "echarts/components"
 import { ScatterChart } from "echarts/charts"
+import { AppRouter } from "@/router"
+
 echarts.use([
   TitleComponent,
   TooltipComponent,
@@ -73,12 +73,7 @@ export const App = () => {
         },
       }}
     >
-      <BrowserRouter>
-        <Routes>
-          <Route path="*" element={<LayoutIndex />} />
-          <Route path={"/login"} element={<Login />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <RouterProvider router={AppRouter} />
     </ConfigProvider>
   )
 }

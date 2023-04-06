@@ -1,0 +1,96 @@
+.stepsContent {
+  max-width: 680px;
+  text-align: left;
+  padding: 0 32px 10px 32px;
+
+  .text {
+    color: $blue-400;
+    margin-bottom: 12px;
+    width: 530px;
+  }
+
+  .stepHeader {
+    color: $blue-500;
+    margin-bottom: 4px;
+    width: 530px;
+  }
+
+  .step {
+    margin-bottom: 2px;
+    color: $blue-500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .subNote {
+    font-size: 12px;
+    line-height: 1.5;
+    color: $blue-400;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .bolder {
+    font-weight: 500;
+  }
+
+  .code {
+    position: relative;
+    margin: 1px 0 2px;
+    width: 100%;
+    color: $blue-100;
+    background-color: $blue-900;
+    border-radius: 4px;
+
+    .copy {
+      visibility: hidden;
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      color: $blue-100;
+    }
+
+    &:hover {
+      .copy {
+        visibility: visible;
+      }
+    }
+
+    .content {
+      padding: 14px 16px;
+      overflow: auto;
+      margin-right: 16px;
+      white-space: pre;
+      font-family: $font-family-monospace;
+      font-size: 11px;
+      line-height: 18px;
+    }
+
+    .operation {
+      color: #b087e5;
+    }
+
+    .string {
+      color: #e6db74;
+    }
+
+    .variable {
+      color: #9ed66b;
+    }
+
+    .comment {
+      color: $blue-500;
+    }
+  }
+}
+
+html[data-type="dark"] {
+  .step {
+    color: $blue-100 !important;
+  }
+
+  .subNote {
+    color: $blue-300 !important;
+  }
+}

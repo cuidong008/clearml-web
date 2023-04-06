@@ -3,7 +3,7 @@ import { StoreState } from "@/types/store"
 import classNames from "classnames"
 import styles from "./index.module.scss"
 import { MouseEvent } from "react"
-import { useThunkDispatch, useStoreSelector } from "@/store"
+import { useStoreSelector, useThunkDispatch } from "@/store"
 import {
   changeScope,
   setProjectGroup,

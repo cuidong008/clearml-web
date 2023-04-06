@@ -1,8 +1,8 @@
 import { Layout } from "antd"
-import { Route, Routes } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import "./index.scss"
 import { useEffect, useState } from "react"
-import { AuthRouter, rootRouter } from "@/router"
+import { AuthRouter } from "@/router/lib"
 import { NavHeader } from "@/layout/nav"
 import { LayoutMenu } from "@/layout/sidebar"
 import { getAllUser, getLoginUser } from "@/store/app/app.actions"
@@ -43,31 +43,7 @@ export const LayoutIndex = () => {
         <Content>
           {user?.id && (
             <AuthRouter>
-              <Routes>
-                {rootRouter.map((item) =>
-                  item.children?.length ? (
-                    <Route
-                      key={item.name}
-                      path={item.path}
-                      element={item.element}
-                    >
-                      {item.children.map((r) => (
-                        <Route
-                          key={item.name}
-                          path={r.path}
-                          element={r.element}
-                        ></Route>
-                      ))}
-                    </Route>
-                  ) : (
-                    <Route
-                      key={item.name}
-                      path={item.path}
-                      element={item.element}
-                    />
-                  ),
-                )}
-              </Routes>
+              <Outlet />
             </AuthRouter>
           )}
         </Content>
