@@ -19,6 +19,7 @@ export interface UsersGetAllExRequest {
 export interface UsersGetAllExResponse {
   users?: Array<User>
 }
+
 export interface UsersGetPreferencesResponse {
   preferences?: UserPreference
 }
@@ -26,6 +27,7 @@ export interface UsersGetPreferencesResponse {
 export interface UsersSetPreferencesRequest {
   preferences: UserPreference
 }
+
 export interface UsersSetPreferencesResponse {
   updated?: number
   fields?: object
