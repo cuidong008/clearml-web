@@ -186,7 +186,11 @@ html[data-type="light"] {
 
   .card {
     &:hover {
-      background-color: $blue-200;
+      background-color: $blue-200 !important;
+    }
+
+    &.selected {
+      background-color: $blue-100;
     }
   }
 }
@@ -194,7 +198,11 @@ html[data-type="light"] {
 html[data-type="dark"] {
   .card {
     &:hover {
-      background-color: $blue-400;
+      background-color: $blue-400 !important;
+    }
+
+    &.selected {
+      background-color: $blue-500;
     }
 
     :global(.tkName) {

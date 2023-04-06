@@ -5,7 +5,6 @@ import {
   createRoutesFromElements,
   Navigate,
   Route,
-  useLocation,
 } from "react-router-dom"
 import { Dashboard } from "@/views/dashboard"
 import { Projects } from "@/views/projects"
@@ -18,6 +17,7 @@ import { ProjectList } from "@/views/projects/list"
 import { Experiments } from "@/views/projects/experiments"
 import { LayoutIndex } from "@/layout"
 import { Login } from "@/layout/login"
+import { ExperimentDetails } from "@/views/projects/experiments/details"
 
 export const rootRouter: Array<RouteObject> = [
   {
@@ -52,6 +52,13 @@ export const rootRouter: Array<RouteObject> = [
         path: ":projId/experiments",
         name: "experiments",
         element: <Experiments />,
+        children: [
+          {
+            path: ":expId/info",
+            name: "expInfo",
+            element: <ExperimentDetails />,
+          },
+        ],
       },
       {
         path: ":projId/overview",
@@ -151,36 +158,33 @@ export const rootRouter: Array<RouteObject> = [
   },
 ]
 
+function genRoutes(root: RouteObject[]) {
+  return root.map((item) =>
+    item.children?.length ? (
+      <Route
+        key={item.name}
+        path={item.path}
+        lazy={item.lazy}
+        element={item.element}
+      >
+        {genRoutes(item.children)}
+      </Route>
+    ) : (
+      <Route
+        key={item.name}
+        path={item.path}
+        lazy={item.lazy}
+        element={item.element}
+      />
+    ),
+  )
+}
+
 const routes = createRoutesFromElements(
   <>
     <Route path={"/"} element={<Navigate to={"/dashboard"} />} />
     <Route path="/" element={<LayoutIndex />}>
-      {rootRouter.map((item) =>
-        item.children?.length ? (
-          <Route
-            key={item.name}
-            path={item.path}
-            lazy={item.lazy}
-            element={item.element}
-          >
-            {item.children.map((r) => (
-              <Route
-                key={item.name}
-                path={r.path}
-                lazy={item.lazy}
-                element={r.element}
-              />
-            ))}
-          </Route>
-        ) : (
-          <Route
-            key={item.name}
-            path={item.path}
-            lazy={item.lazy}
-            element={item.element}
-          />
-        ),
-      )}
+      {genRoutes(rootRouter)}
     </Route>
     <Route path={"/login"} element={<Login />} />
     <Route path={"*"} element={<Navigate to={"/404"} />} />
