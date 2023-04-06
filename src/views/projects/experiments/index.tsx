@@ -59,7 +59,7 @@ export const Experiments = () => {
   const [selectExpKeys, setSelectExpKeys] = useState<Key[]>([])
   const [showArchive, setShowArchive] = useState(false)
   const [showNewDialog, setShowNewDialog] = useState(false)
-  const [viewState, setViewState] = useState("list")
+  const [viewState, setViewState] = useState("table")
   const [oneTimeAni, setOneTimeAni] = useState(false)
 
   const dispatch = useThunkDispatch()
