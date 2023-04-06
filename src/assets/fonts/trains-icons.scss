@@ -1327,6 +1327,7 @@
     color: $blue-300; // don't overwrite
   }
 }
+
 .al-ico-filter-reset {
   &.disabled {
     .path2:before,
@@ -1335,6 +1336,7 @@
     }
   }
 }
+
 .al-ico-filter-reset .path2 {
   &:before {
     content: $al-ico-filter-reset-path2;

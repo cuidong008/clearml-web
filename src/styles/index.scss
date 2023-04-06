@@ -34,22 +34,12 @@ ul {
 }
 
 html[data-type="dark"] {
-  /* scroll bar */
-  ::-webkit-scrollbar {
-    background-color: $blue-800;
-  }
-
   ::-webkit-scrollbar-thumb {
     background-color: $blue-400;
   }
 }
 
 html[data-type="light"] {
-  /* scroll bar */
-  ::-webkit-scrollbar {
-    background-color: #dedede;
-  }
-
   ::-webkit-scrollbar-thumb {
     background-color: #acacac;
   }
@@ -57,7 +47,8 @@ html[data-type="light"] {
 
 ::-webkit-scrollbar {
   width: 4px;
-  height: 6px;
+  height: 4px;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {

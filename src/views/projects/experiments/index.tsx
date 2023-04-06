@@ -3,6 +3,7 @@ import {
   Checkbox,
   message,
   Popover,
+  Radio,
   Space,
   Table,
   TableProps,
@@ -12,11 +13,17 @@ import {
   ColumnDefine,
   getExperimentTableCols,
 } from "./columnFilterLibs"
-import { Key, useCallback, useEffect, useRef, useState } from "react"
+import React, { Key, useCallback, useEffect, useRef, useState } from "react"
 import { FilterMap, Task } from "@/types/task"
 import { getGetAllQuery, getTasksAllEx } from "@/api/task"
 import { useStoreSelector, useThunkDispatch } from "@/store"
-import { MoreOutlined, PlusOutlined, SettingFilled } from "@ant-design/icons"
+import {
+  MoreOutlined,
+  PlusOutlined,
+  SettingFilled,
+  TableOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons"
 import styles from "./index.module.scss"
 import { ColumnFilterItem } from "antd/es/table/interface"
 import { flatten, get, map } from "lodash"
@@ -26,8 +33,11 @@ import classNames from "classnames"
 import { setTableColumn } from "@/store/experiment/experiment.actions"
 import { CheckboxValueType } from "antd/es/checkbox/Group"
 import { uploadUserPreference } from "@/store/app/app.actions"
-import { NewExperimentDialog } from "@/views/projects/experiments/NewExperimentDialog"
+import { NewExperimentDialog } from "@/views/projects/experiments/dialog/NewExperimentDialog"
 import { AUTO_REFRESH_INTERVAL } from "@/utils/constant"
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
+import { ReactComponent as Split } from "@/assets/icons/split.svg"
+import { ExperimentList } from "@/views/projects/experiments/ExperimentList"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
@@ -49,6 +59,8 @@ export const Experiments = () => {
   const [selectExpKeys, setSelectExpKeys] = useState<Key[]>([])
   const [showArchive, setShowArchive] = useState(false)
   const [showNewDialog, setShowNewDialog] = useState(false)
+  const [viewState, setViewState] = useState("table")
+  const [oneTimeAni, setOneTimeAni] = useState(false)
 
   const dispatch = useThunkDispatch()
 
@@ -209,6 +221,16 @@ export const Experiments = () => {
     dispatch(setTableColumn(colIndex))
   }
 
+  function setView(view: string) {
+    setViewState(view)
+    if (view === "list") {
+      setOneTimeAni(true)
+      setTimeout(() => {
+        setOneTimeAni(false)
+      }, 1000)
+    }
+  }
+
   return (
     <div className={styles.experiments}>
       <NewExperimentDialog
@@ -223,10 +245,9 @@ export const Experiments = () => {
           icon={
             <span className="anticon">
               <i
-                className={classNames({
-                  "al-ico-exit-archive": showArchive,
-                  "al-ico-archive": !showArchive,
-                })}
+                className={
+                  showArchive ? "al-ico-exit-archive" : "al-ico-archive"
+                }
               />
             </span>
           }
@@ -234,37 +255,58 @@ export const Experiments = () => {
         >
           {showArchive ? "Exit" : "Open"} Archive
         </Button>
+        <Radio.Group
+          value={viewState}
+          onChange={(e) => setView(e.target.value)}
+          optionType="button"
+          options={[
+            {
+              label: <TableOutlined />,
+              value: "table",
+            },
+            {
+              label: <UnorderedListOutlined />,
+              value: "list",
+            },
+          ]}
+        />
       </Space>
       <Space className={styles.headerRight}>
-        <i
-          className={classNames("al-icon al-ico-filter-reset", {
-            disabled: !Object.values(filteredInfo).some((v) => v && v.value),
-          })}
-          onClick={() => setFilteredInfo({})}
-        >
-          <span className="path1"></span>
-          <span className="path2"></span>
-        </i>
-        <Popover
-          trigger="click"
-          content={
-            <div>
-              <Checkbox.Group
-                style={{ display: "block" }}
-                value={cols}
-                onChange={(e) => changeShowCols(e)}
-              >
-                {map(colsSelectableMap, (v) => (
-                  <li key={v.dataIndex}>
-                    <Checkbox value={v.dataIndex}>{v.title}</Checkbox>
-                  </li>
-                ))}
-              </Checkbox.Group>
-            </div>
-          }
-        >
-          <Button type="text" icon={<SettingFilled />} />
-        </Popover>
+        {viewState === "table" && (
+          <>
+            <i
+              className={classNames("al-icon al-ico-filter-reset", {
+                disabled: !Object.values(filteredInfo).some(
+                  (v) => v && v.value,
+                ),
+              })}
+              onClick={() => setFilteredInfo({})}
+            >
+              <span className="path1"></span>
+              <span className="path2"></span>
+            </i>
+            <Popover
+              trigger="click"
+              content={
+                <div>
+                  <Checkbox.Group
+                    style={{ display: "block" }}
+                    value={cols}
+                    onChange={(e) => changeShowCols(e)}
+                  >
+                    {map(colsSelectableMap, (v) => (
+                      <li key={v.dataIndex}>
+                        <Checkbox value={v.dataIndex}>{v.title}</Checkbox>
+                      </li>
+                    ))}
+                  </Checkbox.Group>
+                </div>
+              }
+            >
+              <Button type="text" icon={<SettingFilled />} />
+            </Popover>
+          </>
+        )}
         <i
           className={classNames("al-icon", {
             "al-ico-auto-refresh-play": userViewsConf?.autoRefresh,
@@ -283,39 +325,60 @@ export const Experiments = () => {
           <span className="path2"></span>
         </i>
       </Space>
-      <div className={styles.experimentTable}>
-        <div style={{ width: "max-content" }}>
-          <Table
-            rowKey={"id"}
-            className={styles.taskTable}
-            size="small"
-            pagination={false}
-            scroll={{ x: "max-content" }}
-            rowSelection={{
-              selectedRowKeys: selectExpKeys,
-              onChange: (selectedRowKeys: Key[]) => {
-                setSelectExpKeys(selectedRowKeys)
-              },
-            }}
-            columns={showCols.concat([
-              {
-                dataIndex: "id",
-                title: "",
-                getter: [],
-                fixed: "right",
-                render: () => <Button icon={<MoreOutlined />} />,
-              },
-            ])}
-            dataSource={tasks}
-            onChange={handleChange}
-          />
-          {hasMore && !!scrollId && (
-            <Button onClick={() => fetchExperiments(false, false)}>
-              Load More
-            </Button>
+      <PanelGroup direction="horizontal">
+        <Panel
+          defaultSize={viewState === "table" ? 100 : 30}
+          className={classNames(styles.experimentTable, {
+            [styles.activeList]: oneTimeAni,
+          })}
+        >
+          {viewState === "table" ? (
+            <div>
+              <Table
+                rowKey={"id"}
+                className={styles.taskTable}
+                size="small"
+                pagination={false}
+                scroll={{ x: "max-content" }}
+                rowSelection={{
+                  selectedRowKeys: selectExpKeys,
+                  onChange: (selectedRowKeys: Key[]) => {
+                    setSelectExpKeys(selectedRowKeys)
+                  },
+                }}
+                columns={showCols.concat([
+                  {
+                    dataIndex: "id",
+                    title: "",
+                    getter: [],
+                    fixed: "right",
+                    render: () => <Button icon={<MoreOutlined />} />,
+                  },
+                ])}
+                dataSource={tasks}
+                onChange={handleChange}
+              />
+            </div>
+          ) : (
+            <ExperimentList tasks={tasks} />
           )}
-        </div>
-      </div>
+          {hasMore && !!scrollId && (
+            <div className={styles.loadMore}>
+              <Button onClick={() => fetchExperiments(false, false)}>
+                Load More
+              </Button>
+            </div>
+          )}
+        </Panel>
+        {viewState === "list" && (
+          <>
+            <PanelResizeHandle className={styles.splitBar}>
+              <Split />
+            </PanelResizeHandle>
+            <Panel className={styles.experimentInfo}>Continue developing</Panel>
+          </>
+        )}
+      </PanelGroup>
     </div>
   )
 }

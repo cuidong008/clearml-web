@@ -6,6 +6,7 @@ import { useStoreSelector } from "@/store"
 export const ThemeToggle = () => {
   const themeConfig = useStoreSelector((state) => state.app.themeConfig)
   const dispatch = useDispatch()
+
   function toggleTheme() {
     dispatch(setThemeConfig({ ...themeConfig, isDark: !themeConfig.isDark }))
   }

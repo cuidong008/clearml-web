@@ -27,6 +27,8 @@ export class Markdown extends React.Component<
   MarkdownEditorProps,
   MarkdownEditorState
 > {
+  editorRef = React.createRef<Editor>()
+
   constructor(props: MarkdownEditorProps) {
     super(props)
     this.state = {
@@ -41,8 +43,6 @@ export class Markdown extends React.Component<
       editMode: true,
     }
   }
-
-  editorRef = React.createRef<Editor>()
 
   override componentDidMount() {
     this.setState({

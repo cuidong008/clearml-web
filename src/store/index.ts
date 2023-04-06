@@ -8,7 +8,7 @@ import {
 } from "redux"
 
 import reduxPromise from "redux-promise"
-import reduxThunk, { ThunkDispatch } from "redux-thunk"
+import reduxThunk from "redux-thunk"
 import reduxLogger from "redux-logger"
 import { StoreState } from "@/types/store"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"

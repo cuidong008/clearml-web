@@ -1,6 +1,12 @@
 import { RouteObject } from "@/types/router"
 import React from "react"
-import { Navigate, useLocation } from "react-router-dom"
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Navigate,
+  Route,
+  useLocation,
+} from "react-router-dom"
 import { Dashboard } from "@/views/dashboard"
 import { Projects } from "@/views/projects"
 import WorkerAndQueues from "@/views/workerAndQueues"
@@ -8,44 +14,19 @@ import NotAuth from "@/components/errors/403"
 import NotFound from "@/components/errors/404"
 import NotNetwork from "@/components/errors/500"
 import { Overview } from "@/views/projects/overview"
-import progress from "nprogress"
 import { ProjectList } from "@/views/projects/list"
 import { Experiments } from "@/views/projects/experiments"
-
-progress.configure({
-  easing: "ease", // 动画方式
-  speed: 500, // 递增进度条的速度
-  showSpinner: false, // 是否显示加载ico
-  trickleSpeed: 200, // 自动递增间隔
-  minimum: 0.3, // 初始化时的最小百分比
-})
-
-export const AuthRouter = (props: { children: JSX.Element }) => {
-  progress.start()
-  const { children } = props
-  const { pathname } = useLocation()
-  if (pathname.includes("/share")) {
-    return children
-  }
-  // * 判断是否有Token
-  const token = localStorage.getItem("authTk") //store.getState().user.token;
-  if (!token) return <Navigate to="/login" replace />
-  // todo add auth logic
-  // * 当前账号有权限返回 Router，正常访问页面
-  progress.done()
-  return children
-}
+import { LayoutIndex } from "@/layout"
+import { Login } from "@/layout/login"
 
 export const rootRouter: Array<RouteObject> = [
   {
-    path: "/",
-    name: "home",
-    element: <Navigate to={"/dashboard"} />,
-  },
-  {
     path: "/dashboard",
     name: "dashboard",
-    element: <Dashboard />,
+    async lazy() {
+      const { Dashboard } = await import("@/views/dashboard")
+      return { Component: Dashboard }
+    },
     meta: {
       requiresAuth: false,
       title: "Dashboard",
@@ -168,9 +149,41 @@ export const rootRouter: Array<RouteObject> = [
     name: "500",
     element: <NotNetwork />,
   },
-  {
-    path: "*",
-    name: "hide",
-    element: <Navigate to="/404" />,
-  },
 ]
+
+const routes = createRoutesFromElements(
+  <>
+    <Route path={"/"} element={<Navigate to={"/dashboard"} />} />
+    <Route path="/" element={<LayoutIndex />}>
+      {rootRouter.map((item) =>
+        item.children?.length ? (
+          <Route
+            key={item.name}
+            path={item.path}
+            lazy={item.lazy}
+            element={item.element}
+          >
+            {item.children.map((r) => (
+              <Route
+                key={item.name}
+                path={r.path}
+                lazy={item.lazy}
+                element={r.element}
+              />
+            ))}
+          </Route>
+        ) : (
+          <Route
+            key={item.name}
+            path={item.path}
+            lazy={item.lazy}
+            element={item.element}
+          />
+        ),
+      )}
+    </Route>
+    <Route path={"/login"} element={<Login />} />
+    <Route path={"*"} element={<Navigate to={"/404"} />} />
+  </>,
+)
+export const AppRouter = createBrowserRouter(routes)
