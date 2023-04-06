@@ -1,31 +1,3 @@
-html[data-type="dark"] {
-  .taskTable {
-    :global(.ant-table-cell) {
-      color: #dce0ee;
-      font-family: Heebo, sans-serif;
-
-      span {
-        color: #dce0ee;
-        font-family: Heebo, sans-serif;
-      }
-    }
-
-    :global(.ant-table-filter-trigger.active) {
-      span {
-        color: $neon-yellow !important;
-      }
-    }
-
-    :global(.ant-table-column-sorter-down.active) {
-      color: $neon-yellow !important;
-    }
-
-    :global(.ant-table-column-sorter-up.active) {
-      color: $neon-yellow !important;
-    }
-  }
-}
-
 .customFilterDropdown {
   .dropdownBody {
     padding: 10px 10px 0 10px;
@@ -53,23 +25,22 @@ html[data-type="dark"] {
 
 .experiments {
   position: relative;
-  height: calc(100% - 70px);
+  height: calc(100% - 56px);
 
   .headerLeft {
     position: absolute;
-    top: -60px;
+    top: -44px;
     left: 10px;
     z-index: 100;
-  }
 
-  .experimentTable {
-    overflow: auto;
-    height: calc(100% - 5px);
+    :global(.ant-radio-group) {
+      display: block;
+    }
   }
 
   .headerRight {
     position: absolute;
-    top: -60px;
+    top: -44px;
     right: 10px;
     z-index: 100;
 
@@ -80,101 +51,189 @@ html[data-type="dark"] {
       cursor: pointer;
     }
   }
-}
 
-.stepsContent {
-  max-width: 680px;
-  text-align: left;
-  padding: 0 32px 10px 32px;
+  .experimentTable {
+    display: block;
+    overflow: auto !important;
+    height: calc(100% - 5px);
+    border-right: 1px solid $blue-500;
 
-  .text {
-    color: $blue-400;
-    margin-bottom: 12px;
-    width: 530px;
-  }
-
-  .stepHeader {
-    color: $blue-500;
-    margin-bottom: 4px;
-    width: 530px;
-  }
-
-  .step {
-    margin-bottom: 2px;
-    color: $blue-500;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-  }
-
-  .subNote {
-    font-size: 12px;
-    line-height: 1.5;
-    color: $blue-400;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .bolder {
-    font-weight: 500;
-  }
-
-  .code {
-    position: relative;
-    margin: 1px 0 2px;
-    width: 100%;
-    color: $blue-100;
-    background-color: $blue-900;
-    border-radius: 4px;
-
-    .copy {
-      visibility: hidden;
-      position: absolute;
-      right: 10px;
-      top: 8px;
-      color: $blue-100;
+    &.activeList {
+      transition: 0.3s;
     }
 
-    &:hover {
-      .copy {
-        visibility: visible;
+    .loadMore {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .cardList {
+      :global(.ant-list-item) {
+        border: none;
+      }
+
+      .listHeader {
+        height: 40px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .title {
+          color: $blue-300;
+          font-weight: 500;
+          font-size: 14px;
+          font-family: Heebo, sans-serif;
+        }
+      }
+
+      .card {
+        width: 100%;
+        cursor: pointer;
+        user-select: none;
+
+        :global(.ant-card-body) {
+          display: grid;
+          grid-template-columns: 20px 32px 1fr;
+          align-items: center;
+          gap: 8px 12px;
+          grid-template-areas:
+            "tkCbx tkType tkName"
+            ". . tkTags"
+            ". . tkData";
+        }
+
+        :global(.tkCbx) {
+          grid-area: tkCbx;
+          margin-right: auto;
+        }
+
+        :global(.tkType) {
+          grid-area: tkType;
+          display: flex;
+          justify-content: center;
+        }
+
+        .name {
+          display: flex;
+          min-width: 0;
+          margin-right: 12px;
+
+          span {
+            flex: 1;
+            font-weight: 500;
+            min-width: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+
+        :global(.tkName) {
+          grid-area: tkName;
+          display: flex;
+          overflow: hidden;
+
+          .status {
+            display: flex;
+            margin-left: auto;
+          }
+        }
+
+        :global(.tkTags) {
+          grid-area: tkTags;
+          display: flex;
+          min-height: 20px;
+          min-width: 0;
+          margin-right: 12px;
+        }
+
+        :global(.tkData) {
+          grid-area: tkData;
+          display: flex;
+          justify-content: space-between;
+          overflow: hidden;
+          color: $blue-300;
+          white-space: nowrap;
+
+          .dot {
+            padding: 0 6px;
+          }
+        }
       }
     }
+  }
 
-    .content {
-      padding: 14px 16px;
-      overflow: auto;
-      margin-right: 16px;
-      white-space: pre;
-      font-family: $font-family-monospace;
-      font-size: 11px;
-      line-height: 18px;
-    }
+  .experimentInfo {
+    background: white;
+  }
 
-    .operation {
-      color: #b087e5;
-    }
+  .splitBar {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color: $blue-800;
+  }
+}
 
-    .string {
-      color: #e6db74;
-    }
+html[data-type="light"] {
+  .listHeader {
+    background: $blue-100;
+  }
 
-    .variable {
-      color: #9ed66b;
-    }
-
-    .comment {
-      color: $blue-500;
+  .card {
+    &:hover {
+      background-color: $blue-200;
     }
   }
 }
 
 html[data-type="dark"] {
-  .step {
-    color: $blue-100 !important;
+  .card {
+    &:hover {
+      background-color: $blue-400;
+    }
+
+    :global(.tkName) {
+      color: #f2f4fc;
+    }
   }
 
-  .subNote {
-    color: $blue-300 !important;
+  .taskTable {
+    :global(.ant-table-cell) {
+      color: #dce0ee;
+      font-family: Heebo, sans-serif;
+
+      span {
+        color: #dce0ee;
+        font-family: Heebo, sans-serif;
+      }
+    }
+
+    :global(.ant-table-filter-trigger.active) {
+      span {
+        color: $neon-yellow !important;
+      }
+    }
+
+    :global(.ant-table-column-sorter-down.active) {
+      color: $neon-yellow !important;
+    }
+
+    :global(.ant-table-column-sorter-up.active) {
+      color: $neon-yellow !important;
+    }
+  }
+
+  .listHeader {
+    background: $blue-600;
+  }
+
+  .splitBar {
+    background: $blue-900;
+    color: #ffffff !important;
   }
 }

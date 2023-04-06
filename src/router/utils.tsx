@@ -1,5 +1,4 @@
 import { RouteObject } from "@/types/router"
-import React from "react"
 
 /**
  * @description 递归查询对应的路由

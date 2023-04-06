@@ -1,6 +1,6 @@
 import { Modal, Tabs } from "antd"
 import { useState } from "react"
-import styles from "./index.module.scss"
+import styles from "./dialog.module.scss"
 import classNames from "classnames"
 import { CopyToClipboard } from "@/components/CopyToClipboard"
 import YouTube from "react-youtube"

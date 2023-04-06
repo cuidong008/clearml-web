@@ -3,7 +3,7 @@ import React from "react"
 import dayjs from "dayjs"
 import { Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
-import { Tooltip, Typography } from "antd"
+import { Card, Tooltip, Typography } from "antd"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
 import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
@@ -50,6 +50,15 @@ export function getExperimentTableCols(cols: string[]) {
 }
 
 export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
+  CARD: {
+    getter: [],
+    dataIndex: "id",
+    title: "EXPERIMENTS LIST",
+    render: (id, task) => {
+      return <Card>{task.name}</Card>
+    },
+    responsive: ["md"],
+  },
   ID: {
     getter: [],
     dataIndex: "id",
