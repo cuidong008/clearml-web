@@ -105,6 +105,9 @@ export const Experiments = () => {
       if (!scrollId && allowRefresh) {
         return
       }
+      if (reload) {
+        setSelectExpKeys([])
+      }
       const request = getGetAllQuery({
         refreshScroll: allowRefresh && !!scrollId && userViewsConf?.autoRefresh,
         scrollId: !allowRefresh && reload ? null : scrollId,
@@ -260,6 +263,7 @@ export const Experiments = () => {
           }
           onClick={() => {
             setShowArchive(!showArchive)
+            setSelectExpKeys([])
             setView("table")
           }}
         >
