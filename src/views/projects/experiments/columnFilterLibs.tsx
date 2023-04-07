@@ -72,7 +72,7 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: true,
     width: 400,
     render: (name) => (
-      <Tooltip title={name} color={"blue"}>
+      <Tooltip title={name} color={"blue"} placement="bottom">
         <Typography.Text ellipsis style={{ width: 360, fontWeight: 500 }}>
           {name}
         </Typography.Text>

@@ -88,6 +88,19 @@
           font-size: 14px;
           font-family: Heebo, sans-serif;
         }
+
+        .filterItem {
+          display: flex;
+          align-items: center;
+          font-family: Heebo, sans-serif;
+          font-weight: bold;
+          font-size: 12px;
+
+          i {
+            font-size: 18px;
+            margin-right: 5px;
+          }
+        }
       }
 
       .card {
@@ -166,11 +179,6 @@
       }
     }
   }
-
-  .experimentInfo {
-    background: white;
-  }
-
   .splitBar {
     justify-content: center;
     display: flex;
@@ -182,6 +190,10 @@
 html[data-type="light"] {
   .listHeader {
     background: $blue-100;
+  }
+
+  .filterItem {
+    color: $blue-400;
   }
 
   .card {
@@ -196,6 +208,10 @@ html[data-type="light"] {
 }
 
 html[data-type="dark"] {
+  .filterItem {
+    color: $blue-200;
+  }
+
   .card {
     &:hover {
       background-color: $blue-400 !important;
