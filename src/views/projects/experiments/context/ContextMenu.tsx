@@ -102,7 +102,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     >
       <ul>
         {menu.map((g, i) => (
-          <div key={i}>
+          <div key={`g-${i}`}>
             {g.map((item) =>
               item.show ? (
                 <li
@@ -116,7 +116,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                   {item.label}
                 </li>
               ) : (
-                <></>
+                <div style={{ display: "none" }} key={item.key}></div>
               ),
             )}
             {i < menu.length - 1 && <hr />}
