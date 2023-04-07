@@ -1,24 +1,73 @@
-import { Button, Card, Checkbox, Dropdown, List, MenuProps } from "antd"
-import { Task } from "@/types/task"
+import { Button, Card, Checkbox, Dropdown, List } from "antd"
+import { SelectedTask, Task } from "@/types/task"
 import styles from "./index.module.scss"
+import projStyles from "../index.module.scss"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
 import { TaskTypeEnum } from "@/types/enums"
 import { TagList } from "@/components/TagList"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { CaretDownOutlined } from "@ant-design/icons"
-import { Dispatch, Key, SetStateAction, useEffect, useState } from "react"
+import {
+  Dispatch,
+  Key,
+  MouseEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react"
 import { CheckboxChangeEvent } from "antd/es/checkbox"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import classNames from "classnames"
+import { colsSelectableMap } from "@/views/projects/experiments/columnFilterLibs"
+import { map } from "lodash"
+import { SortMeta } from "@/types/common"
+import { ItemType } from "antd/es/menu/hooks/useItems"
 
 export const ExperimentList = (props: {
   tasks: Task[]
-  selectedKeys: Key[]
-  setSelectedKeys: Dispatch<SetStateAction<Key[]>>
+  selectedKeys: SelectedTask
+  setSelectedKeys: Dispatch<SetStateAction<SelectedTask>>
+  sorter: SortMeta | undefined
+  setSorter: Dispatch<SetStateAction<SortMeta | undefined>>
+  onCtx: (x: number, y: number, e: Task, selected: boolean) => void
 }) => {
-  const { tasks, selectedKeys, setSelectedKeys } = props
-  const items: MenuProps["items"] = []
+  const { tasks, selectedKeys, setSelectedKeys, sorter, setSorter, onCtx } =
+    props
+
+  function reverseOrder(e: MouseEvent<HTMLElement>) {
+    e.stopPropagation()
+    if (sorter) {
+      setSorter({ ...sorter, order: -sorter.order })
+    }
+  }
+
+  function selectSort({ key }: { key: string }) {
+    setSorter({ field: key, order: 1 })
+  }
+
+  const items: ItemType[] = map(colsSelectableMap, (v, k) => {
+    if (v.sorter) {
+      return {
+        key: v.dataIndex,
+        label: (
+          <div className={projStyles.filterItem}>
+            {v.title}
+            {sorter?.field === v.dataIndex && (
+              <i
+                onClick={(e) => reverseOrder(e)}
+                className={classNames("al-icon", {
+                  "al-ico-sort-asc": sorter.order === 1,
+                  "al-ico-sort-desc": sorter.order === -1,
+                })}
+              />
+            )}
+          </div>
+        ),
+      }
+    }
+    return null
+  }).filter((v) => !!v)
   const [indeterminate, setIndeterminate] = useState(false)
   const [checkAll, setCheckAll] = useState(false)
   const params = useParams()
@@ -26,9 +75,9 @@ export const ExperimentList = (props: {
   const location = useLocation()
 
   useEffect(() => {
-    if (selectedKeys.length) {
+    if (selectedKeys.keys.length) {
       setIndeterminate(true)
-      if (selectedKeys.length === tasks.length) {
+      if (selectedKeys.keys.length === tasks.length) {
         setIndeterminate(false)
         setCheckAll(true)
       }
@@ -41,27 +90,28 @@ export const ExperimentList = (props: {
   function handleChecked(e: CheckboxChangeEvent) {
     const id = e.target.value
     const isCheck = e.target.checked
-    let selected: Key[] = []
+    let selected: Key[]
     if (isCheck) {
-      selected = [...new Set([...selectedKeys, id])]
+      selected = [...new Set([...selectedKeys.keys, id])]
     } else {
-      selected = selectedKeys.filter((v) => v !== id)
+      selected = selectedKeys.keys.filter((v) => v !== id)
     }
-    setSelectedKeys(selected)
+    const selectedTask = tasks.filter((t) => selected.includes(t.id))
+    setSelectedKeys({ keys: selected, rows: selectedTask })
   }
 
   function handleGlobalCheck(e: CheckboxChangeEvent) {
     if (e.target.checked) {
-      setSelectedKeys(tasks.map((t) => t.id))
+      setSelectedKeys({ keys: tasks.map((t) => t.id), rows: tasks })
     } else {
-      setSelectedKeys([])
+      setSelectedKeys({ keys: [], rows: [] })
     }
     setIndeterminate(false)
     setCheckAll(e.target.checked)
   }
 
   function setExperimentShow(id: string) {
-    if (params["expId"]) {
+    if (params["expId"] && params["expId"] !== id) {
       navigate(location.pathname.replace(params["expId"], id))
     }
   }
@@ -75,9 +125,9 @@ export const ExperimentList = (props: {
           onChange={handleGlobalCheck}
         />
         <div className={styles.title}>EXPERIMENT LIST</div>
-        <Dropdown menu={{ items }}>
-          <Button type="ghost">
-            Sort By
+        <Dropdown trigger={["click"]} menu={{ items, onClick: selectSort }}>
+          <Button size="small" type="ghost">
+            SORTED BY
             <CaretDownOutlined />
           </Button>
         </Dropdown>
@@ -92,11 +142,17 @@ export const ExperimentList = (props: {
                 [styles.selected]: params["expId"] === item.id,
               })}
               onClick={() => setExperimentShow(item.id)}
+              onContextMenu={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                const { clientX, clientY } = e
+                onCtx(clientX, clientY, item, false)
+              }}
             >
               <Checkbox
                 className="tkCbx"
                 value={item.id}
-                checked={selectedKeys.includes(item.id)}
+                checked={selectedKeys.keys.includes(item.id)}
                 onChange={handleChecked}
               />
               <div className="tkType">
