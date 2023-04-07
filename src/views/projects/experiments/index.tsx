@@ -165,6 +165,15 @@ export const Experiments = () => {
   const fetchDataRef = useRef(fetchExperiments)
 
   useEffect(() => {
+    // watch url path change when browser back or forward
+    if (!params["expId"]) {
+      setViewState("table")
+    } else {
+      setViewState("list")
+    }
+  }, [params])
+
+  useEffect(() => {
     fetchDataRef.current = fetchExperiments
   }, [fetchExperiments])
 
@@ -200,6 +209,23 @@ export const Experiments = () => {
       }
     }
   }, [scrollId, userViewsConf])
+
+  useEffect(() => {
+    function close(e: Event) {
+      const id = (e.target as HTMLInputElement).id
+      if (id === "expCtxMenu") {
+        return
+      }
+      setCtxMenu({ x: 0, y: 0, show: false, task: undefined })
+    }
+
+    if (ctxMenu.show) {
+      document.addEventListener("click", close)
+    }
+    return () => {
+      document.removeEventListener("click", close)
+    }
+  }, [ctxMenu])
 
   const handleChange: TableProps<Task>["onChange"] = (
     pagination,
@@ -266,23 +292,6 @@ export const Experiments = () => {
       setView("list", e)
     }
   }
-
-  useEffect(() => {
-    function close(e: Event) {
-      const id = (e.target as HTMLInputElement).id
-      if (id === "expCtxMenu") {
-        return
-      }
-      setCtxMenu({ x: 0, y: 0, show: false, task: undefined })
-    }
-
-    if (ctxMenu.show) {
-      document.addEventListener("click", close)
-    }
-    return () => {
-      document.removeEventListener("click", close)
-    }
-  }, [ctxMenu])
 
   function handleContext(x: number, y: number, e: Task, needSelected: boolean) {
     if (needSelected) {
