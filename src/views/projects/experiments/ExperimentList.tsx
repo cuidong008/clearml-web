@@ -166,7 +166,7 @@ export const ExperimentList = (props: {
                 </div>
                 <TaskStatusLabel
                   className={styles.status}
-                  status={item.status ?? ""}
+                  status={item.status ?? "unknown"}
                   showIcon
                   showLabel
                 />

@@ -1,10 +1,14 @@
 import classNames from "classnames"
-import { EXPERIMENTS_STATUS_LABELS, TaskStatusEnum } from "@/types/enums"
+import {
+  EXPERIMENTS_STATUS_LABELS,
+  TaskStatusEnum,
+  TaskStatusEnumType,
+} from "@/types/enums"
 import styles from "./index.module.scss"
 import { Progress } from "antd"
 
 export const TaskStatusLabel = (props: {
-  status: string
+  status: TaskStatusEnumType
   showLabel?: boolean
   showIcon?: boolean
   progress?: string
