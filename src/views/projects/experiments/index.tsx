@@ -13,8 +13,8 @@ import {
   ColumnDefine,
   getExperimentTableCols,
 } from "./columnFilterLibs"
-import React, { Key, useCallback, useEffect, useRef, useState } from "react"
-import { FilterMap, Task } from "@/types/task"
+import { Key, useCallback, useEffect, useRef, useState } from "react"
+import { FilterMap, SelectedTask, Task } from "@/types/task"
 import { getGetAllQuery, getTasksAllEx } from "@/api/task"
 import { useStoreSelector, useThunkDispatch } from "@/store"
 import {
@@ -33,12 +33,13 @@ import classNames from "classnames"
 import { setTableColumn } from "@/store/experiment/experiment.actions"
 import { CheckboxValueType } from "antd/es/checkbox/Group"
 import { uploadUserPreference } from "@/store/app/app.actions"
-import { NewExperimentDialog } from "@/views/projects/experiments/dialog/NewExperimentDialog"
+import { NewExperimentDialog } from "./dialog/NewExperimentDialog"
 import { AUTO_REFRESH_INTERVAL } from "@/utils/constant"
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
 import { ReactComponent as Split } from "@/assets/icons/split.svg"
-import { ExperimentList } from "@/views/projects/experiments/ExperimentList"
+import { ExperimentList } from "./ExperimentList"
 import { Outlet, useNavigate, useParams } from "react-router-dom"
+import { ContextMenu, MenuCtx } from "./context/ContextMenu"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
@@ -60,11 +61,22 @@ export const Experiments = () => {
     order: -1,
     field: "last_update",
   })
-  const [selectExpKeys, setSelectExpKeys] = useState<Key[]>([])
+  const [selectedTask, setSelectedTask] = useState<SelectedTask>({
+    rows: [],
+    keys: [],
+  })
   const [showArchive, setShowArchive] = useState(false)
   const [showNewDialog, setShowNewDialog] = useState(false)
   const [viewState, setViewState] = useState(params["expId"] ? "list" : "table")
   const [oneTimeAni, setOneTimeAni] = useState(false)
+  const [currentTask, setCurrentTask] = useState<Task>()
+  const [ctxMenu, setCtxMenu] = useState<MenuCtx>({
+    x: 0,
+    y: 0,
+    show: false,
+    task: undefined,
+  })
+  const [fullView, setFullView] = useState(false)
 
   const dispatch = useThunkDispatch()
 
@@ -106,7 +118,7 @@ export const Experiments = () => {
         return
       }
       if (reload) {
-        setSelectExpKeys([])
+        setSelectedTask({ rows: [], keys: [] })
       }
       const request = getGetAllQuery({
         refreshScroll: allowRefresh && !!scrollId && userViewsConf?.autoRefresh,
@@ -228,67 +240,130 @@ export const Experiments = () => {
     dispatch(setTableColumn(colIndex))
   }
 
-  function setView(view: string) {
+  function setView(view: string, task?: Task) {
     setViewState(view)
     if (view === "list") {
       setOneTimeAni(true)
       setTimeout(() => {
         setOneTimeAni(false)
       }, 1000)
-      navigate(`${tasks[0].id}/info`)
+      if (task) {
+        navigate(`${task.id}/info`)
+        setCurrentTask(task)
+      } else {
+        navigate(`${tasks[0].id}/info`)
+        setCurrentTask(undefined)
+      }
     } else {
       navigate(`/projects/${params["projId"]}/experiments`)
+      setCurrentTask(undefined)
+    }
+  }
+
+  function taskClick(e: Task, nav: boolean) {
+    setSelectedTask({ keys: [e.id], rows: [e] })
+    if (nav) {
+      setView("list", e)
+    }
+  }
+
+  useEffect(() => {
+    function close(e: Event) {
+      const id = (e.target as HTMLInputElement).id
+      if (id === "expCtxMenu") {
+        return
+      }
+      setCtxMenu({ x: 0, y: 0, show: false, task: undefined })
+    }
+
+    if (ctxMenu.show) {
+      document.addEventListener("click", close)
+    }
+    return () => {
+      document.removeEventListener("click", close)
+    }
+  }, [ctxMenu])
+
+  function handleContext(x: number, y: number, e: Task, needSelected: boolean) {
+    if (needSelected) {
+      setSelectedTask({ keys: [e.id], rows: [e] })
+    }
+    setCtxMenu({ x, y, show: true, task: e })
+  }
+
+  function dispatchCtxMenuAct(e: string, t?: Task) {
+    console.log(e)
+    switch (e) {
+      case "detail":
+        setView("list", t)
+        break
+      case "view":
+        setFullView(true)
+        navigate(`${t?.id}/info`)
+        break
     }
   }
 
   return (
     <div className={styles.experiments}>
+      {ctxMenu.task && (
+        <ContextMenu
+          ctx={ctxMenu}
+          isArchive={showArchive}
+          multiSelect={selectedTask.keys.length > 1}
+          viewState={viewState}
+          dispatch={dispatchCtxMenuAct}
+        />
+      )}
       <NewExperimentDialog
         show={showNewDialog}
         onClose={() => setShowNewDialog(false)}
       />
-      <Space className={styles.headerLeft}>
-        <Button icon={<PlusOutlined />} onClick={() => setShowNewDialog(true)}>
-          New Experiment
-        </Button>
-        <Button
-          icon={
-            <span className="anticon">
-              <i
-                className={
-                  showArchive ? "al-ico-exit-archive" : "al-ico-archive"
-                }
-              />
-            </span>
-          }
-          onClick={() => {
-            setShowArchive(!showArchive)
-            setSelectExpKeys([])
-            setView("table")
-          }}
-        >
-          {showArchive ? "Exit" : "Open"} Archive
-        </Button>
-        <Radio.Group
-          disabled={showArchive}
-          value={viewState}
-          onChange={(e) => setView(e.target.value)}
-          optionType="button"
-          options={[
-            {
-              label: <TableOutlined />,
-              value: "table",
-            },
-            {
-              label: <UnorderedListOutlined />,
-              value: "list",
-            },
-          ]}
-        />
-      </Space>
-      <Space className={styles.headerRight}>
-        {viewState === "table" && (
-          <>
+      {!fullView && (
+        <>
+          <Space className={styles.headerLeft}>
+            <Button
+              icon={<PlusOutlined />}
+              onClick={() => setShowNewDialog(true)}
+            >
+              New Experiment
+            </Button>
+            <Button
+              icon={
+                <span className="anticon">
+                  <i
+                    className={
+                      showArchive ? "al-ico-exit-archive" : "al-ico-archive"
+                    }
+                  />
+                </span>
+              }
+              onClick={() => {
+                setShowArchive(!showArchive)
+                setSelectedTask({ keys: [], rows: [] })
+                setView("table")
+              }}
+            >
+              {showArchive ? "Exit" : "Open"} Archive
+            </Button>
+            <Radio.Group
+              disabled={showArchive}
+              value={viewState}
+              onChange={(e) => setView(e.target.value)}
+              optionType="button"
+              options={[
+                {
+                  label: <TableOutlined />,
+                  value: "table",
+                },
+                {
+                  label: <UnorderedListOutlined />,
+                  value: "list",
+                },
+              ]}
+            />
+          </Space>
+          <Space className={styles.headerRight}>
             <i
               className={classNames("al-icon al-ico-filter-reset", {
                 disabled: !Object.values(filteredInfo).some(
@@ -300,107 +375,145 @@ export const Experiments = () => {
               <span className="path1"></span>
               <span className="path2"></span>
             </i>
-            <Popover
-              trigger="click"
-              content={
-                <div>
-                  <Checkbox.Group
-                    style={{ display: "block" }}
-                    value={cols}
-                    onChange={(e) => changeShowCols(e)}
-                  >
-                    {map(colsSelectableMap, (v) => (
-                      <li key={v.dataIndex}>
-                        <Checkbox value={v.dataIndex}>{v.title}</Checkbox>
-                      </li>
-                    ))}
-                  </Checkbox.Group>
-                </div>
+            {viewState === "table" && (
+              <Popover
+                trigger="click"
+                content={
+                  <div>
+                    <Checkbox.Group
+                      style={{ display: "block" }}
+                      value={cols}
+                      onChange={(e) => changeShowCols(e)}
+                    >
+                      {map(colsSelectableMap, (v) => (
+                        <li key={v.dataIndex}>
+                          <Checkbox value={v.dataIndex}>{v.title}</Checkbox>
+                        </li>
+                      ))}
+                    </Checkbox.Group>
+                  </div>
+                }
+              >
+                <Button type="text" icon={<SettingFilled />} />
+              </Popover>
+            )}
+            <i
+              className={classNames(
+                "al-icon",
+                userViewsConf?.autoRefresh
+                  ? "al-ico-auto-refresh-play"
+                  : "al-ico-auto-refresh-pause",
+              )}
+              onClick={() =>
+                dispatch(
+                  uploadUserPreference("views", {
+                    ...userViewsConf,
+                    autoRefresh: !userViewsConf?.autoRefresh,
+                  }),
+                )
               }
             >
-              <Button type="text" icon={<SettingFilled />} />
-            </Popover>
-          </>
-        )}
-        <i
-          className={classNames("al-icon", {
-            "al-ico-auto-refresh-play": userViewsConf?.autoRefresh,
-            "al-ico-auto-refresh-pause": !userViewsConf?.autoRefresh,
-          })}
-          onClick={() =>
-            dispatch(
-              uploadUserPreference("views", {
-                ...userViewsConf,
-                autoRefresh: !userViewsConf?.autoRefresh,
-              }),
-            )
-          }
-        >
-          <span className="path1"></span>
-          <span className="path2"></span>
-        </i>
-      </Space>
-      <PanelGroup direction="horizontal">
-        <Panel
-          defaultSize={viewState === "table" ? 100 : 30}
-          className={classNames(styles.experimentTable, {
-            [styles.activeList]: oneTimeAni,
-          })}
-        >
-          {viewState === "table" ? (
-            <div style={{ width: "max-content" }}>
-              <Table
-                rowKey={"id"}
-                className={styles.taskTable}
-                size="small"
-                pagination={false}
-                scroll={{ x: "max-content" }}
-                rowSelection={{
-                  selectedRowKeys: selectExpKeys,
-                  onChange: (selectedRowKeys: Key[]) => {
-                    setSelectExpKeys(selectedRowKeys)
-                  },
-                }}
-                columns={showCols.concat([
-                  {
-                    dataIndex: "id",
-                    title: "",
-                    getter: [],
-                    fixed: "right",
-                    render: () => <Button icon={<MoreOutlined />} />,
-                  },
-                ])}
-                dataSource={tasks}
-                onChange={handleChange}
-              />
-            </div>
-          ) : (
-            <ExperimentList
-              tasks={tasks}
-              selectedKeys={selectExpKeys}
-              setSelectedKeys={setSelectExpKeys}
-            />
-          )}
-          {hasMore && !!scrollId && (
-            <div className={styles.loadMore}>
-              <Button onClick={() => fetchExperiments(false, false)}>
-                Load More
-              </Button>
-            </div>
-          )}
-        </Panel>
-        {viewState === "list" && (
-          <>
-            <PanelResizeHandle className={styles.splitBar}>
-              <Split />
-            </PanelResizeHandle>
-            <Panel collapsible className={styles.experimentInfo}>
-              Continue developing
-              <Outlet />
+              <span className="path1"></span>
+              <span className="path2"></span>
+            </i>
+          </Space>
+          <PanelGroup direction="horizontal">
+            <Panel
+              defaultSize={viewState === "table" ? 100 : 30}
+              className={classNames(styles.experimentTable, {
+                [styles.activeList]: oneTimeAni,
+              })}
+            >
+              {viewState === "table" ? (
+                <div style={{ width: "max-content" }}>
+                  <Table
+                    rowKey={"id"}
+                    className={styles.taskTable}
+                    size="small"
+                    showSorterTooltip={false}
+                    pagination={false}
+                    scroll={{ x: "max-content" }}
+                    onRow={(record) => ({
+                      onClick: () => taskClick(record, false),
+                      onDoubleClick: () => taskClick(record, true),
+                      onContextMenu: (e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        const { clientX, clientY } = e
+                        handleContext(clientX, clientY, record, true)
+                      },
+                    })}
+                    rowSelection={{
+                      selectedRowKeys: selectedTask.keys,
+                      onChange: (
+                        selectedRowKeys: Key[],
+                        selectedRows: Task[],
+                      ) => {
+                        setSelectedTask({
+                          keys: selectedRowKeys,
+                          rows: selectedRows,
+                        })
+                      },
+                    }}
+                    columns={showCols.concat([
+                      {
+                        dataIndex: "id",
+                        title: "",
+                        getter: [],
+                        fixed: "right",
+                        render: (_, record) => (
+                          <Button
+                            icon={<MoreOutlined />}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              const { clientX, clientY } = e
+                              handleContext(
+                                clientX - 220,
+                                clientY,
+                                record,
+                                false,
+                              )
+                            }}
+                          />
+                        ),
+                      },
+                    ])}
+                    dataSource={tasks}
+                    onChange={handleChange}
+                  />
+                </div>
+              ) : (
+                <ExperimentList
+                  tasks={tasks}
+                  selectedKeys={selectedTask}
+                  setSelectedKeys={setSelectedTask}
+                  sorter={sorter}
+                  setSorter={setSorter}
+                  onCtx={handleContext}
+                />
+              )}
+              {hasMore && !!scrollId && (
+                <div className={styles.loadMore}>
+                  <Button onClick={() => fetchExperiments(false, false)}>
+                    Load More
+                  </Button>
+                </div>
+              )}
             </Panel>
-          </>
-        )}
-      </PanelGroup>
+            {viewState === "list" && (
+              <>
+                <PanelResizeHandle className={styles.splitBar}>
+                  <Split />
+                </PanelResizeHandle>
+                <Panel collapsible>
+                  <Outlet />
+                </Panel>
+              </>
+            )}
+          </PanelGroup>
+        </>
+      )}
+      {fullView && <Outlet />}
     </div>
   )
 }

@@ -18,8 +18,9 @@ export type TaskStatusEnumType =
   | "failed"
   | "completed"
   | "unknown"
+  | "started"
 
-export const TaskStatusEnum = {
+export const TaskStatusEnum: Record<string, TaskStatusEnumType> = {
   Created: "created",
   Queued: "queued",
   InProgress: "in_progress",
@@ -30,6 +31,7 @@ export const TaskStatusEnum = {
   Failed: "failed",
   Completed: "completed",
   Unknown: "unknown",
+  Started: "started",
 }
 
 export type TaskTypeEnumType =
@@ -44,8 +46,9 @@ export type TaskTypeEnumType =
   | "service"
   | "qc"
   | "custom"
+  | "unknown"
 
-export const TaskTypeEnum = {
+export const TaskTypeEnum: Record<string, TaskTypeEnumType> = {
   Training: "training" as TaskTypeEnumType,
   Testing: "testing" as TaskTypeEnumType,
   Inference: "inference" as TaskTypeEnumType,

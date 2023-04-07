@@ -8,6 +8,7 @@ import { Model } from "@/types/model"
 import { User } from "@/types/user"
 import { Queue } from "@/types/queue"
 import { FilterValue } from "antd/es/table/interface"
+import { Key } from "react"
 
 export interface Output {
   destination?: string
@@ -135,6 +136,7 @@ export interface Task {
   status?: TaskStatusEnumType
   comment?: string
   created?: string
+  ready?: boolean
   started?: string
   completed?: string
   active_duration?: number
@@ -183,3 +185,8 @@ export type FilterMap = Record<
   string,
   { value: FilterValue | null; path: string }
 >
+
+export interface SelectedTask {
+  keys: Key[]
+  rows: Task[]
+}
