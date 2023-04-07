@@ -1,7 +1,6 @@
 import { Button, Card, Checkbox, Dropdown, List } from "antd"
 import { SelectedTask, Task } from "@/types/task"
 import styles from "./index.module.scss"
-import projStyles from "../index.module.scss"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
 import { TaskTypeEnum } from "@/types/enums"
@@ -51,7 +50,7 @@ export const ExperimentList = (props: {
       return {
         key: v.dataIndex,
         label: (
-          <div className={projStyles.filterItem}>
+          <div className={styles.filterItem}>
             {v.title}
             {sorter?.field === v.dataIndex && (
               <i
