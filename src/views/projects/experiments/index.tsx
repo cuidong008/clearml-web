@@ -40,6 +40,8 @@ import { ReactComponent as Split } from "@/assets/icons/split.svg"
 import { ExperimentList } from "./ExperimentList"
 import { Outlet, useNavigate, useParams } from "react-router-dom"
 import { ContextMenu, MenuCtx } from "./context/ContextMenu"
+import { ExperimentDetails } from "./details"
+import { ShareExperimentDialog } from "./dialog/ShareExperimentDialog"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(
@@ -50,6 +52,7 @@ export const Experiments = () => {
   const navigate = useNavigate()
   const params = useParams()
 
+  const [loading, setLoading] = useState(false)
   const [showCols, setShowCols] = useState<ColumnDefine<Task>[]>(
     getExperimentTableCols(cols),
   )
@@ -65,8 +68,10 @@ export const Experiments = () => {
     rows: [],
     keys: [],
   })
+  const [currentTask, setCurrentTask] = useState<Task>()
   const [showArchive, setShowArchive] = useState(false)
   const [showNewDialog, setShowNewDialog] = useState(false)
+  const [showShareDialog, setShowShareDialog] = useState(false)
   const [viewState, setViewState] = useState(params["expId"] ? "list" : "table")
   const [oneTimeAni, setOneTimeAni] = useState(false)
   const [ctxMenu, setCtxMenu] = useState<MenuCtx>({
@@ -119,6 +124,9 @@ export const Experiments = () => {
       if (reload) {
         setSelectedTask({ rows: [], keys: [] })
       }
+      if (!allowRefresh) {
+        setLoading(true)
+      }
       const request = getGetAllQuery({
         refreshScroll: allowRefresh && !!scrollId && userViewsConf?.autoRefresh,
         scrollId: !allowRefresh && reload ? null : scrollId,
@@ -130,26 +138,34 @@ export const Experiments = () => {
         cols: showCols,
         filters: filteredInfo,
       })
-      getTasksAllEx(request).then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
-          return
-        }
-        let taskList: Task[] = []
-        if (reload) {
-          taskList = [...data.tasks]
-        } else {
-          taskList = [...tasks, ...data.tasks]
-        }
-        setTasks(() => taskList)
-        injectColsFilters(taskList)
-        setHasMore(data.tasks.length >= 12)
-        if (data.scroll_id && data.scroll_id !== scrollId) {
-          setScrollId(data.scroll_id)
-        }
-      })
+      getTasksAllEx(request)
+        .then(({ data, meta }) => {
+          if (meta.result_code !== 200) {
+            message.error(meta.result_msg)
+            return
+          }
+          let taskList: Task[] = []
+          if (reload) {
+            taskList = [...data.tasks]
+          } else {
+            taskList = [...tasks, ...data.tasks]
+          }
+          setTasks(() => taskList)
+          injectColsFilters(taskList)
+          setHasMore(data.tasks.length >= 12)
+          if (data.scroll_id && data.scroll_id !== scrollId) {
+            setScrollId(data.scroll_id)
+          }
+        })
+        .catch(() => {
+          message.error("get experiments failure")
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     },
     [
+      loading,
       sorter,
       tasks,
       userViewsConf,
@@ -166,9 +182,14 @@ export const Experiments = () => {
   useEffect(() => {
     // watch url path change when browser back or forward
     if (!params["expId"]) {
-      setViewState("table")
+      setViewState(() => "table")
     } else {
-      setViewState("list")
+      setViewState(() => "list")
+      if (params["output"] === "full") {
+        setFullView(() => true)
+      } else {
+        setFullView(() => false)
+      }
     }
   }, [params])
 
@@ -273,9 +294,9 @@ export const Experiments = () => {
         setOneTimeAni(false)
       }, 1000)
       if (task) {
-        navigate(`${task.id}/info`)
+        navigate(`${task.id}/details`)
       } else {
-        navigate(`${tasks[0].id}/info`)
+        navigate(`${tasks[0].id}/details`)
       }
     } else {
       navigate(`/projects/${params["projId"]}/experiments`)
@@ -297,14 +318,16 @@ export const Experiments = () => {
   }
 
   function dispatchCtxMenuAct(e: string, t?: Task) {
-    console.log(e)
     switch (e) {
       case "detail":
         setView("list", t)
         break
       case "view":
-        setFullView(true)
-        navigate(`${t?.id}/info`)
+        navigate(`${t?.id}/full/details`)
+        break
+      case "share":
+        setCurrentTask(t)
+        setShowShareDialog(true)
         break
     }
   }
@@ -323,6 +346,11 @@ export const Experiments = () => {
       <NewExperimentDialog
         show={showNewDialog}
         onClose={() => setShowNewDialog(false)}
+      />
+      <ShareExperimentDialog
+        show={showShareDialog}
+        task={currentTask}
+        onClose={() => setShowShareDialog(false)}
       />
       {!fullView && (
         <>
@@ -364,7 +392,7 @@ export const Experiments = () => {
                 {
                   label: <UnorderedListOutlined />,
                   value: "list",
-                  disabled: tasks.length === 0,
+                  disabled: tasks.length === 0 || showArchive,
                 },
               ]}
             />
@@ -433,6 +461,7 @@ export const Experiments = () => {
               {viewState === "table" ? (
                 <div style={{ width: "max-content" }}>
                   <Table
+                    loading={loading}
                     rowKey={"id"}
                     className={styles.taskTable}
                     size="small"
@@ -512,14 +541,20 @@ export const Experiments = () => {
                   <Split />
                 </PanelResizeHandle>
                 <Panel collapsible>
-                  <Outlet />
+                  <ExperimentDetails>
+                    <Outlet />
+                  </ExperimentDetails>
                 </Panel>
               </>
             )}
           </PanelGroup>
         </>
       )}
-      {fullView && <Outlet />}
+      {fullView && (
+        <ExperimentDetails>
+          <Outlet />
+        </ExperimentDetails>
+      )}
     </div>
   )
 }
