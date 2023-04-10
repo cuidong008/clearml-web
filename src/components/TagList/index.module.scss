@@ -4,6 +4,29 @@
   flex-wrap: nowrap;
   overflow: hidden;
 
+  .sysTag {
+    display: inline-block;
+    position: relative;
+    min-width: 50px;
+    max-width: 180px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 11px;
+    border-radius: 4px;
+    border: #8492c2 1px solid;
+    padding: 0 8px 0 14px;
+    margin-right: 5px;
+    background-color: #5a658e;
+    color: #fff;
+    text-transform: uppercase;
+    background-repeat: no-repeat;
+    background-size: 9px;
+    background-position: 0 -1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-image: url("@/assets/icons/sys-tag.svg");
+  }
+
   .userTag {
     margin-right: 5px;
     flex: 0 2 content;
