@@ -198,7 +198,7 @@ html[data-type="light"] {
 
   .card {
     &:hover {
-      background-color: $blue-200 !important;
+      background-color: $blue-50 !important;
     }
 
     &.selected {
@@ -214,7 +214,7 @@ html[data-type="dark"] {
 
   .card {
     &:hover {
-      background-color: $blue-400 !important;
+      background-color: $blue-600 !important;
     }
 
     &.selected {
