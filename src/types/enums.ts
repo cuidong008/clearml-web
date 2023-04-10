@@ -47,6 +47,8 @@ export type TaskTypeEnumType =
   | "qc"
   | "custom"
   | "unknown"
+  | "annotation"
+  | "annotation_manual"
 
 export const TaskTypeEnum: Record<string, TaskTypeEnumType> = {
   Training: "training" as TaskTypeEnumType,
@@ -60,6 +62,8 @@ export const TaskTypeEnum: Record<string, TaskTypeEnumType> = {
   Service: "service" as TaskTypeEnumType,
   Qc: "qc" as TaskTypeEnumType,
   Custom: "custom" as TaskTypeEnumType,
+  Annotation: "annotation",
+  ManualAnnotation: "annotation_manual",
 }
 
 export type ArtifactModeEnum = "input" | "output"
@@ -74,9 +78,12 @@ export const EXPERIMENTS_STATUS_LABELS = {
   [TaskStatusEnum.InProgress]: "Running",
   [TaskStatusEnum.Completed]: "Completed",
   [TaskStatusEnum.Published]: "Published",
+  [TaskStatusEnum.Publishing]: "Publishing",
   [TaskStatusEnum.Failed]: "Failed",
   [TaskStatusEnum.Stopped]: "Stopped",
   [TaskStatusEnum.Closed]: "Closed",
+  [TaskStatusEnum.Unknown]: "Unknown",
+  [TaskStatusEnum.Started]: "Started",
 }
 export const EXPERIMENTS_TYPE_LABELS = {
   [TaskTypeEnum.Testing]: "Testing",
@@ -90,18 +97,13 @@ export const EXPERIMENTS_TYPE_LABELS = {
   [TaskTypeEnum.Service]: "Service",
   [TaskTypeEnum.Qc]: "Qc",
   [TaskTypeEnum.Custom]: "Custom",
+  [TaskTypeEnum.ManualAnnotation]: "ManualAnnotation",
+  [TaskTypeEnum.Annotation]: "Annotation",
+  [TaskTypeEnum.Unknown]: "Unknown",
 }
 export type CloudProviders = "fs" | "gc" | "s3" | "azure" | "misc"
 
 export type MetricValueType = "min_value" | "max_value" | "value"
-
-declare type FilterMatchModeEnum =
-  | "startsWith"
-  | "contains"
-  | "endsWidth"
-  | "equals"
-  | "notEquals"
-  | "in"
 
 export type StatsForStateEnum = "active" | "archived"
 
