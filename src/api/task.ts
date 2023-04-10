@@ -1,5 +1,10 @@
 import REQ from "@/api/index"
-import { TasksGetAllExRequest, TasksGetAllExResponse } from "./models/task"
+import {
+  TasksGetAllExRequest,
+  TasksGetAllExResponse,
+  TasksUpdateRequest,
+  TasksUpdateResponse,
+} from "./models/task"
 import { SortMeta } from "@/types/common"
 import {
   ColumnDefine,
@@ -95,7 +100,10 @@ export function getGetAllQuery({
     cols.map((col) => (col.getter.length ? col.getter : [col.dataIndex])),
   )
   const otherFilters = createFiltersFromStore(filters, true)
-  const only_fields = [...new Set([...MINIMUM_ONLY_FIELDS, ...selectCols])]
+  const only_fields = [
+    "execution",
+    ...new Set([...MINIMUM_ONLY_FIELDS, ...selectCols]),
+  ]
   return {
     ...otherFilters,
     id: selectedIds,
@@ -124,4 +132,8 @@ export function getGetAllQuery({
 
 export function getTasksAllEx(request: TasksGetAllExRequest) {
   return REQ.post<TasksGetAllExResponse>("/tasks.get_all_ex", request)
+}
+
+export function tasksUpdate(request: TasksUpdateRequest) {
+  return REQ.post<TasksUpdateResponse>("/tasks.update", request)
 }

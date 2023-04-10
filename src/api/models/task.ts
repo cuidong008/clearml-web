@@ -33,3 +33,19 @@ export interface TasksGetAllExResponse {
   tasks: Array<Task>
   scroll_id?: string
 }
+
+export interface TasksUpdateRequest {
+  task: string
+  name?: string
+  tags?: Array<string>
+  system_tags?: Array<string>
+  comment?: string
+  project?: string
+  output__error?: string
+  created?: string
+}
+
+export interface TasksUpdateResponse {
+  updated?: number
+  fields?: object
+}
