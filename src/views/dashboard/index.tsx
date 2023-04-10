@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { Project } from "@/types/project"
 import styles from "./index.module.scss"
 import { Link, useNavigate } from "react-router-dom"
-import { Button, message, Table, Tooltip } from "antd"
+import { Button, message, Table, Tooltip, Typography } from "antd"
 import { getAllProjectsEx } from "@/api/project"
 import Column from "antd/es/table/Column"
 import { getTasksAllEx } from "@/api/task"
@@ -230,11 +230,18 @@ export const Dashboard = () => {
                 dataIndex="name"
                 title="TITLE"
                 render={(name) => (
-                  <Tooltip title={name} color={"blue"}>
-                    <div className="ellipsis" style={{ maxWidth: 450 }}>
-                      {name}
-                    </div>
-                  </Tooltip>
+                  <Typography.Text
+                    ellipsis={{
+                      tooltip: {
+                        color: "blue",
+                        title: name,
+                        placement: "bottom",
+                      },
+                    }}
+                    style={{ maxWidth: 450 }}
+                  >
+                    {name}
+                  </Typography.Text>
                 )}
               />
               <Column

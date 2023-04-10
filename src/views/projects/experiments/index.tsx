@@ -69,7 +69,6 @@ export const Experiments = () => {
   const [showNewDialog, setShowNewDialog] = useState(false)
   const [viewState, setViewState] = useState(params["expId"] ? "list" : "table")
   const [oneTimeAni, setOneTimeAni] = useState(false)
-  const [currentTask, setCurrentTask] = useState<Task>()
   const [ctxMenu, setCtxMenu] = useState<MenuCtx>({
     x: 0,
     y: 0,
@@ -275,14 +274,11 @@ export const Experiments = () => {
       }, 1000)
       if (task) {
         navigate(`${task.id}/info`)
-        setCurrentTask(task)
       } else {
         navigate(`${tasks[0].id}/info`)
-        setCurrentTask(undefined)
       }
     } else {
       navigate(`/projects/${params["projId"]}/experiments`)
-      setCurrentTask(undefined)
     }
   }
 
@@ -368,6 +364,7 @@ export const Experiments = () => {
                 {
                   label: <UnorderedListOutlined />,
                   value: "list",
+                  disabled: tasks.length === 0,
                 },
               ]}
             />

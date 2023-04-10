@@ -3,7 +3,7 @@ import React from "react"
 import dayjs from "dayjs"
 import { Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
-import { Tooltip, Typography } from "antd"
+import { Typography } from "antd"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
 import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
@@ -72,11 +72,14 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: true,
     width: 400,
     render: (name) => (
-      <Tooltip title={name} color={"blue"} placement="bottom">
-        <Typography.Text ellipsis style={{ width: 360, fontWeight: 500 }}>
-          {name}
-        </Typography.Text>
-      </Tooltip>
+      <Typography.Text
+        ellipsis={{
+          tooltip: { color: "blue", title: name, placement: "bottom" },
+        }}
+        style={{ width: 360, fontWeight: 500 }}
+      >
+        {name}
+      </Typography.Text>
     ),
   },
   TAGS: {
@@ -158,11 +161,14 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: true,
     width: 300,
     render: (comment) => (
-      <Tooltip title={comment} color={"blue"}>
-        <Typography.Text ellipsis style={{ width: 260 }}>
-          {comment}
-        </Typography.Text>
-      </Tooltip>
+      <Typography.Text
+        ellipsis={{
+          tooltip: { color: "blue", title: comment, placement: "bottom" },
+        }}
+        style={{ width: 260 }}
+      >
+        {comment}
+      </Typography.Text>
     ),
   },
   ACTIVE_DURATION: {
