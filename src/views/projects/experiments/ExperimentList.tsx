@@ -1,12 +1,8 @@
 import { Button, Card, Checkbox, Dropdown, List } from "antd"
 import { SelectedTask, Task } from "@/types/task"
-import styles from "./index.module.scss"
-import { TaskStatusLabel } from "@/components/TaskStatusLabel"
-import { TaskIconLabel } from "@/components/TaskIconLabel"
-import { TaskTypeEnum } from "@/types/enums"
-import { TagList } from "@/components/TagList"
-import { transformDateToPeriod } from "@/utils/transformer"
-import { CaretDownOutlined } from "@ant-design/icons"
+import { SortMeta } from "@/types/common"
+import { ItemType } from "antd/es/menu/hooks/useItems"
+import { CheckboxChangeEvent } from "antd/es/checkbox"
 import {
   Dispatch,
   Key,
@@ -15,13 +11,17 @@ import {
   useEffect,
   useState,
 } from "react"
-import { CheckboxChangeEvent } from "antd/es/checkbox"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import styles from "./index.module.scss"
 import classNames from "classnames"
-import { colsSelectableMap } from "@/views/projects/experiments/columnFilterLibs"
+import { TaskStatusLabel } from "@/components/TaskStatusLabel"
+import { TaskIconLabel } from "@/components/TaskIconLabel"
+import { TaskTypeEnum } from "@/types/enums"
+import { TagList } from "@/components/TagList"
+import { transformDateToPeriod } from "@/utils/transformer"
+import { CaretDownOutlined } from "@ant-design/icons"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { colsSelectableMap } from "./columnFilterLibs"
 import { map } from "lodash"
-import { SortMeta } from "@/types/common"
-import { ItemType } from "antd/es/menu/hooks/useItems"
 
 export const ExperimentList = (props: {
   tasks: Task[]

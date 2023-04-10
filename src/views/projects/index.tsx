@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
-import { ProjectList } from "@/views/projects/list"
+import { ProjectList } from "./list"
 import styles from "./index.module.scss"
 import { message, Tabs } from "antd"
 import { useCallback, useEffect, useState } from "react"

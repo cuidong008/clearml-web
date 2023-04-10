@@ -26,28 +26,34 @@ export const Dashboard = () => {
   const [newProjDialog, setNewProjDialog] = useState(false)
   const navigate = useNavigate()
 
-  const fetchRecentProjects = useCallback(() => {
-    setProjects([])
-    let active_user: Record<string, any> = {}
+  function generateUserScopeObj() {
+    return showScope === "my"
+      ? { active_users: [user ? user.id : ""] }
+      : showScope === "public"
+      ? { active_users: [groupId] }
+      : {
+          id: sharedProjects.length
+            ? sharedProjects.map((r) => r.id)
+            : ["none"],
+        }
+  }
+
+  function checkQueryCondition(): boolean {
     if (showScope === "public" && groupId === "") {
-      return
+      return false
     }
     if (showScope === "my" && !user) {
+      return false
+    }
+    return !(showScope === "share" && !sharedProjects.length)
+  }
+
+  const fetchRecentProjects = useCallback(() => {
+    setProjects([])
+    if (!checkQueryCondition()) {
       return
     }
-    if (showScope === "share" && !sharedProjects.length) {
-      return
-    }
-    active_user =
-      showScope === "my"
-        ? { active_users: [user ? user.id : ""] }
-        : showScope === "public"
-        ? { active_users: [groupId] }
-        : {
-            id: sharedProjects.length
-              ? sharedProjects.map((r) => r.id)
-              : ["none"],
-          }
+    const active_user = generateUserScopeObj()
     getAllProjectsEx({
       stats_for_state: "active",
       include_stats: true,
@@ -76,17 +82,10 @@ export const Dashboard = () => {
   }, [showScope, orderBy, sortOrder, groupId, sharedProjects])
 
   const fetchTaskRecent = useCallback(() => {
-    let active_user: Record<string, any> = {}
-    if (showScope === "public" && groupId === "") {
+    if (!checkQueryCondition()) {
       return
     }
-    if (showScope === "my" && !user) {
-      return
-    }
-    if (showScope === "share" && !sharedProjects.length) {
-      return
-    }
-    active_user =
+    const queryScope =
       showScope === "my"
         ? { user: [user ? user.id : ""] }
         : showScope === "public"
@@ -108,7 +107,7 @@ export const Dashboard = () => {
         "in_progress",
         "completed",
       ],
-      ...active_user,
+      ...queryScope,
       type: [
         "__$not",
         "annotation_manual",

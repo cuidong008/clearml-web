@@ -1,7 +1,7 @@
-import { ProjectListHeader } from "@/views/projects/ProjectListHeader"
+import { ProjectListHeader } from "../ProjectListHeader"
 import styles from "./index.module.scss"
 import { Button, message } from "antd"
-import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog"
+import { ProjectNewDialog } from "../ProjectNewDialog"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ProjectCard } from "@/components/ProjectCard"
 import {
@@ -10,8 +10,8 @@ import {
   projectValidateDelete,
 } from "@/api/project"
 import { Project, ReadyForDeletion } from "@/types/project"
-import { ProjectDeleteDialog } from "@/views/projects/ProjectDeleteDialog"
-import { ProjectShareDialog } from "@/views/projects/ProjectShareDialog"
+import { ProjectDeleteDialog } from "../ProjectDeleteDialog"
+import { ProjectShareDialog } from "../ProjectShareDialog"
 import { useStoreSelector } from "@/store"
 import { StoreState } from "@/types/store"
 import { useNavigate, useParams } from "react-router-dom"
@@ -40,20 +40,22 @@ export const ProjectList = () => {
   const navigate = useNavigate()
   const params = useParams()
 
+  function checkQueryCondition(): boolean {
+    if (showScope === "public" && groupId === "") {
+      return false
+    }
+    if (showScope === "my" && !user) {
+      return false
+    }
+    return !(showScope === "share" && !sharedProjects.length)
+  }
+
   const fetchProjects = useCallback(
     (reload: boolean) => {
-      let active_user: Record<string, any> = {}
-      if (showScope === "public" && groupId === "") {
+      if (!checkQueryCondition()) {
         return
       }
-      if (showScope === "my" && !user) {
-        return
-      }
-      if (showScope === "share" && !sharedProjects.length) {
-        return
-      }
-
-      active_user =
+      const active_user =
         showScope === "my"
           ? { active_users: [user ? user.id : ""] }
           : showScope === "public"

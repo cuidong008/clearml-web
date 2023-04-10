@@ -8,11 +8,7 @@ import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
 import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
-import {
-  NumFilter,
-  TagsFilter,
-  TimeFilter,
-} from "@/views/projects/experiments/tableColumns"
+import { NumFilter, TagsFilter, TimeFilter } from "./tableColumns"
 import { TagList } from "@/components/TagList"
 
 export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
@@ -48,6 +44,46 @@ export function getExperimentTableCols(cols: string[]) {
   })
   return columns
 }
+
+export const EXPERIMENT_INFO_ONLY_FIELDS_BASE = [
+  "id",
+  "name",
+  "user.name",
+  "company",
+  "type",
+  "status",
+  "status_changed",
+  "status_message",
+  "status_reason",
+  "comment",
+  "created",
+  "last_update",
+  "last_change",
+  "completed",
+  "started",
+  "parent.name",
+  "parent.project.name",
+  "project.name",
+  "output",
+  "hyperparams",
+  "execution.queue.name",
+  "script.binary",
+  "script.repository",
+  "script.tag",
+  "script.branch",
+  "script.version_num",
+  "script.entry_point",
+  "script.working_dir",
+  "script.requirements",
+  "system_tags",
+  "published",
+  "last_iteration",
+  "last_worker",
+  "tags",
+  "active_duration",
+  "container",
+  "runtime",
+]
 
 export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
   ID: {
@@ -89,7 +125,12 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: false,
     filterable: true,
     filterDropdown: TagsFilter,
-    render: (tags: string[]) => <TagList style={{ width: 300 }} tags={tags} />,
+    render: (tags: string[], record: Task) => (
+      <TagList
+        style={{ width: 300 }}
+        tags={(record.system_tags ?? []).concat(tags)}
+      />
+    ),
     width: 300,
   },
   USER: {

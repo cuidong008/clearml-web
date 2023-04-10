@@ -9,38 +9,38 @@ import {
   TableProps,
 } from "antd"
 import {
-  colsSelectableMap,
-  ColumnDefine,
-  getExperimentTableCols,
-} from "./columnFilterLibs"
-import { Key, useCallback, useEffect, useRef, useState } from "react"
-import { FilterMap, SelectedTask, Task } from "@/types/task"
-import { getGetAllQuery, getTasksAllEx } from "@/api/task"
-import { useStoreSelector, useThunkDispatch } from "@/store"
-import {
   MoreOutlined,
   PlusOutlined,
   SettingFilled,
   TableOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons"
-import styles from "./index.module.scss"
-import { ColumnFilterItem } from "antd/es/table/interface"
-import { flatten, get, map } from "lodash"
-import { SortMeta } from "@/types/common"
-import { hasValue } from "@/utils/global"
 import classNames from "classnames"
-import { setTableColumn } from "@/store/experiment/experiment.actions"
+import styles from "./index.module.scss"
+import {
+  colsSelectableMap,
+  ColumnDefine,
+  getExperimentTableCols,
+} from "./columnFilterLibs"
+import { Key, useCallback, useEffect, useRef, useState } from "react"
+import { FilterMap, SelectedTask, Task } from "@/types/task"
+import { SortMeta } from "@/types/common"
+import { ColumnFilterItem } from "antd/es/table/interface"
 import { CheckboxValueType } from "antd/es/checkbox/Group"
+import { getGetAllQuery, getTasksAllEx } from "@/api/task"
+import { useStoreSelector, useThunkDispatch } from "@/store"
+import { setTableColumn } from "@/store/experiment/experiment.actions"
 import { uploadUserPreference } from "@/store/app/app.actions"
-import { NewExperimentDialog } from "./dialog/NewExperimentDialog"
+import { Outlet, useNavigate, useParams } from "react-router-dom"
+import { flatten, get, map } from "lodash"
+import { hasValue } from "@/utils/global"
 import { AUTO_REFRESH_INTERVAL } from "@/utils/constant"
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
 import { ReactComponent as Split } from "@/assets/icons/split.svg"
 import { ExperimentList } from "./ExperimentList"
-import { Outlet, useNavigate, useParams } from "react-router-dom"
-import { ContextMenu, MenuCtx } from "./context/ContextMenu"
+import { Index, MenuCtx } from "./menu"
 import { ExperimentDetails } from "./details"
+import { NewExperimentDialog } from "./dialog/NewExperimentDialog"
 import { ShareExperimentDialog } from "./dialog/ShareExperimentDialog"
 
 export const Experiments = () => {
@@ -335,7 +335,7 @@ export const Experiments = () => {
   return (
     <div className={styles.experiments}>
       {ctxMenu.task && (
-        <ContextMenu
+        <Index
           ctx={ctxMenu}
           isArchive={showArchive}
           multiSelect={selectedTask.keys.length > 1}
