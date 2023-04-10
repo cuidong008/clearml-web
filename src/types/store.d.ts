@@ -3,6 +3,7 @@ import { CurrentUser, User } from "@/types/user"
 import { RouteObject } from "@/types/router"
 import { MetricColumn, TagColor } from "@/types/common"
 import { PersistPartial } from "redux-persist/es/persistReducer"
+import { IExperimentInfo, Task } from "@/types/task"
 
 export interface ThemeConfigState {
   primary: string
@@ -61,6 +62,7 @@ export interface ProjectConfState {
 
 export interface ExperimentState {
   cols: string[]
+  selectedExperiment?: IExperimentInfo
 }
 
 export interface StoreState {
