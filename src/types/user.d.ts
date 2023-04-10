@@ -1,6 +1,6 @@
 export interface User {
-  id?: string
-  name?: string
+  id: string
+  name: string
   given_name?: string
   family_name?: string
   avatar?: string
