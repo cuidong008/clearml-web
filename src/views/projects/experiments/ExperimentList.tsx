@@ -26,7 +26,7 @@ import { map } from "lodash"
 export const ExperimentList = (props: {
   tasks: Task[]
   selectedKeys: SelectedTask
-  setSelectedKeys: Dispatch<SetStateAction<SelectedTask>>
+  setSelectedKeys: (e: SelectedTask) => void
   sorter: SortMeta | undefined
   setSorter: Dispatch<SetStateAction<SortMeta | undefined>>
   onCtx: (x: number, y: number, e: Task, selected: boolean) => void
@@ -109,7 +109,7 @@ export const ExperimentList = (props: {
     setCheckAll(e.target.checked)
   }
 
-  function setExperimentShow(id: string) {
+  function setTaskToShow(id: string) {
     if (params["expId"] && params["expId"] !== id) {
       navigate(location.pathname.replace(params["expId"], id))
     }
@@ -140,7 +140,7 @@ export const ExperimentList = (props: {
               className={classNames(styles.card, {
                 [styles.selected]: params["expId"] === item.id,
               })}
-              onClick={() => setExperimentShow(item.id)}
+              onClick={() => setTaskToShow(item.id)}
               onContextMenu={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
@@ -172,7 +172,7 @@ export const ExperimentList = (props: {
                 />
               </div>
               <div className="tkTags">
-                <TagList tags={item.tags ?? []} />
+                <TagList sysTags={item.system_tags} tags={item.tags ?? []} />
               </div>
               <div className="tkData">
                 <div className={styles.name}>
