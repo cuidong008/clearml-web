@@ -11,9 +11,13 @@ export interface Tag {
   }
 }
 
-const SYS_TAG = ["shared"]
-export const TagList = (props: { tags: string[]; style?: CSSProperties }) => {
-  const { tags, style } = props
+const SYS_TAG_SHOW = ["shared"]
+export const TagList = (props: {
+  tags: string[]
+  style?: CSSProperties
+  sysTags?: string[]
+}) => {
+  const { tags, style, sysTags } = props
   const [tagsList, setTagsList] = useState<Tag[]>([])
 
   useEffect(() => {
@@ -26,19 +30,16 @@ export const TagList = (props: { tags: string[]; style?: CSSProperties }) => {
 
   return (
     <div style={style} className={styles.tagList}>
-      {tagsList.map((t) =>
-        SYS_TAG.includes(t.caption) ? (
-          <span key={`sys-${t.caption}`} className={styles.sysTag}>
-            {t.caption}
+      {sysTags
+        ?.filter((t) => SYS_TAG_SHOW.includes(t))
+        .map((t) => (
+          <span key={`sys-${t}`} className={styles.sysTag}>
+            {t}
           </span>
-        ) : (
-          <UserTag
-            key={`tag-${t.caption}`}
-            color={t.color}
-            caption={t.caption}
-          />
-        ),
-      )}
+        ))}
+      {tagsList.map((t) => (
+        <UserTag key={`tag-${t.caption}`} color={t.color} caption={t.caption} />
+      ))}
     </div>
   )
 }
