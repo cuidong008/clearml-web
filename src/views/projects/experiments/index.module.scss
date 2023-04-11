@@ -25,7 +25,6 @@
 
 .experiments {
   position: relative;
-  height: calc(100% - 56px);
 
   .headerLeft {
     position: absolute;
@@ -179,11 +178,19 @@
       }
     }
   }
+
   .splitBar {
     justify-content: center;
     display: flex;
     align-items: center;
     color: $blue-800;
+  }
+
+  .footer {
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    background-color: $blue-600;
   }
 }
 
