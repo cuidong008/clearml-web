@@ -34,6 +34,7 @@ export const ShareExperimentDialog = (props: {
 
   return (
     <Modal
+      getContainer={() => document.body}
       width={650}
       open={show}
       onOk={() => onClose(false)}
