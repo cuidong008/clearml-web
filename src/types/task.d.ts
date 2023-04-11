@@ -196,13 +196,13 @@ export type FilterMap = Record<
   { value: FilterValue | null; path: string }
 >
 
-export interface IExperimentModelInfo {
+export interface ITaskModelInfo {
   input?: IModelInfo[]
   output?: IModelInfo[]
   artifacts?: Artifact[]
 }
 
-export enum sourceTypesEnum {
+export enum SourceTypesEnum {
   Tag = "tag",
   VersionNum = "version_num",
   Branch = "branch",
@@ -217,7 +217,7 @@ export interface IExecutionForm {
     branch?: string
     entry_point: string
     working_dir: string
-    scriptType: sourceTypesEnum
+    scriptType: SourceTypesEnum
   }
   docker_cmd?: string
   requirements: any
@@ -234,8 +234,8 @@ export interface IHyperParamsForm {
   [key: string]: ParamsItem[]
 }
 
-export interface IExperimentInfo extends Omit<Task, "execution"> {
-  model?: IExperimentModelInfo
+export interface ITaskInfo extends Omit<Task, "execution"> {
+  model?: ITaskModelInfo
   execution?: IExecutionForm
   hyperParams?: IHyperParamsForm
 }

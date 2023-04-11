@@ -72,7 +72,7 @@ export const ArtifactModeEnum = {
   Input: "input" as ArtifactModeEnum,
   Output: "output" as ArtifactModeEnum,
 }
-export const EXPERIMENTS_STATUS_LABELS = {
+export const TASKS_STATUS_LABELS = {
   [TaskStatusEnum.Created]: "Draft",
   [TaskStatusEnum.Queued]: "Pending",
   [TaskStatusEnum.InProgress]: "Running",
@@ -85,7 +85,7 @@ export const EXPERIMENTS_STATUS_LABELS = {
   [TaskStatusEnum.Unknown]: "Unknown",
   [TaskStatusEnum.Started]: "Started",
 }
-export const EXPERIMENTS_TYPE_LABELS = {
+export const TASKS_TYPE_LABELS = {
   [TaskTypeEnum.Testing]: "Testing",
   [TaskTypeEnum.Training]: "Training",
   [TaskTypeEnum.Inference]: "Inference",

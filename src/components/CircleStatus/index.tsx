@@ -1,6 +1,6 @@
 import {
-  EXPERIMENTS_STATUS_LABELS,
-  EXPERIMENTS_TYPE_LABELS,
+  TASKS_STATUS_LABELS,
+  TASKS_TYPE_LABELS,
   TaskStatusEnumType,
   TaskTypeEnumType,
 } from "@/types/enums"
@@ -38,9 +38,9 @@ export const CircleStatus = (props: {
       </div>
       <div className={styles.counterLabel}>
         {status
-          ? EXPERIMENTS_STATUS_LABELS[status]
+          ? TASKS_STATUS_LABELS[status]
           : type
-          ? EXPERIMENTS_TYPE_LABELS[type]
+          ? TASKS_TYPE_LABELS[type]
           : ""}
       </div>
     </div>

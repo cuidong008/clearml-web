@@ -6,7 +6,7 @@ import { TaskIconLabel } from "@/components/TaskIconLabel"
 import { Typography } from "antd"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
-import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
+import { TASKS_STATUS_LABELS } from "@/types/enums"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
 import { NumFilter, TagsFilter, TimeFilter } from "./tableColumns"
 import { TagList } from "@/components/TagList"
@@ -34,7 +34,7 @@ export const parseNumVal = (selectedKeys: React.Key[], index: number) => {
     : null
 }
 
-export function getExperimentTableCols(cols: string[]) {
+export function getTasksTableCols(cols: string[]) {
   const columns: ColumnDefine<Task>[] = []
   cols.forEach((col) => {
     const defCol = colsSelectableMap[col.toUpperCase()]
@@ -45,7 +45,7 @@ export function getExperimentTableCols(cols: string[]) {
   return columns
 }
 
-export const EXPERIMENT_INFO_ONLY_FIELDS_BASE = [
+export const TASK_INFO_ONLY_FIELDS_BASE = [
   "id",
   "name",
   "user.name",
@@ -128,7 +128,8 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     render: (tags: string[], record: Task) => (
       <TagList
         style={{ width: 300 }}
-        tags={(record.system_tags ?? []).concat(tags)}
+        sysTags={record.system_tags}
+        tags={tags}
       />
     ),
     width: 300,
@@ -160,7 +161,7 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     getter: [],
     dataIndex: "status",
     title: "STATUS",
-    filters: map(EXPERIMENTS_STATUS_LABELS, (k, v) => ({ value: v, text: k })),
+    filters: map(TASKS_STATUS_LABELS, (k, v) => ({ value: v, text: k })),
     sorter: false,
     render: (status, exp) => (
       <TaskStatusLabel
