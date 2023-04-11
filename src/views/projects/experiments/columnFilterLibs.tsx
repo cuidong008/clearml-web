@@ -163,9 +163,9 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     title: "STATUS",
     filters: map(TASKS_STATUS_LABELS, (k, v) => ({ value: v, text: k })),
     sorter: false,
-    render: (status, exp) => (
+    render: (status, task) => (
       <TaskStatusLabel
-        progress={exp?.runtime?.progress}
+        progress={task?.runtime?.progress}
         status={status}
         showLabel
         showIcon

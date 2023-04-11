@@ -6,13 +6,6 @@ import { CopyToClipboard } from "@/components/CopyToClipboard"
 import YouTube from "react-youtube"
 import { urls } from "@/utils/constant"
 
-interface StepObject {
-  header?: string
-  title?: string
-  code?: string
-  subNote?: string
-}
-
 export const NewExperimentDialog = (props: {
   show: boolean
   onClose: (e: boolean) => void
@@ -20,7 +13,7 @@ export const NewExperimentDialog = (props: {
   const { show, onClose } = props
   const [activeTab, setActiveTab] = useState("setup")
   const [subActive, setSubActive] = useState("local")
-  const [videoSrc, setVideoSrc] = useState("s3k9ntmQmD4")
+  const [videoSrc] = useState("s3k9ntmQmD4")
 
   return (
     <Modal
@@ -109,8 +102,8 @@ export const NewExperimentDialog = (props: {
                           __html: `%env CLEARML_WEB_HOST=${urls.WEB_SERVER_URL}
 %env CLEARML_API_HOST=${urls.API_BASE_URL}
 %env CLEARML_FILES_HOST=${urls.FIlE_SERVER_URL}
-%env CLEARML_API_ACCESS_KEY=${"< "}You’re API access key>
-%env CLEARML_API_SECRET_KEY=${"< "}You’re API secret key>`,
+%env CLEARML_API_ACCESS_KEY=< You’re API access key>
+%env CLEARML_API_SECRET_KEY=< You’re API secret key>`,
                         }}
                       />
                     </CopyToClipboard>

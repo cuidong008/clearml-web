@@ -239,7 +239,7 @@ export const ProjectList = () => {
       />
       <ProjectShareDialog
         show={shareProjDialog}
-        onClose={(e) => {
+        onClose={() => {
           setShareProjDialog(false)
         }}
       />

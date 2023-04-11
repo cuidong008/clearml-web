@@ -1,13 +1,11 @@
-import { Task } from "@/types/task"
 import { Checkbox, Modal } from "antd"
 import { useState } from "react"
 
 export const WarnArchiveDialog = (props: {
   show: boolean
-  task?: Task
   onClose: (e: boolean, neverShowPopup?: boolean) => void
 }) => {
-  const { show, task, onClose } = props
+  const { show, onClose } = props
   const [neverShowPopup, setNeverShowPopup] = useState(false)
 
   return (

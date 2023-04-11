@@ -45,7 +45,7 @@ export const ExperimentList = (props: {
     setSorter({ field: key, order: 1 })
   }
 
-  const items: ItemType[] = map(colsSelectableMap, (v, k) => {
+  const items: ItemType[] = map(colsSelectableMap, (v) => {
     if (v.sorter) {
       return {
         key: v.dataIndex,

@@ -83,6 +83,7 @@ export const Experiments = () => {
     isArchive: false,
   })
   const [fullView, setFullView] = useState(false)
+
   const [msg, msgContext] = message.useMessage()
   const dispatch = useThunkDispatch()
 
@@ -124,6 +125,13 @@ export const Experiments = () => {
         return
       }
       if (reload) {
+        setCtxMenu(() => ({
+          ...ctxMenu,
+          showMenu: false,
+          showFooter: false,
+          target: undefined,
+          selectedTasks: [],
+        }))
         setSelectedTask({ rows: [], keys: [] })
       }
       if (!allowRefresh) {

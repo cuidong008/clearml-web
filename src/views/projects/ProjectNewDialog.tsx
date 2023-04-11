@@ -30,7 +30,7 @@ export const ProjectNewDialog = (props: {
           message.success("create project success")
         })
         .catch(() => {
-          message.error("create project success")
+          message.error("create project failed")
         })
     })
   }
