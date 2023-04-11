@@ -1,7 +1,13 @@
 import REQ from "@/api/index"
 import {
+  TasksArchiveManyRequest,
+  TasksArchiveManyResponse,
+  TasksArchiveRequest,
+  TasksArchiveResponse,
   TasksGetAllExRequest,
   TasksGetAllExResponse,
+  TasksUnArchiveManyRequest,
+  TasksUnArchiveManyResponse,
   TasksUpdateRequest,
   TasksUpdateResponse,
 } from "./models/task"
@@ -136,4 +142,16 @@ export function getTasksAllEx(request: TasksGetAllExRequest) {
 
 export function tasksUpdate(request: TasksUpdateRequest) {
   return REQ.post<TasksUpdateResponse>("/tasks.update", request)
+}
+
+export function tasksArchive(request: TasksArchiveRequest) {
+  return REQ.post<TasksArchiveResponse>("/tasks.archive", request)
+}
+
+export function tasksArchiveMany(request: TasksArchiveManyRequest) {
+  return REQ.post<TasksArchiveManyResponse>("/tasks.archive_many", request)
+}
+
+export function tasksUnArchiveMany(request: TasksUnArchiveManyRequest) {
+  return REQ.post<TasksUnArchiveManyResponse>("/tasks.unarchive_many", request)
 }

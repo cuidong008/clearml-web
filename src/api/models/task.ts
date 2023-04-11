@@ -49,3 +49,51 @@ export interface TasksUpdateResponse {
   updated?: number
   fields?: object
 }
+
+export interface TasksUnArchiveManyRequest {
+  ids: Array<string>
+  status_reason?: string
+  status_message?: string
+}
+
+export interface TasksResetManyResponseError {
+  codes?: Array<number>
+  msg?: string
+  data?: object
+}
+
+export interface TasksResetManyResponseFailed {
+  id?: string
+  error?: TasksResetManyResponseError
+}
+
+export interface TasksUnArchiveManyResponseSucceeded {
+  id?: string
+  unarchived?: boolean
+}
+
+export interface TasksUnArchiveManyResponse {
+  succeeded?: Array<TasksUnArchiveManyResponseSucceeded>
+  failed?: Array<TasksResetManyResponseFailed>
+}
+
+export interface TasksArchiveRequest {
+  tasks: Array<string>
+  status_reason?: string
+  status_message?: string
+}
+
+export interface TasksArchiveResponse {
+  archived?: number
+}
+
+export interface TasksArchiveManyRequest {
+  ids: Array<string>
+  status_reason?: string
+  status_message?: string
+}
+
+export interface TasksArchiveManyResponse {
+  succeeded?: Array<{ id: string }>
+  failed?: Array<TasksResetManyResponseFailed>
+}
