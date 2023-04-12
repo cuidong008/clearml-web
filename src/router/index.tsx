@@ -17,7 +17,7 @@ import { ProjectList } from "@/views/projects/list"
 import { Experiments } from "@/views/projects/experiments"
 import { LayoutIndex } from "@/layout"
 import { Login } from "@/layout/login"
-import { ExperimentDetails } from "@/views/projects/experiments/details"
+import { DetailTabPanel } from "@/views/projects/experiments/details/DetailTabPanel"
 
 export const rootRouter: Array<RouteObject> = [
   {
@@ -54,9 +54,14 @@ export const rootRouter: Array<RouteObject> = [
         element: <Experiments />,
         children: [
           {
-            path: ":expId/info",
-            name: "expInfo",
-            element: <ExperimentDetails />,
+            path: ":expId/details",
+            name: "experimentDetails",
+            element: <DetailTabPanel />,
+          },
+          {
+            path: ":expId/:output/details",
+            name: "experimentDetails",
+            element: <DetailTabPanel />,
           },
         ],
       },

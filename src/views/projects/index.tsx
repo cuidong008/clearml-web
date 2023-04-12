@@ -1,28 +1,35 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
-import { ProjectList } from "@/views/projects/list"
+import { ProjectList } from "./list"
 import styles from "./index.module.scss"
 import { message, Tabs } from "antd"
 import { useCallback, useEffect, useState } from "react"
 import { getAllProjectsEx } from "@/api/project"
 import { setProjectSelected } from "@/store/project/project.actions"
 import { useDispatch } from "react-redux"
+import { useStoreSelector } from "@/store"
 
 export const Projects = () => {
   const params = useParams()
   const location = useLocation()
+  const selectedProject = useStoreSelector(
+    (state) => state.project.selectedProject,
+  )
   const [activeKey, setActiveKey] = useState("experiments")
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const getProjectById = useCallback(
-    (pid: string) => {
+    (projId: string) => {
+      if (projId === selectedProject?.id) {
+        return
+      }
       getAllProjectsEx({
         stats_for_state: "active",
         include_stats: true,
         size: 1,
         search_hidden: true,
         allow_public: false,
-        id: [pid],
+        id: [projId],
         only_fields: [
           "name",
           "company",
@@ -42,7 +49,7 @@ export const Projects = () => {
         }
       })
     },
-    [params],
+    [selectedProject],
   )
 
   useEffect(() => {

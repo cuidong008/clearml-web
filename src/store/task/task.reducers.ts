@@ -1,7 +1,7 @@
-import { ExperimentState } from "@/types/store"
+import { TaskState } from "@/types/store"
 import { AnyAction } from "redux"
 import produce from "immer"
-import * as types from "./experiment.actions-types"
+import * as types from "./task.actions-types"
 
 export const DEFAULT_COLS: string[] = [
   "type",
@@ -15,15 +15,19 @@ export const DEFAULT_COLS: string[] = [
   "parent",
 ]
 
-const initState: ExperimentState = {
+const initState: TaskState = {
   cols: DEFAULT_COLS,
+  selectedTask: undefined,
 }
 
-export default function experiment(state = initState, action: AnyAction) {
+export default function task(state = initState, action: AnyAction) {
   return produce(state, (draftState) => {
     switch (action.type) {
-      case types.EXPERIMENT_SET_COLS:
+      case types.TASK_SET_COLS:
         draftState.cols = action.cols
+        break
+      case types.TASK_SET_SELECTED:
+        draftState.selectedTask = action.selectedTask
         break
       default:
         return draftState

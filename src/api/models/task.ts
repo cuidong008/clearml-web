@@ -33,3 +33,92 @@ export interface TasksGetAllExResponse {
   tasks: Array<Task>
   scroll_id?: string
 }
+
+export interface TasksUpdateRequest {
+  task: string
+  name?: string
+  tags?: Array<string>
+  system_tags?: Array<string>
+  comment?: string
+  project?: string
+  output__error?: string
+  created?: string
+}
+
+export interface TasksUpdateResponse {
+  updated?: number
+  fields?: object
+}
+
+export interface TasksUnArchiveManyRequest {
+  ids: Array<string>
+  status_reason?: string
+  status_message?: string
+}
+
+export interface TasksResetManyResponseError {
+  codes?: Array<number>
+  msg?: string
+  data?: object
+}
+
+export interface TasksResetManyResponseFailed {
+  id?: string
+  error?: TasksResetManyResponseError
+}
+
+export interface TasksUnArchiveManyResponseSucceeded {
+  id?: string
+  unarchived?: boolean
+}
+
+export interface TasksUnArchiveManyResponse {
+  succeeded?: Array<TasksUnArchiveManyResponseSucceeded>
+  failed?: Array<TasksResetManyResponseFailed>
+}
+
+export interface TasksArchiveRequest {
+  tasks: Array<string>
+  status_reason?: string
+  status_message?: string
+}
+
+export interface TasksArchiveResponse {
+  archived?: number
+}
+
+export interface TasksArchiveManyRequest {
+  ids: Array<string>
+  status_reason?: string
+  status_message?: string
+}
+
+export interface TasksArchiveManyResponse {
+  succeeded?: Array<{ id: string }>
+  failed?: Array<TasksResetManyResponseFailed>
+}
+
+export interface TasksGetByIdExRequest {
+  id?: Array<string>
+  name?: string
+  user?: Array<string>
+  project?: Array<string>
+  page?: number
+  page_size?: number
+  order_by?: Array<string>
+  type?: Array<string>
+  tags?: Array<string>
+  system_tags?: Array<string>
+  status?: Array<TaskStatusEnumType>
+  only_fields?: Array<string>
+  parent?: string
+  status_changed?: Array<string>
+  search_text?: string
+  _all_?: MultiFieldPatternData
+  _any_?: MultiFieldPatternData
+  input_view_entries_version?: Array<string>
+}
+
+export interface TasksGetByIdExResponse {
+  tasks?: Array<Task>
+}

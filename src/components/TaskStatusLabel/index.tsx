@@ -1,6 +1,6 @@
 import classNames from "classnames"
 import {
-  EXPERIMENTS_STATUS_LABELS,
+  TASKS_STATUS_LABELS,
   TaskStatusEnum,
   TaskStatusEnumType,
 } from "@/types/enums"
@@ -34,7 +34,7 @@ export const TaskStatusLabel = (props: {
             "with-spinner": showSpin() && progress,
           })}
         >
-          {EXPERIMENTS_STATUS_LABELS[status] || status}
+          {TASKS_STATUS_LABELS[status] || status}
         </div>
       )}
       {showSpin() && progress && (

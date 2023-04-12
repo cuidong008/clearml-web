@@ -61,3 +61,20 @@ export function getSourceType(src: string): CloudProviders {
     return "misc"
   }
 }
+
+export function notificationMsg(
+  succeeded: number,
+  failed: number,
+  entityType: string,
+  operationName: string,
+) {
+  const totalNum = succeeded + failed
+  const allFailed = succeeded === 0
+  return allFailed
+    ? `${totalNum === 1 ? "" : totalNum} ${entityType}${
+        totalNum > 1 ? "s" : ""
+      } failed to ${operationName}`
+    : `${totalNum === 1 ? "" : succeeded} ${
+        totalNum > succeeded ? "of " + totalNum : ""
+      } ${entityType}${succeeded > 1 ? "s" : ""} ${operationName} successfully`
+}

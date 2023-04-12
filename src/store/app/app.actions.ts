@@ -1,5 +1,5 @@
 import * as types from "./app.actions-types"
-import { AppStoreState, ThemeConfigState, UserPreference } from "@/types/store"
+import { StoreState, ThemeConfigState, UserPreference } from "@/types/store"
 import { RouteObject } from "@/types/router"
 import { CurrentUser, User } from "@/types/user"
 import {
@@ -63,18 +63,21 @@ export const setUserPreferencesAll = (preferences: UserPreference) => {
 
 export const setTagColors =
   (colors: { [p: string]: TagColor }) =>
-  (dispatch: ThunkDispatcher, getState: () => AppStoreState) => {
-    const { preferences } = getState()
-    if (preferences.rootProjects) {
-      const temp = cloneDeep(preferences.rootProjects)
-      temp.tagsColors = { ...preferences.rootProjects?.tagsColors, ...colors }
+  (dispatch: ThunkDispatcher, getState: () => StoreState) => {
+    const { app } = getState()
+    if (app.preferences.rootProjects) {
+      const temp = cloneDeep(app.preferences.rootProjects)
+      temp.tagsColors = {
+        ...app.preferences.rootProjects?.tagsColors,
+        ...colors,
+      }
       dispatch(uploadUserPreference("rootProjects", temp))
     }
   }
 
 export const uploadUserPreference =
   (field: keyof UserPreference, newValue: object) =>
-  (dispatch: ThunkDispatcher, getState: () => AppStoreState) => {
+  (dispatch: ThunkDispatcher, getState: () => StoreState) => {
     return new Promise((resolve, reject) => {
       setUserPreferences({
         preferences: { [field]: newValue },
@@ -85,8 +88,13 @@ export const uploadUserPreference =
             reject(new Error(meta.result_msg))
             return
           }
-          const { preferences } = getState()
-          dispatch(setUserPreferencesAll({ ...preferences, [field]: newValue }))
+          const { app } = getState()
+          dispatch(
+            setUserPreferencesAll({
+              ...app.preferences,
+              ...data.fields?.preferences,
+            }),
+          )
           resolve({})
         })
         .catch((err) => {
@@ -107,7 +115,6 @@ export const getLoginUser =
             tagColorManager.tagsColorMap =
               refResp.data.preferences.rootProjects.tagsColors
           }
-
           resolve(userResp.data.user)
         })
         .catch((err) => {

@@ -1,30 +1,15 @@
-import { ColumnType } from "antd/es/table"
 import React from "react"
 import dayjs from "dayjs"
-import { Task } from "@/types/task"
+import { ColumnDefine, Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
-import { Tooltip, Typography } from "antd"
+import { Typography } from "antd"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
-import { EXPERIMENTS_STATUS_LABELS } from "@/types/enums"
+import { TASKS_STATUS_LABELS } from "@/types/enums"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
-import {
-  NumFilter,
-  TagsFilter,
-  TimeFilter,
-} from "@/views/projects/experiments/tableColumns"
+import { NumFilter, TagsFilter, TimeFilter } from "./customFilters"
 import { TagList } from "@/components/TagList"
-
-export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
-  dataIndex: keyof T
-  getter: string[]
-  title: string
-  filterable?: boolean
-  valuePath?: string
-  labelPath?: string
-}
-
-export const SP_TOKEN = "$-$"
+import { SP_TOKEN } from "@/utils/constant"
 
 export const parseTimeVal = (selectedKeys: React.Key[], index: number) => {
   return selectedKeys[0] && `${selectedKeys[0]}`.split(SP_TOKEN)[index]
@@ -38,7 +23,7 @@ export const parseNumVal = (selectedKeys: React.Key[], index: number) => {
     : null
 }
 
-export function getExperimentTableCols(cols: string[]) {
+export function getTasksTableCols(cols: string[]) {
   const columns: ColumnDefine<Task>[] = []
   cols.forEach((col) => {
     const defCol = colsSelectableMap[col.toUpperCase()]
@@ -48,6 +33,46 @@ export function getExperimentTableCols(cols: string[]) {
   })
   return columns
 }
+
+export const TASK_INFO_ONLY_FIELDS_BASE = [
+  "id",
+  "name",
+  "user.name",
+  "company",
+  "type",
+  "status",
+  "status_changed",
+  "status_message",
+  "status_reason",
+  "comment",
+  "created",
+  "last_update",
+  "last_change",
+  "completed",
+  "started",
+  "parent.name",
+  "parent.project.name",
+  "project.name",
+  "output",
+  "hyperparams",
+  "execution.queue.name",
+  "script.binary",
+  "script.repository",
+  "script.tag",
+  "script.branch",
+  "script.version_num",
+  "script.entry_point",
+  "script.working_dir",
+  "script.requirements",
+  "system_tags",
+  "published",
+  "last_iteration",
+  "last_worker",
+  "tags",
+  "active_duration",
+  "container",
+  "runtime",
+]
 
 export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
   ID: {
@@ -72,11 +97,14 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: true,
     width: 400,
     render: (name) => (
-      <Tooltip title={name} color={"blue"} placement="bottom">
-        <Typography.Text ellipsis style={{ width: 360, fontWeight: 500 }}>
-          {name}
-        </Typography.Text>
-      </Tooltip>
+      <Typography.Text
+        ellipsis={{
+          tooltip: { color: "blue", title: name, placement: "bottom" },
+        }}
+        style={{ width: 360, fontWeight: 500 }}
+      >
+        {name}
+      </Typography.Text>
     ),
   },
   TAGS: {
@@ -86,7 +114,13 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: false,
     filterable: true,
     filterDropdown: TagsFilter,
-    render: (tags: string[]) => <TagList style={{ width: 300 }} tags={tags} />,
+    render: (tags: string[], record: Task) => (
+      <TagList
+        style={{ width: 300 }}
+        sysTags={record.system_tags}
+        tags={tags}
+      />
+    ),
     width: 300,
   },
   USER: {
@@ -116,11 +150,11 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     getter: [],
     dataIndex: "status",
     title: "STATUS",
-    filters: map(EXPERIMENTS_STATUS_LABELS, (k, v) => ({ value: v, text: k })),
+    filters: map(TASKS_STATUS_LABELS, (k, v) => ({ value: v, text: k })),
     sorter: false,
-    render: (status, exp) => (
+    render: (status, task) => (
       <TaskStatusLabel
-        progress={exp?.runtime?.progress}
+        progress={task?.runtime?.progress}
         status={status}
         showLabel
         showIcon
@@ -158,11 +192,14 @@ export const colsSelectableMap: Record<string, ColumnDefine<Task>> = {
     sorter: true,
     width: 300,
     render: (comment) => (
-      <Tooltip title={comment} color={"blue"}>
-        <Typography.Text ellipsis style={{ width: 260 }}>
-          {comment}
-        </Typography.Text>
-      </Tooltip>
+      <Typography.Text
+        ellipsis={{
+          tooltip: { color: "blue", title: comment, placement: "bottom" },
+        }}
+        style={{ width: 260 }}
+      >
+        {comment}
+      </Typography.Text>
     ),
   },
   ACTIVE_DURATION: {

@@ -14,7 +14,7 @@ import { StoreState } from "@/types/store"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import { persistReducer, persistStore } from "redux-persist"
 import storage from "redux-persist/lib/storage"
-import experiment from "@/store/experiment/experiment.reducers"
+import task from "@/store/task/task.reducers"
 import { ThunkDispatcher } from "@/types/common"
 
 const persistConfig = {
@@ -27,7 +27,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const persistApp = persistReducer(persistConfig, app)
 const reducer = combineReducers<StoreState>({
   app: persistApp,
-  experiment,
+  task,
   project,
 })
 const store = createStore(

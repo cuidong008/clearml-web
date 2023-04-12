@@ -133,6 +133,8 @@ export const NAVIGATION_ACTIONS = {
 
 export const AUTO_REFRESH_INTERVAL = 10 * 1000
 
+export const ArchivePopupId = "archive-shared-task"
+export const SP_TOKEN = "$-$"
 export const urls = {
   WEB_SERVER_URL: "",
   API_BASE_URL: "",

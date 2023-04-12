@@ -30,5 +30,5 @@ export interface UsersSetPreferencesRequest {
 
 export interface UsersSetPreferencesResponse {
   updated?: number
-  fields?: object
+  fields?: { preferences: UserPreference }
 }
