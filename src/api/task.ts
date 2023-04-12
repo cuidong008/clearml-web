@@ -6,20 +6,19 @@ import {
   TasksArchiveResponse,
   TasksGetAllExRequest,
   TasksGetAllExResponse,
+  TasksGetByIdExRequest,
+  TasksGetByIdExResponse,
   TasksUnArchiveManyRequest,
   TasksUnArchiveManyResponse,
   TasksUpdateRequest,
   TasksUpdateResponse,
 } from "./models/task"
 import { SortMeta } from "@/types/common"
-import {
-  ColumnDefine,
-  SP_TOKEN,
-} from "@/views/projects/experiments/columnFilterLibs"
-import { FilterMap, Task } from "@/types/task"
+import { ColumnDefine, FilterMap, Task } from "@/types/task"
 import { flatten } from "lodash"
 import { TaskStatusEnumType } from "@/types/enums"
 import { hasValue } from "@/utils/global"
+import { SP_TOKEN } from "@/utils/constant"
 
 export const encodeOrder = (orders: SortMeta[]): string[] =>
   orders.map((order) => `${order.order === -1 ? "-" : ""}${order.field}`)
@@ -154,4 +153,8 @@ export function tasksArchiveMany(request: TasksArchiveManyRequest) {
 
 export function tasksUnArchiveMany(request: TasksUnArchiveManyRequest) {
   return REQ.post<TasksUnArchiveManyResponse>("/tasks.unarchive_many", request)
+}
+
+export function tasksGetByIdEx(request: TasksGetByIdExRequest) {
+  return REQ.post<TasksGetByIdExResponse>("/tasks.get_by_id_ex", request)
 }

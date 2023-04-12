@@ -97,3 +97,28 @@ export interface TasksArchiveManyResponse {
   succeeded?: Array<{ id: string }>
   failed?: Array<TasksResetManyResponseFailed>
 }
+
+export interface TasksGetByIdExRequest {
+  id?: Array<string>
+  name?: string
+  user?: Array<string>
+  project?: Array<string>
+  page?: number
+  page_size?: number
+  order_by?: Array<string>
+  type?: Array<string>
+  tags?: Array<string>
+  system_tags?: Array<string>
+  status?: Array<TaskStatusEnumType>
+  only_fields?: Array<string>
+  parent?: string
+  status_changed?: Array<string>
+  search_text?: string
+  _all_?: MultiFieldPatternData
+  _any_?: MultiFieldPatternData
+  input_view_entries_version?: Array<string>
+}
+
+export interface TasksGetByIdExResponse {
+  tasks?: Array<Task>
+}
