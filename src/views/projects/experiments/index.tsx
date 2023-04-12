@@ -17,13 +17,9 @@ import {
 } from "@ant-design/icons"
 import classNames from "classnames"
 import styles from "./index.module.scss"
-import {
-  colsSelectableMap,
-  ColumnDefine,
-  getTasksTableCols,
-} from "./columnFilterLibs"
+import { colsSelectableMap, getTasksTableCols } from "./columnsLib"
 import { Key, useCallback, useEffect, useRef, useState } from "react"
-import { FilterMap, SelectedTask, Task } from "@/types/task"
+import { ColumnDefine, FilterMap, SelectedTask, Task } from "@/types/task"
 import { SortMeta } from "@/types/common"
 import { ColumnFilterItem } from "antd/es/table/interface"
 import { CheckboxValueType } from "antd/es/checkbox/Group"

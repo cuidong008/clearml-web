@@ -12,7 +12,7 @@ import styles from "./index.module.scss"
 import React, { FormEvent, useEffect, useState } from "react"
 import { SearchOutlined } from "@ant-design/icons"
 import { hasValue } from "@/utils/global"
-import { parseNumVal, parseTimeVal, SP_TOKEN } from "./columnFilterLibs"
+import { parseNumVal, parseTimeVal, SP_TOKEN } from "./columnsLib"
 
 export const TimeFilter = ({
   setSelectedKeys,

@@ -9,6 +9,7 @@ import { User } from "@/types/user"
 import { Queue } from "@/types/queue"
 import { FilterValue } from "antd/es/table/interface"
 import { Key } from "react"
+import { ColumnType } from "antd/es/table"
 
 export interface Output {
   destination?: string
@@ -243,4 +244,13 @@ export interface ITaskInfo extends Omit<Task, "execution"> {
 export interface SelectedTask {
   keys: Key[]
   rows: Task[]
+}
+
+export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
+  dataIndex: keyof T
+  getter: string[]
+  title: string
+  filterable?: boolean
+  valuePath?: string
+  labelPath?: string
 }

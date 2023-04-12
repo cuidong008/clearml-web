@@ -20,7 +20,7 @@ import { TagList } from "@/components/TagList"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { CaretDownOutlined } from "@ant-design/icons"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
-import { colsSelectableMap } from "./columnFilterLibs"
+import { colsSelectableMap } from "./columnsLib"
 import { map } from "lodash"
 
 export const ExperimentList = (props: {

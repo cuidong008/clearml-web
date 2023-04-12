@@ -1,26 +1,15 @@
-import { ColumnType } from "antd/es/table"
 import React from "react"
 import dayjs from "dayjs"
-import { Task } from "@/types/task"
+import { ColumnDefine, Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
 import { Typography } from "antd"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
 import { TASKS_STATUS_LABELS } from "@/types/enums"
 import { TaskStatusLabel } from "@/components/TaskStatusLabel"
-import { NumFilter, TagsFilter, TimeFilter } from "./tableColumns"
+import { NumFilter, TagsFilter, TimeFilter } from "./customFilters"
 import { TagList } from "@/components/TagList"
-
-export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
-  dataIndex: keyof T
-  getter: string[]
-  title: string
-  filterable?: boolean
-  valuePath?: string
-  labelPath?: string
-}
-
-export const SP_TOKEN = "$-$"
+import { SP_TOKEN } from "@/utils/constant"
 
 export const parseTimeVal = (selectedKeys: React.Key[], index: number) => {
   return selectedKeys[0] && `${selectedKeys[0]}`.split(SP_TOKEN)[index]
