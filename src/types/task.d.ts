@@ -9,6 +9,7 @@ import { User } from "@/types/user"
 import { Queue } from "@/types/queue"
 import { FilterValue } from "antd/es/table/interface"
 import { Key } from "react"
+import { ColumnType } from "antd/es/table"
 
 export interface Output {
   destination?: string
@@ -36,7 +37,7 @@ export interface Artifact {
 }
 
 export interface Execution {
-  queue?: string
+  queue?: { id?: string }
   parameters?: object
   model?: string
   model_desc?: object
@@ -127,10 +128,18 @@ export interface ConfigurationItem {
   description?: string
 }
 
+export interface ParamsItem {
+  section?: string
+  name?: string
+  value?: string
+  type?: string
+  description?: string
+}
+
 export interface Task {
   id: string
   name?: string
-  user?: { id: string; name?: string }
+  user?: User
   company?: { id: string; name?: string }
   type?: TaskTypeEnumType
   status?: TaskStatusEnumType
@@ -138,16 +147,18 @@ export interface Task {
   created?: string
   ready?: boolean
   started?: string
+  artifacts?: Artifact[]
   completed?: string
   active_duration?: number
   parent?: { id: string; name: string; project?: { id: string } }
-  project?: string
+  project?: Project
   input?: { bindingPropertyName?: string }
   output?: Output
   execution?: Execution
   models?: TaskModels
   container?: Container
   script?: Script
+  readonly?: boolean
   tags?: Array<string>
   system_tags?: Array<string>
   status_changed?: string
@@ -160,7 +171,7 @@ export interface Task {
   last_change?: string
   last_iteration?: number
   last_metrics?: { [key: string]: any }
-  hyperparams?: { [key: string]: any }
+  hyperparams?: { [key: string]: { [key: string]: ParamsItem } }
   configuration?: { [key: string]: ConfigurationItem }
   runtime?: { [key: string]: string }
 }
@@ -186,7 +197,60 @@ export type FilterMap = Record<
   { value: FilterValue | null; path: string }
 >
 
+export interface ITaskModelInfo {
+  input?: IModelInfo[]
+  output?: IModelInfo[]
+  artifacts?: Artifact[]
+}
+
+export enum SourceTypesEnum {
+  Tag = "tag",
+  VersionNum = "version_num",
+  Branch = "branch",
+}
+
+export interface IExecutionForm {
+  artifacts?: any[]
+  source: {
+    repository: string
+    tag?: string
+    version_num?: string
+    branch?: string
+    entry_point: string
+    working_dir: string
+    scriptType: SourceTypesEnum
+  }
+  docker_cmd?: string
+  requirements: any
+  diff: string
+  output: {
+    destination: string
+    logLevel?: "basic" | "details"
+  }
+  queue: Queue
+  container?: Container
+}
+
+export interface IHyperParamsForm {
+  [key: string]: ParamsItem[]
+}
+
+export interface ITaskInfo extends Omit<Task, "execution"> {
+  model?: ITaskModelInfo
+  execution?: IExecutionForm
+  hyperParams?: IHyperParamsForm
+}
+
 export interface SelectedTask {
   keys: Key[]
   rows: Task[]
+}
+
+export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
+  dataIndex: keyof T
+  getter: string[]
+  title: string
+  filterable?: boolean
+  valuePath?: string
+  labelPath?: string
 }

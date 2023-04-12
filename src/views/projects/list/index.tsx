@@ -1,7 +1,7 @@
-import { ProjectListHeader } from "@/views/projects/ProjectListHeader"
+import { ProjectListHeader } from "../ProjectListHeader"
 import styles from "./index.module.scss"
 import { Button, message } from "antd"
-import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog"
+import { ProjectNewDialog } from "../ProjectNewDialog"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ProjectCard } from "@/components/ProjectCard"
 import {
@@ -10,8 +10,8 @@ import {
   projectValidateDelete,
 } from "@/api/project"
 import { Project, ReadyForDeletion } from "@/types/project"
-import { ProjectDeleteDialog } from "@/views/projects/ProjectDeleteDialog"
-import { ProjectShareDialog } from "@/views/projects/ProjectShareDialog"
+import { ProjectDeleteDialog } from "../ProjectDeleteDialog"
+import { ProjectShareDialog } from "../ProjectShareDialog"
 import { useStoreSelector } from "@/store"
 import { StoreState } from "@/types/store"
 import { useNavigate, useParams } from "react-router-dom"
@@ -29,6 +29,12 @@ export const ProjectList = () => {
   } = useStoreSelector((state: StoreState) => state.project)
   const user = useStoreSelector((state) => state.app.user)
   const dispatch = useDispatch()
+
+  const navigate = useNavigate()
+  const params = useParams()
+
+  const [msg, msgContext] = message.useMessage()
+
   const [newProjDialog, setNewProjDialog] = useState(false)
   const [delProjDialog, setDelProjDialog] = useState(false)
   const [shareProjDialog, setShareProjDialog] = useState(false)
@@ -37,23 +43,23 @@ export const ProjectList = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const [selectProject, setSelectProject] = useState<Project>()
   const [readyDelete, setReadyDelete] = useState<ReadyForDeletion>()
-  const navigate = useNavigate()
-  const params = useParams()
+
+  function checkQueryCondition(): boolean {
+    if (showScope === "public" && groupId === "") {
+      return false
+    }
+    if (showScope === "my" && !user) {
+      return false
+    }
+    return !(showScope === "share" && !sharedProjects.length)
+  }
 
   const fetchProjects = useCallback(
     (reload: boolean) => {
-      let active_user: Record<string, any> = {}
-      if (showScope === "public" && groupId === "") {
+      if (!checkQueryCondition()) {
         return
       }
-      if (showScope === "my" && !user) {
-        return
-      }
-      if (showScope === "share" && !sharedProjects.length) {
-        return
-      }
-
-      active_user =
+      const active_user =
         showScope === "my"
           ? { active_users: [user ? user.id : ""] }
           : showScope === "public"
@@ -84,7 +90,7 @@ export const ProjectList = () => {
       })
         .then(({ data, meta }) => {
           if (meta.result_code !== 200) {
-            message.error(meta.result_msg)
+            msg.error(meta.result_msg)
             return
           }
           if (reload) {
@@ -133,7 +139,7 @@ export const ProjectList = () => {
     projectValidateDelete({ project: project.id })
       .then(({ data, meta }) => {
         if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
+          msg.error(meta.result_msg)
           return
         }
         const readyForDeletion: ReadyForDeletion = {
@@ -157,7 +163,7 @@ export const ProjectList = () => {
         setDelProjDialog(true)
       })
       .catch(() => {
-        message.error("validate project delete failure")
+        msg.error("validate project delete failure")
       })
   }
 
@@ -188,7 +194,7 @@ export const ProjectList = () => {
     projectUpdate({ project: project.id, name: newName })
       .then(({ data, meta }) => {
         if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
+          msg.error(meta.result_msg)
           return
         }
         setProjects(() =>
@@ -200,12 +206,12 @@ export const ProjectList = () => {
           }),
         )
         setSelectProject(undefined)
-        message.success(
+        msg.success(
           `update project name "${project.name}" to "${newName}" success`,
         )
       })
       .catch((err) => {
-        message.error(`update project ${project.name}'s name failure`)
+        msg.error(`update project ${project.name}'s name failure`)
       })
   }
 
@@ -218,6 +224,7 @@ export const ProjectList = () => {
 
   return (
     <div className={styles.projectList}>
+      {msgContext}
       <ProjectDeleteDialog
         show={delProjDialog}
         readyForDeletion={readyDelete}
@@ -237,7 +244,7 @@ export const ProjectList = () => {
       />
       <ProjectShareDialog
         show={shareProjDialog}
-        onClose={(e) => {
+        onClose={() => {
           setShareProjDialog(false)
         }}
       />

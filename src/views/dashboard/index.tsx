@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { Project } from "@/types/project"
 import styles from "./index.module.scss"
 import { Link, useNavigate } from "react-router-dom"
-import { Button, message, Table, Tooltip } from "antd"
+import { Button, message, Table, Tooltip, Typography } from "antd"
 import { getAllProjectsEx } from "@/api/project"
 import Column from "antd/es/table/Column"
 import { getTasksAllEx } from "@/api/task"
@@ -20,34 +20,43 @@ export const Dashboard = () => {
   const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
     useStoreSelector((state: StoreState) => state.project)
   const user = useStoreSelector((state) => state.app.user)
+
   const [projects, setProjects] = useState<Project[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
-  const ref = useRef<HTMLDivElement>(null)
   const [newProjDialog, setNewProjDialog] = useState(false)
+
+  const ref = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+  const [msg, msgContext] = message.useMessage()
+
+  function generateUserScopeObj() {
+    return showScope === "my"
+      ? { active_users: [user ? user.id : ""] }
+      : showScope === "public"
+      ? { active_users: [groupId] }
+      : {
+          id: sharedProjects.length
+            ? sharedProjects.map((r) => r.id)
+            : ["none"],
+        }
+  }
+
+  function checkQueryCondition(): boolean {
+    if (showScope === "public" && groupId === "") {
+      return false
+    }
+    if (showScope === "my" && !user) {
+      return false
+    }
+    return !(showScope === "share" && !sharedProjects.length)
+  }
 
   const fetchRecentProjects = useCallback(() => {
     setProjects([])
-    let active_user: Record<string, any> = {}
-    if (showScope === "public" && groupId === "") {
+    if (!checkQueryCondition()) {
       return
     }
-    if (showScope === "my" && !user) {
-      return
-    }
-    if (showScope === "share" && !sharedProjects.length) {
-      return
-    }
-    active_user =
-      showScope === "my"
-        ? { active_users: [user ? user.id : ""] }
-        : showScope === "public"
-        ? { active_users: [groupId] }
-        : {
-            id: sharedProjects.length
-              ? sharedProjects.map((r) => r.id)
-              : ["none"],
-          }
+    const active_user = generateUserScopeObj()
     getAllProjectsEx({
       stats_for_state: "active",
       include_stats: true,
@@ -68,7 +77,7 @@ export const Dashboard = () => {
       ],
     }).then(({ data, meta }) => {
       if (meta.result_code !== 200) {
-        message.error(meta.result_msg)
+        msg.error(meta.result_msg)
         return
       }
       setProjects(data.projects ?? [])
@@ -76,17 +85,10 @@ export const Dashboard = () => {
   }, [showScope, orderBy, sortOrder, groupId, sharedProjects])
 
   const fetchTaskRecent = useCallback(() => {
-    let active_user: Record<string, any> = {}
-    if (showScope === "public" && groupId === "") {
+    if (!checkQueryCondition()) {
       return
     }
-    if (showScope === "my" && !user) {
-      return
-    }
-    if (showScope === "share" && !sharedProjects.length) {
-      return
-    }
-    active_user =
+    const queryScope =
       showScope === "my"
         ? { user: [user ? user.id : ""] }
         : showScope === "public"
@@ -108,7 +110,7 @@ export const Dashboard = () => {
         "in_progress",
         "completed",
       ],
-      ...active_user,
+      ...queryScope,
       type: [
         "__$not",
         "annotation_manual",
@@ -130,7 +132,7 @@ export const Dashboard = () => {
       allow_public: false,
     }).then(({ data, meta }) => {
       if (meta.result_code !== 200) {
-        message.error(meta.result_msg)
+        msg.error(meta.result_msg)
         return
       }
       setTasks(data.tasks ?? [])
@@ -149,6 +151,7 @@ export const Dashboard = () => {
 
   return (
     <div className={styles.dashboardBody}>
+      {msgContext}
       <ProjectNewDialog
         show={newProjDialog}
         onClose={(e) => {
@@ -230,11 +233,18 @@ export const Dashboard = () => {
                 dataIndex="name"
                 title="TITLE"
                 render={(name) => (
-                  <Tooltip title={name} color={"blue"}>
-                    <div className="ellipsis" style={{ maxWidth: 450 }}>
-                      {name}
-                    </div>
-                  </Tooltip>
+                  <Typography.Text
+                    ellipsis={{
+                      tooltip: {
+                        color: "blue",
+                        title: name,
+                        placement: "bottom",
+                      },
+                    }}
+                    style={{ maxWidth: 450 }}
+                  >
+                    {name}
+                  </Typography.Text>
                 )}
               />
               <Column

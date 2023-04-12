@@ -25,15 +25,17 @@ export const Overview = () => {
   const rootProjects: UserPreference["rootProjects"] = useStoreSelector(
     (state) => state.app.preferences.rootProjects,
   )
+  const dispatch = useThunkDispatch()
+
   const [graphVariant, setGraphVariant] = useState<MetricColumn>()
   const [showMetricDialog, setShowMetricDialog] = useState(false)
   const [graphData, setGraphData] = useState<ProjectStatsGraphData[]>([])
   const [variants, setVariants] = useState<MetricVariantResult[]>([])
   const [showOverview, setShowOverview] = useState(false)
+
   const refChartIns = useRef<echarts.ECharts>()
   const refChart = useRef<HTMLDivElement>(null)
-
-  const dispatch = useThunkDispatch()
+  const [msg, msgContext] = message.useMessage()
 
   useEffect(() => {
     if (projectSelected && rootProjects) {
@@ -97,10 +99,10 @@ export const Overview = () => {
     projectUpdate({ project: projectSelected.id, description: info })
       .then(({ data, meta }) => {
         if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
+          msg.error(meta.result_msg)
           return
         }
-        message.success(
+        msg.success(
           `update project description "${projectSelected.name}" success`,
         )
         callback()
@@ -110,7 +112,7 @@ export const Overview = () => {
         dispatch(setProjectSelected({ ...projectSelected, description: info }))
       })
       .catch((err) => {
-        message.error(
+        msg.error(
           `update project ${projectSelected.name}'s description failure`,
         )
       })
@@ -149,7 +151,7 @@ export const Overview = () => {
       size: 1000,
     }).then(({ data, meta }) => {
       if (meta.result_code !== 200) {
-        message.error(meta.result_msg)
+        msg.error(meta.result_msg)
         return
       }
       const graphicData = data.tasks?.map<ProjectStatsGraphData>((task) => {
@@ -180,7 +182,7 @@ export const Overview = () => {
     })
       .then(({ data, meta }) => {
         if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
+          msg.error(meta.result_msg)
           return
         }
         setVariants(
@@ -191,7 +193,7 @@ export const Overview = () => {
         setShowMetricDialog(true)
       })
       .catch(() => {
-        message.error("get projects unique metric variants failure")
+        msg.error("get projects unique metric variants failure")
       })
   }
 
@@ -220,6 +222,7 @@ export const Overview = () => {
 
   return (
     <div className={styles.overview}>
+      {msgContext}
       <MetricsSelectDialog
         show={showMetricDialog}
         onClose={(evt, e) => resetMetricSelect(evt, e)}

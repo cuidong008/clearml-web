@@ -1,12 +1,8 @@
 import { Button, Card, Checkbox, Dropdown, List } from "antd"
 import { SelectedTask, Task } from "@/types/task"
-import styles from "./index.module.scss"
-import { TaskStatusLabel } from "@/components/TaskStatusLabel"
-import { TaskIconLabel } from "@/components/TaskIconLabel"
-import { TaskTypeEnum } from "@/types/enums"
-import { TagList } from "@/components/TagList"
-import { transformDateToPeriod } from "@/utils/transformer"
-import { CaretDownOutlined } from "@ant-design/icons"
+import { SortMeta } from "@/types/common"
+import { ItemType } from "antd/es/menu/hooks/useItems"
+import { CheckboxChangeEvent } from "antd/es/checkbox"
 import {
   Dispatch,
   Key,
@@ -15,18 +11,22 @@ import {
   useEffect,
   useState,
 } from "react"
-import { CheckboxChangeEvent } from "antd/es/checkbox"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import styles from "./index.module.scss"
 import classNames from "classnames"
-import { colsSelectableMap } from "@/views/projects/experiments/columnFilterLibs"
+import { TaskStatusLabel } from "@/components/TaskStatusLabel"
+import { TaskIconLabel } from "@/components/TaskIconLabel"
+import { TaskTypeEnum } from "@/types/enums"
+import { TagList } from "@/components/TagList"
+import { transformDateToPeriod } from "@/utils/transformer"
+import { CaretDownOutlined } from "@ant-design/icons"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { colsSelectableMap } from "./columnsLib"
 import { map } from "lodash"
-import { SortMeta } from "@/types/common"
-import { ItemType } from "antd/es/menu/hooks/useItems"
 
 export const ExperimentList = (props: {
   tasks: Task[]
   selectedKeys: SelectedTask
-  setSelectedKeys: Dispatch<SetStateAction<SelectedTask>>
+  setSelectedKeys: (e: SelectedTask) => void
   sorter: SortMeta | undefined
   setSorter: Dispatch<SetStateAction<SortMeta | undefined>>
   onCtx: (x: number, y: number, e: Task, selected: boolean) => void
@@ -45,7 +45,7 @@ export const ExperimentList = (props: {
     setSorter({ field: key, order: 1 })
   }
 
-  const items: ItemType[] = map(colsSelectableMap, (v, k) => {
+  const items: ItemType[] = map(colsSelectableMap, (v) => {
     if (v.sorter) {
       return {
         key: v.dataIndex,
@@ -109,7 +109,7 @@ export const ExperimentList = (props: {
     setCheckAll(e.target.checked)
   }
 
-  function setExperimentShow(id: string) {
+  function setTaskToShow(id: string) {
     if (params["expId"] && params["expId"] !== id) {
       navigate(location.pathname.replace(params["expId"], id))
     }
@@ -140,7 +140,7 @@ export const ExperimentList = (props: {
               className={classNames(styles.card, {
                 [styles.selected]: params["expId"] === item.id,
               })}
-              onClick={() => setExperimentShow(item.id)}
+              onClick={() => setTaskToShow(item.id)}
               onContextMenu={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
@@ -172,7 +172,7 @@ export const ExperimentList = (props: {
                 />
               </div>
               <div className="tkTags">
-                <TagList tags={item.tags ?? []} />
+                <TagList sysTags={item.system_tags} tags={item.tags ?? []} />
               </div>
               <div className="tkData">
                 <div className={styles.name}>

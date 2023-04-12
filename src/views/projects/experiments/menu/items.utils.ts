@@ -2,21 +2,15 @@ import { Task } from "@/types/task"
 import { TaskStatusEnum, TaskTypeEnum } from "@/types/enums"
 import { get } from "lodash"
 
-export const TASK_TYPES = {
-  TRAINING: "training",
-  ANNOTATION: "annotation",
-  MANUAL_ANNOTATION: "annotation_manual",
-  TESTING: "testing",
-}
-export const selectionAllIsArchive = (selectedElements: Task[]) =>
-  selectedElements.every((s) => s?.system_tags?.includes("archived"))
-export const selectionIsArchive = (selectedElements: Task) =>
-  selectedElements?.system_tags?.includes("archived")
+export const selectionAllIsArchive = (selectedTasks: Task[]) =>
+  selectedTasks.every((s) => s?.system_tags?.includes("archived"))
+export const selectionIsArchive = (selectedTasks: Task) =>
+  selectedTasks?.system_tags?.includes("archived")
 export const canEnqueue = (task: Task): boolean =>
   task &&
   (TaskStatusEnum.Created === task.status ||
     TaskStatusEnum.Stopped === task.status) &&
-  task.type !== TASK_TYPES.MANUAL_ANNOTATION
+  task.type !== TaskTypeEnum.ManualAnnotation
 
 export const canDequeue = (task: Task): boolean =>
   task && TaskStatusEnum.Queued === task.status
@@ -26,7 +20,7 @@ export const canContinue = (task: Task): boolean =>
   [TaskStatusEnum.Created, TaskStatusEnum.Stopped].includes(
     task.status ?? "unknown",
   ) &&
-  task.type !== TASK_TYPES.MANUAL_ANNOTATION &&
+  task.type !== TaskTypeEnum.ManualAnnotation &&
   !!task.execution?.queue
 export const countAvailableAndIsDisable = (selectedFiltered: Task[]) => ({
   available: selectedFiltered.length,
@@ -38,8 +32,8 @@ export const isReadOnly = (item: Task) => {
   }
   return !get(item, "company.id") || !!get(item, "readOnly")
 }
-export const selectionDisabledAbort = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledAbort = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) =>
       [TaskStatusEnum.Queued, TaskStatusEnum.InProgress].includes(
         _selected?.status ?? "unknown",
@@ -47,10 +41,8 @@ export const selectionDisabledAbort = (selectedElements: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledPublishExperiments = (
-  selectedElements: Task[],
-) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledPublishTasks = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) =>
       [
         TaskStatusEnum.Stopped,
@@ -61,15 +53,15 @@ export const selectionDisabledPublishExperiments = (
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledPublishModels = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledPublishModels = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => !isReadOnly(_selected) && !_selected?.ready,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
 
-export const selectionDisabledReset = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledReset = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) =>
       ![
         TaskStatusEnum.Created,
@@ -80,8 +72,8 @@ export const selectionDisabledReset = (selectedElements: Task[]) => {
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
 
-export const selectionDisabledAbortAllChildren = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledAbortAllChildren = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) =>
       [TaskTypeEnum.Controller, TaskTypeEnum.Optimizer].includes(
         _selected?.type ?? "unknown",
@@ -89,58 +81,58 @@ export const selectionDisabledAbortAllChildren = (selectedElements: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledDelete = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledDelete = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => selectionIsArchive(_selected) && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledMoveTo = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledMoveTo = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledQueue = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledQueue = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) =>
       _selected?.status === TaskStatusEnum.Queued && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledViewWorker = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledViewWorker = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) =>
       _selected?.status === TaskStatusEnum.InProgress && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledContinue = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledContinue = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => canContinue(_selected) && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledEnqueue = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledEnqueue = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => canEnqueue(_selected) && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledDequeue = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledDequeue = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => canDequeue(_selected) && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledArchive = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledArchive = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
-export const selectionDisabledTags = (selectedElements: Task[]) => {
-  const selectedFiltered = selectedElements.filter(
+export const selectionDisabledTags = (selectedTasks: Task[]) => {
+  const selectedFiltered = selectedTasks.filter(
     (_selected) => !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }

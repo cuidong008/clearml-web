@@ -1,14 +1,24 @@
 import REQ from "@/api/index"
-import { TasksGetAllExRequest, TasksGetAllExResponse } from "./models/task"
-import { SortMeta } from "@/types/common"
 import {
-  ColumnDefine,
-  SP_TOKEN,
-} from "@/views/projects/experiments/columnFilterLibs"
-import { FilterMap, Task } from "@/types/task"
+  TasksArchiveManyRequest,
+  TasksArchiveManyResponse,
+  TasksArchiveRequest,
+  TasksArchiveResponse,
+  TasksGetAllExRequest,
+  TasksGetAllExResponse,
+  TasksGetByIdExRequest,
+  TasksGetByIdExResponse,
+  TasksUnArchiveManyRequest,
+  TasksUnArchiveManyResponse,
+  TasksUpdateRequest,
+  TasksUpdateResponse,
+} from "./models/task"
+import { SortMeta } from "@/types/common"
+import { ColumnDefine, FilterMap, Task } from "@/types/task"
 import { flatten } from "lodash"
 import { TaskStatusEnumType } from "@/types/enums"
 import { hasValue } from "@/utils/global"
+import { SP_TOKEN } from "@/utils/constant"
 
 export const encodeOrder = (orders: SortMeta[]): string[] =>
   orders.map((order) => `${order.order === -1 ? "-" : ""}${order.field}`)
@@ -95,7 +105,10 @@ export function getGetAllQuery({
     cols.map((col) => (col.getter.length ? col.getter : [col.dataIndex])),
   )
   const otherFilters = createFiltersFromStore(filters, true)
-  const only_fields = [...new Set([...MINIMUM_ONLY_FIELDS, ...selectCols])]
+  const only_fields = [
+    "execution",
+    ...new Set([...MINIMUM_ONLY_FIELDS, ...selectCols]),
+  ]
   return {
     ...otherFilters,
     id: selectedIds,
@@ -124,4 +137,24 @@ export function getGetAllQuery({
 
 export function getTasksAllEx(request: TasksGetAllExRequest) {
   return REQ.post<TasksGetAllExResponse>("/tasks.get_all_ex", request)
+}
+
+export function tasksUpdate(request: TasksUpdateRequest) {
+  return REQ.post<TasksUpdateResponse>("/tasks.update", request)
+}
+
+export function tasksArchive(request: TasksArchiveRequest) {
+  return REQ.post<TasksArchiveResponse>("/tasks.archive", request)
+}
+
+export function tasksArchiveMany(request: TasksArchiveManyRequest) {
+  return REQ.post<TasksArchiveManyResponse>("/tasks.archive_many", request)
+}
+
+export function tasksUnArchiveMany(request: TasksUnArchiveManyRequest) {
+  return REQ.post<TasksUnArchiveManyResponse>("/tasks.unarchive_many", request)
+}
+
+export function tasksGetByIdEx(request: TasksGetByIdExRequest) {
+  return REQ.post<TasksGetByIdExResponse>("/tasks.get_by_id_ex", request)
 }
