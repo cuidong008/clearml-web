@@ -29,6 +29,12 @@ export const ProjectList = () => {
   } = useStoreSelector((state: StoreState) => state.project)
   const user = useStoreSelector((state) => state.app.user)
   const dispatch = useDispatch()
+
+  const navigate = useNavigate()
+  const params = useParams()
+
+  const [msg, msgContext] = message.useMessage()
+
   const [newProjDialog, setNewProjDialog] = useState(false)
   const [delProjDialog, setDelProjDialog] = useState(false)
   const [shareProjDialog, setShareProjDialog] = useState(false)
@@ -37,8 +43,6 @@ export const ProjectList = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const [selectProject, setSelectProject] = useState<Project>()
   const [readyDelete, setReadyDelete] = useState<ReadyForDeletion>()
-  const navigate = useNavigate()
-  const params = useParams()
 
   function checkQueryCondition(): boolean {
     if (showScope === "public" && groupId === "") {
@@ -86,7 +90,7 @@ export const ProjectList = () => {
       })
         .then(({ data, meta }) => {
           if (meta.result_code !== 200) {
-            message.error(meta.result_msg)
+            msg.error(meta.result_msg)
             return
           }
           if (reload) {
@@ -135,7 +139,7 @@ export const ProjectList = () => {
     projectValidateDelete({ project: project.id })
       .then(({ data, meta }) => {
         if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
+          msg.error(meta.result_msg)
           return
         }
         const readyForDeletion: ReadyForDeletion = {
@@ -159,7 +163,7 @@ export const ProjectList = () => {
         setDelProjDialog(true)
       })
       .catch(() => {
-        message.error("validate project delete failure")
+        msg.error("validate project delete failure")
       })
   }
 
@@ -190,7 +194,7 @@ export const ProjectList = () => {
     projectUpdate({ project: project.id, name: newName })
       .then(({ data, meta }) => {
         if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
+          msg.error(meta.result_msg)
           return
         }
         setProjects(() =>
@@ -202,12 +206,12 @@ export const ProjectList = () => {
           }),
         )
         setSelectProject(undefined)
-        message.success(
+        msg.success(
           `update project name "${project.name}" to "${newName}" success`,
         )
       })
       .catch((err) => {
-        message.error(`update project ${project.name}'s name failure`)
+        msg.error(`update project ${project.name}'s name failure`)
       })
   }
 
@@ -220,6 +224,7 @@ export const ProjectList = () => {
 
   return (
     <div className={styles.projectList}>
+      {msgContext}
       <ProjectDeleteDialog
         show={delProjDialog}
         readyForDeletion={readyDelete}

@@ -10,6 +10,7 @@ export const ProjectNewDialog = (props: {
   const { show, onClose } = props
   const [form] = Form.useForm()
   const formRef = useRef(null)
+  const [msg, msgContext] = message.useMessage()
 
   useEffect(() => {
     if (formRef.current && show) {
@@ -27,10 +28,10 @@ export const ProjectNewDialog = (props: {
       })
         .then(({ data }) => {
           data.id && onClose(true)
-          message.success("create project success")
+          msg.success("create project success")
         })
         .catch(() => {
-          message.error("create project failed")
+          msg.error("create project failed")
         })
     })
   }
@@ -42,6 +43,7 @@ export const ProjectNewDialog = (props: {
       onCancel={() => onClose(false)}
       title={<div></div>}
     >
+      {msgContext}
       <div style={{ textAlign: "center" }}>
         <div>
           <i

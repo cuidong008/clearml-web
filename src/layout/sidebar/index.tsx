@@ -1,7 +1,7 @@
 import { Logo } from "@/layout/sidebar/Logo"
 import { searchRouter } from "@/router/utils"
 import type { MenuProps } from "antd"
-import { Menu, Spin } from "antd"
+import { Menu } from "antd"
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { rootRouter } from "@/router"
@@ -11,16 +11,15 @@ import { useDispatch } from "react-redux"
 import { setMenuList } from "@/store/app/app.actions"
 
 export const LayoutMenu = (props: { setBreadCrumbList?: any }) => {
-  let init = false
   const { pathname } = useLocation()
   const sidebarCollapsed = useStoreSelector(
     (state) => state.app.sidebarCollapsed,
   )
   const menuList = useStoreSelector((state) => state.app.menuList)
   const { setBreadCrumbList } = props
+
   const [selectedKeys, setSelectedKeys] = useState<string[]>([pathname])
   const [menus, setMenus] = useState<MenuItem[]>([])
-  const [loading, setLoading] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -127,21 +126,14 @@ export const LayoutMenu = (props: { setBreadCrumbList?: any }) => {
   }
   // 获取菜单列表并处理成 antd menu 需要的格式
 
-  const getMenuData = async () => {
-    setLoading(true)
-    try {
-      setMenus(deepLoopFloat(rootRouter))
-      setBreadCrumbList(findAllBreadcrumb(rootRouter))
-      dispatch(setMenuList(rootRouter))
-    } finally {
-      setLoading(false)
-    }
+  const getMenuData = () => {
+    setMenus(deepLoopFloat(rootRouter))
+    setBreadCrumbList(findAllBreadcrumb(rootRouter))
+    dispatch(setMenuList(rootRouter))
   }
+
   useEffect(() => {
-    if (!init) {
-      getMenuData().then()
-      init = true
-    }
+    getMenuData()
   }, [])
 
   // 点击当前菜单跳转页面
@@ -160,16 +152,13 @@ export const LayoutMenu = (props: { setBreadCrumbList?: any }) => {
 
   return (
     <div className={styles.menu}>
-      <Spin spinning={loading} tip="Loading...">
-        <Logo></Logo>
-        <Menu
-          mode="inline"
-          triggerSubMenuAction="hover"
-          selectedKeys={selectedKeys}
-          items={menus}
-          onClick={clickMenu}
-        />
-      </Spin>
+      <Logo></Logo>
+      <Menu
+        mode="inline"
+        selectedKeys={selectedKeys}
+        items={menus}
+        onClick={clickMenu}
+      />
     </div>
   )
 }

@@ -10,7 +10,7 @@ import { useState } from "react"
 import { uploadUserPreference } from "@/store/app/app.actions"
 import { ExperimentFooter } from "./ExperimentFooter"
 import { ContextMenu } from "./ContextMenu"
-import { useMenuCtx } from "../MenuCtx"
+import { useMenuCtx } from "./MenuCtx"
 import { notificationMsg } from "@/utils/global"
 
 interface ContextMenuProps {
@@ -68,7 +68,7 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
         only_fields: ["execution.queue.id"],
       }).then(({ data, meta }) => {
         if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
+          msg.error(meta.result_msg)
           return
         }
         if (data.tasks.length && data.tasks[0].execution?.queue?.id) {

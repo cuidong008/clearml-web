@@ -15,7 +15,7 @@ import {
   selectionDisabledViewWorker,
 } from "./items.utils"
 import classNames from "classnames"
-import { useMenuCtx } from "../MenuCtx"
+import { useMenuCtx } from "./MenuCtx"
 import { useParams } from "react-router-dom"
 
 interface ContextMenuProps {

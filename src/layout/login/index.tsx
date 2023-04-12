@@ -9,6 +9,7 @@ export function Login() {
   const [error, setError] = useState<string>()
   const navigate = useNavigate()
   const location = useLocation().state?.location ?? "/"
+  const [api, msgContext] = message.useMessage()
 
   const handleLogin = useCallback(
     (form: UserCredentials) => {
@@ -25,7 +26,7 @@ export function Login() {
               ? "登录成功，即将跳转到主页..."
               : "登录成功，即将返回之前页面..."
           setError(undefined)
-          message.success(msg)
+          api.success(msg)
           setTimeout(() => {
             navigate(location)
           }, 1000)
@@ -47,6 +48,7 @@ export function Login() {
 
   return (
     <div className={styles.container}>
+      {msgContext}
       <Card
         className={styles.card}
         title="OA 账户登录"

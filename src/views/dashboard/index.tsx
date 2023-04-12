@@ -20,11 +20,14 @@ export const Dashboard = () => {
   const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
     useStoreSelector((state: StoreState) => state.project)
   const user = useStoreSelector((state) => state.app.user)
+
   const [projects, setProjects] = useState<Project[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
-  const ref = useRef<HTMLDivElement>(null)
   const [newProjDialog, setNewProjDialog] = useState(false)
+
+  const ref = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+  const [msg, msgContext] = message.useMessage()
 
   function generateUserScopeObj() {
     return showScope === "my"
@@ -74,7 +77,7 @@ export const Dashboard = () => {
       ],
     }).then(({ data, meta }) => {
       if (meta.result_code !== 200) {
-        message.error(meta.result_msg)
+        msg.error(meta.result_msg)
         return
       }
       setProjects(data.projects ?? [])
@@ -129,7 +132,7 @@ export const Dashboard = () => {
       allow_public: false,
     }).then(({ data, meta }) => {
       if (meta.result_code !== 200) {
-        message.error(meta.result_msg)
+        msg.error(meta.result_msg)
         return
       }
       setTasks(data.tasks ?? [])
@@ -148,6 +151,7 @@ export const Dashboard = () => {
 
   return (
     <div className={styles.dashboardBody}>
+      {msgContext}
       <ProjectNewDialog
         show={newProjDialog}
         onClose={(e) => {
