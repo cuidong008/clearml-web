@@ -22,6 +22,8 @@ import { CaretDownOutlined } from "@ant-design/icons"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { colsSelectableMap } from "./columnsLib"
 import { map } from "lodash"
+import { setSelectedTask } from "@/store/task/task.actions"
+import { useDispatch } from "react-redux"
 
 export const ExperimentList = (props: {
   tasks: Task[]
@@ -33,6 +35,7 @@ export const ExperimentList = (props: {
 }) => {
   const { tasks, selectedKeys, setSelectedKeys, sorter, setSorter, onCtx } =
     props
+  const dispatch = useDispatch()
 
   function reverseOrder(e: MouseEvent<HTMLElement>) {
     e.stopPropagation()
@@ -109,9 +112,10 @@ export const ExperimentList = (props: {
     setCheckAll(e.target.checked)
   }
 
-  function setTaskToShow(id: string) {
-    if (params["expId"] && params["expId"] !== id) {
-      navigate(location.pathname.replace(params["expId"], id))
+  function setTaskToShow(t: Task) {
+    if (params["expId"] && params["expId"] !== t.id) {
+      navigate(location.pathname.replace(params["expId"], t.id))
+      dispatch(setSelectedTask(t))
     }
   }
 
@@ -140,7 +144,7 @@ export const ExperimentList = (props: {
               className={classNames(styles.card, {
                 [styles.selected]: params["expId"] === item.id,
               })}
-              onClick={() => setTaskToShow(item.id)}
+              onClick={() => setTaskToShow(item)}
               onContextMenu={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
