@@ -2,6 +2,10 @@ import store from "@/store"
 import { TagColor } from "@/types/common"
 
 class TagColors {
+  get tags(): string[] {
+    return Object.keys(this._tagsColors)
+  }
+
   public static predefined = [
     { foreground: "white", background: "#803d3d" },
     { foreground: "white", background: "#833e65" },
@@ -24,17 +28,18 @@ class TagColors {
     { foreground: "white", background: "#2a4958" },
     { foreground: "white", background: "#434141" },
   ] as TagColor[]
-  private tagsColors: { [p: string]: TagColor } = {}
+  private _tagsColors: { [p: string]: TagColor } = {}
 
   set tagsColorMap(colors: { [p: string]: TagColor }) {
-    this.tagsColors = colors
+    this._tagsColors = colors
   }
 
   getColor(tag: string) {
-    return (
+    const tagColor =
       store.getState().app.preferences.rootProjects?.tagsColors[tag] ??
       this.calcColor(tag)
-    )
+    this._tagsColors = { ...this._tagsColors, [tag]: tagColor }
+    return tagColor
   }
 
   calcColor(tag: string) {
@@ -46,7 +51,7 @@ class TagColors {
 
   setColor(tag: string, colors: Partial<TagColor>) {
     if (!colors.background || !colors.foreground) {
-      const curr = this.tagsColors[tag] || this.calcColor(tag)
+      const curr = this._tagsColors[tag] || this.calcColor(tag)
       return {
         background: colors.background || curr.background,
         foreground: colors.foreground || curr.foreground,
