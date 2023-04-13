@@ -41,7 +41,7 @@
   }
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .header {
     background-color: $blue-800;
 
@@ -59,7 +59,7 @@ html[data-type="dark"] {
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .header {
     background-color: #ffffff;
 

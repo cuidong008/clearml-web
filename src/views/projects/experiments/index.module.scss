@@ -54,7 +54,7 @@
   .experimentTable {
     display: block;
     overflow: auto !important;
-    height: calc(100% - 5px);
+    height: calc(100% - 2px);
     border-right: 1px solid $blue-500;
 
     &.activeList {
@@ -194,7 +194,7 @@
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .listHeader {
     background: $blue-100;
   }
@@ -214,7 +214,7 @@ html[data-type="light"] {
   }
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .filterItem {
     color: $blue-200;
   }

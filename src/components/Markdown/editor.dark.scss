@@ -35,7 +35,7 @@
   overflow-y: auto;
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .cheatSheetWrap {
     background: $blue-800;
   }

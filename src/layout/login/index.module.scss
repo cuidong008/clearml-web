@@ -6,7 +6,7 @@
   height: 100vh;
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .container {
     background: $blue-800;
   }

@@ -51,7 +51,7 @@
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .title {
     color: $blue-700;
   }
@@ -69,7 +69,7 @@ html[data-type="light"] {
   }
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .title {
     color: $blue-200;
   }

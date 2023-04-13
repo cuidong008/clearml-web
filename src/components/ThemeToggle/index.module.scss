@@ -8,7 +8,7 @@
   flex-shrink: 0;
   box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
   border: 1px solid #cccccc;
-  transition: border-color .25s, background-color .25s;
+  transition: border-color 0.25s, background-color 0.25s;
 
   .vtSwitchCheck {
     position: absolute;
@@ -19,7 +19,7 @@
     border-radius: 50%;
     background-color: #ffffff;
     box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
-    transition: background-color .25s, transform .25s;
+    transition: background-color 0.25s, transform 0.25s;
 
     .vtSwitchIcon {
       position: relative;
@@ -31,11 +31,11 @@
 
       .sun {
         color: #f22;
-        opacity: 1
+        opacity: 1;
       }
 
       .dark {
-        opacity: 0
+        opacity: 0;
       }
 
       svg {
@@ -49,7 +49,7 @@
   }
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .vtSwitch {
     border: 1px solid $darkBorderColor !important;
     background: $darkOverlayColor !important;
@@ -61,7 +61,7 @@ html[data-type="dark"] {
       .vtSwitchIcon {
         svg {
           color: #ff2;
-          transition: opacity .25s;
+          transition: opacity 0.25s;
         }
 
         .sun {

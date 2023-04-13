@@ -110,7 +110,7 @@
   }
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .step {
     color: $blue-100 !important;
   }

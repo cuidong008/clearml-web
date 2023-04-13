@@ -9,8 +9,8 @@ const useTheme = (themeConfig: ThemeConfigState) => {
     // 灰色和弱色切换
     const body = document.documentElement as HTMLElement
     isDark
-      ? body.setAttribute("data-type", "dark")
-      : body.setAttribute("data-type", "light")
+      ? body.setAttribute("schema", "dark")
+      : body.setAttribute("schema", "light")
   }
   initTheme()
 
