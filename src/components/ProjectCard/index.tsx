@@ -2,7 +2,7 @@ import { Project } from "@/types/project"
 import React, { useEffect, useState } from "react"
 import classNames from "classnames"
 import styles from "./index.module.scss"
-import { Button, Input, Menu, Popover, Space, Tooltip } from "antd"
+import { Button, Input, Menu, Popover, Space, Tooltip, Typography } from "antd"
 import {
   CheckOutlined,
   CloseOutlined,
@@ -119,15 +119,18 @@ export const ProjectCard = (props: {
             {project && (
               <div className={styles.cardName}>
                 {!showRename && (
-                  <Tooltip
-                    title={project.name}
-                    placement="bottom"
-                    color={"blue"}
+                  <Typography.Text
+                    className={styles.projectName}
+                    ellipsis={{
+                      tooltip: {
+                        color: "blue",
+                        title: project.name,
+                        placement: "bottom",
+                      },
+                    }}
                   >
-                    <span className={styles.projectName}>
-                      {shortProjectName(project.name)}
-                    </span>
-                  </Tooltip>
+                    {shortProjectName(project.name)}
+                  </Typography.Text>
                 )}
                 {showRename && editProjId === project.id && (
                   <Space>
