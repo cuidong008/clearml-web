@@ -5,10 +5,14 @@ export const TaskIconLabel = (props: {
   type: TaskTypeEnumType
   iconClass?: string
   showLabel?: boolean
+  className?: string
 }) => {
-  const { type, iconClass, showLabel } = props
+  const { type, iconClass, showLabel, className } = props
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div
+      className={className}
+      style={{ display: "flex", alignItems: "center" }}
+    >
       <i
         className={classNames(
           "al-icon",
