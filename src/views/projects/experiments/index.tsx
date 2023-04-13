@@ -25,7 +25,7 @@ import { ColumnFilterItem } from "antd/es/table/interface"
 import { CheckboxValueType } from "antd/es/checkbox/Group"
 import { getGetAllQuery, getTasksAllEx } from "@/api/task"
 import { useStoreSelector, useThunkDispatch } from "@/store"
-import { setTableColumn } from "@/store/task/task.actions"
+import { setSelectedTask, setTableColumn } from "@/store/task/task.actions"
 import { uploadUserPreference } from "@/store/app/app.actions"
 import { Outlet, useNavigate, useParams } from "react-router-dom"
 import { flatten, get, map } from "lodash"
@@ -60,7 +60,7 @@ export const Experiments = () => {
     order: -1,
     field: "last_update",
   })
-  const [selectedTask, setSelectedTask] = useState<SelectedTask>({
+  const [selectedTasks, setSelectedTasks] = useState<SelectedTask>({
     rows: [],
     keys: [],
   })
@@ -77,6 +77,9 @@ export const Experiments = () => {
     selectedTasks: [],
     ctxMode: "single",
     isArchive: false,
+    setCtx: (ctx) => {
+      setCtxMenu(ctx)
+    },
   })
   const [fullView, setFullView] = useState(false)
 
@@ -128,7 +131,7 @@ export const Experiments = () => {
           target: undefined,
           selectedTasks: [],
         }))
-        setSelectedTask({ rows: [], keys: [] })
+        setSelectedTasks({ rows: [], keys: [] })
       }
       if (!allowRefresh) {
         setLoading(true)
@@ -238,7 +241,7 @@ export const Experiments = () => {
 
   useEffect(() => {
     function close(e: Event) {
-      const id = (e.target as HTMLInputElement).id
+      const id = (e.target as HTMLDivElement).id
       if (id === "expCtxMenu") {
         return
       }
@@ -301,8 +304,10 @@ export const Experiments = () => {
       }, 1000)
       if (task) {
         navigate(`${task.id}/details`)
+        dispatch(setSelectedTask(task))
       } else {
         navigate(`${tasks[0].id}/details`)
+        dispatch(setSelectedTask(tasks[0]))
       }
     } else {
       navigate(`/projects/${params["projId"]}/experiments`)
@@ -310,7 +315,7 @@ export const Experiments = () => {
   }
 
   function taskClick(e: Task, nav: boolean) {
-    setSelectedTask({ keys: [e.id], rows: [e] })
+    setSelectedTasks({ keys: [e.id], rows: [e] })
     if (nav) {
       setView("list", e)
     }
@@ -324,11 +329,11 @@ export const Experiments = () => {
       showMenu: true,
       target: e,
       ctxMode: "single",
-      selectedTasks: selectedTask.rows,
+      selectedTasks: selectedTasks.rows,
     }
     if (needSelected) {
-      if (!selectedTask.keys.includes(e.id)) {
-        setSelectedTask({ keys: [e.id], rows: [e] })
+      if (!selectedTasks.keys.includes(e.id)) {
+        setSelectedTasks({ keys: [e.id], rows: [e] })
         ctx = {
           ...ctx,
           ctxMode: "multi",
@@ -344,14 +349,31 @@ export const Experiments = () => {
     setCtxMenu(() => ctx)
   }
 
-  function dispatchCtxMenuAct(e: string, t?: Task) {
+  function dispatchCtxMenuAct(e: string, t?: Task, data?: object) {
     switch (e) {
       case "detail":
         setView("list", t)
         break
-      case "refresh":
+      case "afterArchive":
         fetchTasks(true, false)
+        if (viewState !== "table") {
+          setView("table")
+          setFullView(false)
+        }
         break
+      case "updateSelected":
+        t &&
+          setTasks(() =>
+            tasks.map((task) => {
+              if (task.id === t.id) {
+                task = { ...task, ...data }
+                if (t.id && t.id === params["expId"]) {
+                  dispatch(setSelectedTask(task))
+                }
+              }
+              return task
+            }),
+          )
     }
   }
 
@@ -359,7 +381,7 @@ export const Experiments = () => {
     <div
       className={styles.experiments}
       style={{
-        height: `calc(100% - ${selectedTask.keys.length > 1 ? 105 : 55}px)`,
+        height: `calc(100% - ${selectedTasks.keys.length > 1 ? 105 : 55}px)`,
       }}
     >
       {msgContext}
@@ -389,7 +411,7 @@ export const Experiments = () => {
               onClick={() => {
                 setShowArchive(!showArchive)
                 setCtxMenu({ ...ctxMenu, isArchive: !showArchive })
-                setSelectedTask({ keys: [], rows: [] })
+                setSelectedTasks({ keys: [], rows: [] })
                 setView("table")
               }}
             >
@@ -469,6 +491,7 @@ export const Experiments = () => {
           </Space>
           <PanelGroup direction="horizontal">
             <Panel
+              collapsible
               defaultSize={viewState === "table" ? 100 : 30}
               className={classNames(styles.experimentTable, {
                 [styles.activeList]: oneTimeAni,
@@ -495,12 +518,12 @@ export const Experiments = () => {
                       },
                     })}
                     rowSelection={{
-                      selectedRowKeys: selectedTask.keys,
+                      selectedRowKeys: selectedTasks.keys,
                       onChange: (
                         selectedRowKeys: Key[],
                         selectedRows: Task[],
                       ) => {
-                        setSelectedTask({
+                        setSelectedTasks({
                           keys: selectedRowKeys,
                           rows: selectedRows,
                         })
@@ -550,9 +573,9 @@ export const Experiments = () => {
               ) : (
                 <ExperimentList
                   tasks={tasks}
-                  selectedKeys={selectedTask}
+                  selectedKeys={selectedTasks}
                   setSelectedKeys={(e) => {
-                    setSelectedTask(e)
+                    setSelectedTasks(e)
                     setCtxMenu({
                       ...ctxMenu,
                       selectedTasks: e.rows,
@@ -582,10 +605,12 @@ export const Experiments = () => {
                 <PanelResizeHandle className={styles.splitBar}>
                   <Split />
                 </PanelResizeHandle>
-                <Panel collapsible>
-                  <ExperimentDetails>
-                    <Outlet />
-                  </ExperimentDetails>
+                <Panel>
+                  <MenuContext.Provider value={ctxMenu}>
+                    <ExperimentDetails onTaskChange={dispatchCtxMenuAct}>
+                      <Outlet />
+                    </ExperimentDetails>
+                  </MenuContext.Provider>
                 </Panel>
               </>
             )}
@@ -593,9 +618,11 @@ export const Experiments = () => {
         </>
       )}
       {fullView && (
-        <ExperimentDetails>
-          <Outlet />
-        </ExperimentDetails>
+        <MenuContext.Provider value={ctxMenu}>
+          <ExperimentDetails onTaskChange={dispatchCtxMenuAct}>
+            <Outlet />
+          </ExperimentDetails>
+        </MenuContext.Provider>
       )}
       <MenuContext.Provider value={ctxMenu}>
         <ExperimentMenu dispatch={dispatchCtxMenuAct} />

@@ -1,34 +1,41 @@
 import { Button, message, Modal } from "antd"
 import { CopyToClipboard } from "@/components/CopyToClipboard"
 import styles from "./dialog.module.scss"
-import { Task } from "@/types/task"
 import { tasksUpdate } from "@/api/task"
 import { useEffect, useState } from "react"
+import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
 
 export const ShareExperimentDialog = (props: {
   show: boolean
-  task?: Task
   onClose: (e: boolean) => void
 }) => {
-  const { show, task, onClose } = props
-  const [shared, setShared] = useState(task?.system_tags?.includes("shared"))
+  const { show, onClose } = props
+  const ctx = useMenuCtx()
+  const [shared, setShared] = useState(
+    ctx.target?.system_tags?.includes("shared"),
+  )
 
   useEffect(() => {
-    setShared(task?.system_tags?.includes("shared"))
-  }, [task])
+    setShared(ctx.target?.system_tags?.includes("shared"))
+  }, [ctx.target])
 
   function share() {
+    if (!ctx.target) {
+      return
+    }
     tasksUpdate({
-      task: task?.id ?? "",
+      task: ctx.target.id ?? "",
       system_tags: shared
-        ? task?.system_tags?.filter((v) => v !== "shared")
-        : [...(task?.system_tags ?? []), "shared"],
-    }).then(({ meta }) => {
+        ? ctx.target.system_tags?.filter((v) => v !== "shared")
+        : [...(ctx.target.system_tags ?? []), "shared"],
+    }).then(({ data, meta }) => {
       if (meta.result_code !== 200) {
         message.error(meta.result_msg)
         return
       }
       setShared(!shared)
+      ctx.target &&
+        ctx.setCtx({ ...ctx, target: { ...ctx.target, ...data.fields } })
     })
   }
 
@@ -37,7 +44,7 @@ export const ShareExperimentDialog = (props: {
       getContainer={() => document.body}
       width={650}
       open={show}
-      onOk={() => onClose(false)}
+      onOk={() => onClose(true)}
       onCancel={() => onClose(false)}
       cancelButtonProps={{ style: { display: "none" } }}
       title={<div></div>}
@@ -67,7 +74,7 @@ export const ShareExperimentDialog = (props: {
         <div className={styles.linkCopy}>
           <CopyToClipboard>
             <div className={styles.shareLink}>
-              {`${location.origin}/projects/${task?.project?.id}/experiments/${task?.id}/full/details`}
+              {`${location.origin}/projects/${ctx.target?.project?.id}/experiments/${ctx.target?.id}/full/details`}
             </div>
           </CopyToClipboard>
         </div>

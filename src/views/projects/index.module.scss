@@ -16,7 +16,7 @@
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .filterItem {
     color: $blue-400;
   }
@@ -47,7 +47,7 @@ html[data-type="light"] {
   }
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .filterItem {
     color: $blue-200;
   }

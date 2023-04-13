@@ -70,7 +70,7 @@
   min-height: 17px;
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .counterContainer {
     .circleCounter {
       &.multi {
@@ -98,7 +98,7 @@ html[data-type="dark"] {
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .counterContainer {
     .circleCounter {
       &.empty {

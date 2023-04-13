@@ -39,6 +39,12 @@
     padding-right: 20px;
     cursor: pointer;
 
+    &.addButton {
+      min-width: 85px;
+      max-width: 85px;
+      transition: opacity 0.3s;
+    }
+
     &:hover {
       flex-shrink: 0;
     }
@@ -90,7 +96,7 @@
       height: 30px;
       background-color: inherit;
 
-      &.add-button {
+      &.addButton {
         border-right: solid 1px $blue-280;
         border-top: solid 1px $blue-280;
         right: 17px;
@@ -103,5 +109,24 @@
         transform: scale(0.8);
       }
     }
+  }
+}
+
+.addTagDialog {
+  :global(.ant-input-group-addon) {
+    border: none !important;
+    background: transparent;
+  }
+
+  .tagOption {
+    max-height: 300px;
+    overflow: auto;
+    li {
+      cursor: pointer;
+    }
+  }
+
+  :global(.ant-input-wrapper) {
+    border-bottom: 2px solid #0d0e15;
   }
 }

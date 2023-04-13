@@ -9,16 +9,18 @@ export const CopyToClipboard = (props: {
 }) => {
   const { children, className } = props
   const ref = useRef<HTMLDivElement>(null)
+  const [msg, msgContext] = message.useMessage()
 
   function handleCopy() {
     if (ref.current) {
       copy(ref.current.children?.[0].textContent ?? "")
-      message.success("code has been copied!")
+      msg.success("code has been copied!")
     }
   }
 
   return (
     <>
+      {msgContext}
       <div ref={ref}>{children}</div>
       <Button
         type="text"

@@ -1,5 +1,5 @@
 import styles from "./index.module.scss"
-import { Button, Collapse, Empty, message, Tooltip, Typography } from "antd"
+import { Button, Collapse, Empty, message, Typography } from "antd"
 import { Markdown } from "@/components/Markdown"
 import { useEffect, useRef, useState } from "react"
 import { useStoreSelector, useThunkDispatch } from "@/store"
@@ -249,18 +249,20 @@ export const Overview = () => {
                       openSelectVariantsDialog()
                     }}
                   >
-                    <Tooltip
-                      color="blue"
-                      title={`${graphVariant.metric} > ${
+                    <Typography.Text
+                      ellipsis={{
+                        tooltip: {
+                          color: "blue",
+                          title: `${graphVariant.metric} > ${
+                            graphVariant.variant
+                          } > ${getValueName(graphVariant.valueType)}`,
+                        },
+                      }}
+                    >
+                      {`${graphVariant.metric} > ${
                         graphVariant.variant
                       } > ${getValueName(graphVariant.valueType)}`}
-                    >
-                      <Typography.Text ellipsis>
-                        {`${graphVariant.metric} > ${
-                          graphVariant.variant
-                        } > ${getValueName(graphVariant.valueType)}`}
-                      </Typography.Text>
-                    </Tooltip>
+                    </Typography.Text>
                   </Button>
                 )}
               </div>

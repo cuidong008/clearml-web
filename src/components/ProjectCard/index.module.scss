@@ -18,9 +18,6 @@
 
     .projectName {
       max-width: 280px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
       font-weight: 500;
       font-size: 14px;
       color: #c3cdf0;
@@ -71,7 +68,7 @@
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .cardName {
     .projectName {
       color: $blue-600 !important;

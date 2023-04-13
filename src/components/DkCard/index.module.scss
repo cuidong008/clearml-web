@@ -98,7 +98,7 @@
   }
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .firstTab {
     .tbf1 {
       fill: $blue-400;
@@ -191,7 +191,7 @@ html[data-type="dark"] {
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .firstTab {
     .tbf1 {
       fill: $blue-100;

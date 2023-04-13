@@ -33,13 +33,13 @@ ul {
   min-height: 54px;
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   ::-webkit-scrollbar-thumb {
     background-color: $blue-400;
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   ::-webkit-scrollbar-thumb {
     background-color: #acacac;
   }
@@ -55,7 +55,7 @@ html[data-type="light"] {
   border-radius: 20px;
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .ant-table-thead {
     .ant-table-cell {
       background: $blue-700;
@@ -103,7 +103,7 @@ html[data-type="dark"] {
   margin-left: auto !important;
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .commonDialogTitle {
     color: $blue-50;
   }

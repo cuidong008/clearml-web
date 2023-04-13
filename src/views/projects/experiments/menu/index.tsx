@@ -14,7 +14,7 @@ import { useMenuCtx } from "./MenuCtx"
 import { notificationMsg } from "@/utils/global"
 
 interface ContextMenuProps {
-  dispatch: (e: string, t?: Task, data?: any) => void
+  dispatch: (e: string, t?: Task, data?: object) => void
 }
 
 export const ExperimentMenu = (props: ContextMenuProps) => {
@@ -29,13 +29,17 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
   const [msg, msgContext] = message.useMessage()
   const dispatchThunk = useThunkDispatch()
 
-  function onMenuClick(e: string, t?: Task) {
+  function onMenuClick(e: string, t?: Task, data?: string) {
     switch (e) {
       case "detail":
         dispatchToParent("detail", t)
         break
       case "view":
-        navigate(`${t?.id}/full/details`)
+        if (data === "full") {
+          navigate(`${t?.id}/full/details`)
+        } else {
+          navigate(`${t?.id}/details`)
+        }
         break
       case "mq":
         navigateToQueue()
@@ -97,28 +101,34 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
         ctx.ctxMode === "single"
           ? [ctx.target?.id ?? ""]
           : ctx.selectedTasks.map((t) => t.id),
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        msg.error(meta.result_msg)
-        return
-      }
-      notify.open({
-        type: data.failed?.length ? "error" : "success",
-        message: "",
-        description: notificationMsg(
-          data.succeeded?.length ?? 0,
-          data.failed?.length ?? 0,
-          "experiment",
-          "archive",
-        ),
-        btn: (
-          <Button type="text" onClick={() => doRestoreTask()}>
-            Undo
-          </Button>
-        ),
-      })
-      dispatchToParent("refresh")
     })
+      .then(({ data, meta }) => {
+        if (meta.result_code !== 200) {
+          msg.error(meta.result_msg)
+          return
+        }
+        notify.open({
+          type: data.failed?.length ? "error" : "success",
+          message: "",
+          description: notificationMsg(
+            data.succeeded?.length ?? 0,
+            data.failed?.length ?? 0,
+            "experiment",
+            "archive",
+          ),
+          btn: data.failed?.length ? (
+            <Button type="text">More Info</Button>
+          ) : (
+            <Button type="text" onClick={() => doRestoreTask()}>
+              Undo
+            </Button>
+          ),
+        })
+        dispatchToParent("afterArchive")
+      })
+      .catch((e) => {
+        console.log(e)
+      })
   }
 
   function doRestoreTask() {
@@ -142,7 +152,7 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
           "restore",
         ),
       })
-      dispatchToParent("refresh")
+      dispatchToParent("afterArchive")
     })
   }
 
@@ -152,8 +162,10 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
     <>
       <ShareExperimentDialog
         show={showShareDialog}
-        task={ctx.target}
-        onClose={() => setShowShareDialog(false)}
+        onClose={(e) => {
+          setShowShareDialog(false)
+          e && dispatchToParent("updateSelected", ctx.target, ctx.target)
+        }}
       />
       <WarnArchiveDialog
         show={showWarnDialog}
