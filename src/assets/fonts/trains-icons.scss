@@ -1628,6 +1628,9 @@
 
 .al-icon,
 .icon {
+  &.pointer {
+    cursor: pointer;
+  }
   &.flashing-icon {
     transition: opacity 0.3s;
   }
@@ -1665,6 +1668,12 @@
     font-size: 20px;
   }
 
+  &.sm-xd {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+  }
+
   &.md {
     width: 28px;
     height: 28px;
@@ -1693,5 +1702,43 @@
     width: 64px;
     height: 64px;
     font-size: 64px;
+  }
+}
+
+.al-color {
+  &.white {
+    color: $white;
+  }
+
+  &.neon-yellow {
+    color: $neon-yellow;
+  }
+
+  &.light-periwinkle-two {
+    color: $light-periwinkle-two;
+  }
+
+  &.blue-100 {
+    color: $blue-100;
+  }
+
+  &.blue-300 {
+    color: $blue-300;
+  }
+
+  &.blue-400 {
+    color: $blue-400;
+  }
+
+  &.blue-800 {
+    color: $blue-800;
+  }
+
+  &.error-dark {
+    color: $error-dark;
+  }
+
+  &.warn-dark {
+    color: #ffba00;
   }
 }

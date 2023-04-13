@@ -57,6 +57,12 @@
   @include icon("@/assets/icons/welcome-researcher.svg");
 }
 
+.i-idCard {
+  @include icon("@/assets/icons/idcard.svg");
+  width: 20px;
+  height: 16px;
+}
+
 .new-experiment-table {
   height: 120px;
   background-image: url("@/assets/icons/new-experiment-table.png");
