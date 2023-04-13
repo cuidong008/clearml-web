@@ -10,6 +10,7 @@ export interface MenuCtx {
   target: Task | undefined
   selectedTasks: Task[]
   isArchive: boolean
+  setCtx: (ctx: MenuCtx) => void
 }
 
 export const MenuContext = createContext<MenuCtx>({
@@ -21,6 +22,9 @@ export const MenuContext = createContext<MenuCtx>({
   x: 0,
   y: 0,
   isArchive: false,
+  setCtx: (ctx: MenuCtx) => {
+    void ctx
+  },
 })
 
 export function useMenuCtx() {

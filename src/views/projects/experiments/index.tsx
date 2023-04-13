@@ -77,6 +77,9 @@ export const Experiments = () => {
     selectedTasks: [],
     ctxMode: "single",
     isArchive: false,
+    setCtx: (ctx) => {
+      setCtxMenu(ctx)
+    },
   })
   const [fullView, setFullView] = useState(false)
 
@@ -238,7 +241,7 @@ export const Experiments = () => {
 
   useEffect(() => {
     function close(e: Event) {
-      const id = (e.target as HTMLInputElement).id
+      const id = (e.target as HTMLDivElement).id
       if (id === "expCtxMenu") {
         return
       }
@@ -469,6 +472,7 @@ export const Experiments = () => {
           </Space>
           <PanelGroup direction="horizontal">
             <Panel
+              collapsible
               defaultSize={viewState === "table" ? 100 : 30}
               className={classNames(styles.experimentTable, {
                 [styles.activeList]: oneTimeAni,
@@ -582,10 +586,12 @@ export const Experiments = () => {
                 <PanelResizeHandle className={styles.splitBar}>
                   <Split />
                 </PanelResizeHandle>
-                <Panel collapsible>
-                  <ExperimentDetails>
-                    <Outlet />
-                  </ExperimentDetails>
+                <Panel>
+                  <MenuContext.Provider value={ctxMenu}>
+                    <ExperimentDetails>
+                      <Outlet />
+                    </ExperimentDetails>
+                  </MenuContext.Provider>
                 </Panel>
               </>
             )}
@@ -593,9 +599,11 @@ export const Experiments = () => {
         </>
       )}
       {fullView && (
-        <ExperimentDetails>
-          <Outlet />
-        </ExperimentDetails>
+        <MenuContext.Provider value={ctxMenu}>
+          <ExperimentDetails>
+            <Outlet />
+          </ExperimentDetails>
+        </MenuContext.Provider>
       )}
       <MenuContext.Provider value={ctxMenu}>
         <ExperimentMenu dispatch={dispatchCtxMenuAct} />
