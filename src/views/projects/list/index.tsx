@@ -232,6 +232,7 @@ export const ProjectList = () => {
           setDelProjDialog(false)
           if (e) {
             setReadyDelete(undefined)
+            fetchDataRef.current(true)
           }
         }}
       />
