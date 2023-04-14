@@ -6,7 +6,6 @@ import {
   compose,
   legacy_createStore as createStore,
 } from "redux"
-
 import reduxPromise from "redux-promise"
 import reduxThunk from "redux-thunk"
 import reduxLogger from "redux-logger"

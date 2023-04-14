@@ -2,10 +2,6 @@ import store from "@/store"
 import { TagColor } from "@/types/common"
 
 class TagColors {
-  get tags(): string[] {
-    return Object.keys(this._tagsColors)
-  }
-
   public static predefined = [
     { foreground: "white", background: "#803d3d" },
     { foreground: "white", background: "#833e65" },
@@ -29,6 +25,10 @@ class TagColors {
     { foreground: "white", background: "#434141" },
   ] as TagColor[]
   private _tagsColors: { [p: string]: TagColor } = {}
+
+  get tags(): string[] {
+    return Object.keys(this._tagsColors)
+  }
 
   set tagsColorMap(colors: { [p: string]: TagColor }) {
     this._tagsColors = colors
