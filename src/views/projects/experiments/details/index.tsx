@@ -16,6 +16,7 @@ import {
   ConfigProvider,
   Input,
   message,
+  notification,
   Popover,
   Space,
   Spin,
@@ -29,6 +30,8 @@ import { Tag, TagList } from "@/components/TagList"
 import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
 import copy from "copy-to-clipboard"
 import { useStoreSelector } from "@/store"
+import { cloneDeep } from "lodash"
+import { DetailContext } from "@/views/projects/experiments/details/DetailContext"
 
 const { defaultAlgorithm } = theme
 export const ExperimentDetails = (props: {
@@ -38,8 +41,8 @@ export const ExperimentDetails = (props: {
   const params = useParams()
   const navigate = useNavigate()
   const selectedTask = useStoreSelector((state) => state.task.selectedTask)
-
   const { children, onTaskChange } = props
+
   const [curTask, setCurTask] = useState<Task>()
   const [loading, setLoading] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
@@ -48,12 +51,12 @@ export const ExperimentDetails = (props: {
   const [newComment, setNewComment] = useState("")
   const [activeTab, setActiveTab] = useState("execution")
 
+  const [notify, notifyContext] = notification.useNotification()
   const [msg, msgContext] = message.useMessage()
   const menuCtx = useMenuCtx()
   const ref = useRef(null)
 
   useOnClickOutside(ref, () => {
-    console.log("123")
     setShowEdit(false)
   })
 
@@ -63,11 +66,7 @@ export const ExperimentDetails = (props: {
       id: [params["expId"] ?? ""],
       only_fields: TASK_INFO_ONLY_FIELDS_BASE,
     })
-      .then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          msg.error(meta.result_msg)
-          return
-        }
+      .then(({ data }) => {
         if (data.tasks?.length) {
           setCurTask(data.tasks[0])
           setNewTaskName(data.tasks[0].name ?? "")
@@ -112,32 +111,62 @@ export const ExperimentDetails = (props: {
     tasksUpdate({
       task: curTask.id,
       name: newTaskName,
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        msg.error(meta.result_msg)
-        return
-      }
+    }).then(({ data }) => {
       setCurTask({ ...curTask, ...data.fields })
       setShowEdit(false)
       onTaskChange("updateSelected", curTask, data.fields)
     })
   }
 
-  function updateTaskTags(e: Tag[]) {
+  function updateTaskTags(op: string, tag: Tag) {
+    if (!curTask) {
+      return
+    }
+    const oldTags = cloneDeep(curTask.tags ?? [])
+    tasksUpdate({
+      task: curTask.id,
+      tags:
+        op === "rm"
+          ? [...oldTags.filter((t) => t !== tag.caption)]
+          : [...oldTags, tag.caption],
+    })
+      .then(({ data }) => {
+        setCurTask({ ...curTask, ...data.fields })
+        onTaskChange("updateSelected", curTask, data.fields)
+        notify.open({
+          type: "success",
+          duration: 3,
+          message: "info",
+          description: `“${tag.caption}” tag has been ${
+            op === "rm" ? "removed from" : "added to"
+          } “${curTask.name}” experiment`,
+          btn: (
+            <Button type="text" onClick={() => restoreTaskTag(oldTags)}>
+              Undo
+            </Button>
+          ),
+        })
+      })
+      .catch(() => {
+        msg.error("tags update failure")
+      })
+  }
+
+  function restoreTaskTag(tags: string[]) {
     if (!curTask) {
       return
     }
     tasksUpdate({
       task: curTask.id,
-      tags: e.map((e) => e.caption),
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        msg.error(meta.result_msg)
-        return
-      }
-      setCurTask({ ...curTask, ...data.fields })
-      onTaskChange("updateSelected", curTask, data.fields)
+      tags: tags,
     })
+      .then(({ data }) => {
+        setCurTask({ ...curTask, ...data.fields })
+        onTaskChange("updateSelected", curTask, data.fields)
+      })
+      .catch(() => {
+        msg.error("tags update failure")
+      })
   }
 
   function startEditComment() {
@@ -154,6 +183,12 @@ export const ExperimentDetails = (props: {
           Layout: {
             colorBgHeader: "#ffffff",
           },
+          Notification: {
+            colorBgElevated: "#313852",
+            colorText: "#ffffff",
+            colorIcon: "#ffffff",
+            colorTextHeading: "#ffffff",
+          },
         },
         token: {
           colorBgBase: "#ffffff",
@@ -163,6 +198,7 @@ export const ExperimentDetails = (props: {
       }}
     >
       {msgContext}
+      {notifyContext}
       <div className={styles.experimentInfo}>
         <Spin
           spinning={loading}
@@ -314,12 +350,14 @@ export const ExperimentDetails = (props: {
                       })
                     }}
                   />
-                  <i
-                    className="al-icon  sm-xd al-ico-dialog-x pointer"
-                    onClick={() => {
-                      navigate(`/projects/${curTask.project?.id}/experiments`)
-                    }}
-                  />
+                  {!params["output"] && (
+                    <i
+                      className="al-icon  sm-xd al-ico-dialog-x pointer"
+                      onClick={() => {
+                        navigate(`/projects/${curTask.project?.id}/experiments`)
+                      }}
+                    />
+                  )}
                 </Space>
               </div>
               <div className={styles.middleHeader}>
@@ -348,8 +386,11 @@ export const ExperimentDetails = (props: {
               />
             </>
           )}
-
-          {children}
+          <DetailContext.Provider
+            value={{ activeTab, current: curTask, setCurrent: setCurTask }}
+          >
+            {children}
+          </DetailContext.Provider>
         </Spin>
       </div>
     </ConfigProvider>

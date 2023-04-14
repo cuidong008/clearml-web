@@ -4,7 +4,6 @@ import { UserTag } from "@/components/TagList/UserTag"
 import styles from "./index.module.scss"
 import { Input, Popover } from "antd"
 import { SearchOutlined } from "@ant-design/icons"
-import { cloneDeep } from "lodash"
 
 export interface Tag {
   caption: string
@@ -26,7 +25,7 @@ export const TagList = (props: {
   showRemove?: boolean
   style?: CSSProperties
   sysTags?: string[]
-  onUpdate?: (newTags: Tag[], oldTag: Tag[]) => void
+  onUpdate?: (op: string, tag: Tag) => void
 }) => {
   const { showAdd, showRemove, tags, style, sysTags, onUpdate } = props
   const [tagsList, setTagsList] = useState<Tag[]>([])
@@ -66,19 +65,9 @@ export const TagList = (props: {
   }, [tags])
 
   function updateTags(op: string, t: Tag) {
-    switch (op) {
-      case "rm":
-        onUpdate?.(
-          [...tagsList.filter((tag) => t.caption !== tag.caption)],
-          cloneDeep(tagsList),
-        )
-        break
-      case "add":
-        onUpdate?.([...tagsList, t], cloneDeep(tagsList))
-        setTagSearch("")
-        setShowAddPopup(false)
-        break
-    }
+    onUpdate?.(op, t)
+    setTagSearch("")
+    setShowAddPopup(false)
     setTagCanUse([])
   }
 
