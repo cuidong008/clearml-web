@@ -366,6 +366,17 @@ export const Experiments = () => {
                 if (t.id && t.id === params["expId"]) {
                   dispatch(setSelectedTask(task))
                 }
+                // update menu ctx selected tasks (bug when add new tag in detail
+                // and footer menu add tag panel not update may cause duplicate tag update to task)
+                if (ctxMenu.selectedTasks.some((v) => v.id === t.id)) {
+                  setCtxMenu({
+                    ...ctxMenu,
+                    selectedTasks: [
+                      ...ctxMenu.selectedTasks.filter((v) => v.id !== t.id),
+                      task,
+                    ],
+                  })
+                }
               }
               return task
             }),
