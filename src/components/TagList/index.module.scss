@@ -111,23 +111,3 @@
     }
   }
 }
-
-.addTagDialog {
-  :global(.ant-input-group-addon) {
-    border: none !important;
-    background: transparent;
-  }
-
-  .tagOption {
-    max-height: 300px;
-    overflow: auto;
-
-    li {
-      cursor: pointer;
-    }
-  }
-
-  :global(.ant-input-wrapper) {
-    border-bottom: 2px solid #0d0e15;
-  }
-}
