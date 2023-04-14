@@ -4,10 +4,15 @@ import {
   TasksArchiveManyResponse,
   TasksArchiveRequest,
   TasksArchiveResponse,
+  TasksDeleteManyRequest,
+  TasksDeleteManyResponse,
   TasksGetAllExRequest,
   TasksGetAllExResponse,
   TasksGetByIdExRequest,
   TasksGetByIdExResponse,
+  TasksResetManyResponse,
+  TasksStopManyRequest,
+  TasksStopManyResponse,
   TasksUnArchiveManyRequest,
   TasksUnArchiveManyResponse,
   TasksUpdateRequest,
@@ -157,4 +162,16 @@ export function tasksUnArchiveMany(request: TasksUnArchiveManyRequest) {
 
 export function tasksGetByIdEx(request: TasksGetByIdExRequest) {
   return REQ.post<TasksGetByIdExResponse>("/tasks.get_by_id_ex", request)
+}
+
+export function tasksDeleteMany(request: TasksDeleteManyRequest) {
+  return REQ.post<TasksDeleteManyResponse>("/tasks.delete_many", request)
+}
+
+export function tasksResetMany(request: TasksDeleteManyRequest) {
+  return REQ.post<TasksResetManyResponse>("/tasks.reset_many", request)
+}
+
+export function tasksStopMany(request: TasksStopManyRequest) {
+  return REQ.post<TasksStopManyResponse>("/tasks.stop_many", request)
 }
