@@ -1,17 +1,28 @@
 import { Task } from "@/types/task"
 import { useNavigate } from "react-router-dom"
 import { useStoreSelector, useThunkDispatch } from "@/store"
-import { getTasksAllEx, tasksArchiveMany, tasksUnArchiveMany } from "@/api/task"
+import {
+  getTasksAllEx,
+  tasksArchiveMany,
+  tasksDeleteMany,
+  tasksResetMany,
+  tasksStopMany,
+  tasksUnArchiveMany,
+} from "@/api/task"
 import { Button, message, notification } from "antd"
 import { ArchivePopupId } from "@/utils/constant"
 import { ShareExperimentDialog } from "../dialog/ShareExperimentDialog"
 import { WarnArchiveDialog } from "../dialog/WarnArchiveDialog"
+import { DeleteExperimentDialog } from "../dialog/DeleteExperimentDialog"
+import { ResetExperimentDialog } from "../dialog/ResetExperimentDialog"
+import { AbortExperimentDialog } from "../dialog/AbortExperimentDialog"
 import { useState } from "react"
 import { uploadUserPreference } from "@/store/app/app.actions"
 import { ExperimentFooter } from "./ExperimentFooter"
 import { ContextMenu } from "./ContextMenu"
 import { useMenuCtx } from "./MenuCtx"
-import { notificationMsg } from "@/utils/global"
+import { getUrlsPerProvider, notificationMsg } from "@/utils/global"
+import { selectionDisabledAbort, selectionDisabledReset } from "./items.utils"
 
 interface ContextMenuProps {
   dispatch: (e: string, t?: Task, data?: object) => void
@@ -25,6 +36,9 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
   const storeSelectedTask = useStoreSelector((state) => state.task.selectedTask)
   const [showShareDialog, setShowShareDialog] = useState(false)
   const [showWarnDialog, setShowWarnDialog] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [showResetDialog, setShowResetDialog] = useState(false)
+  const [showAbortDialog, setShowAbortDialog] = useState(false)
   const [notify, notifyContext] = notification.useNotification()
   const [msg, msgContext] = message.useMessage()
   const dispatchThunk = useThunkDispatch()
@@ -56,6 +70,13 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
           : doArchiveTask()
         break
       case "delete":
+        setShowDeleteDialog(true)
+        break
+      case "reset":
+        setShowResetDialog(true)
+        break
+      case "abort":
+        setShowAbortDialog(true)
         break
     }
   }
@@ -70,11 +91,7 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
       getTasksAllEx({
         id: [ctx.target?.id ?? ""],
         only_fields: ["execution.queue.id"],
-      }).then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          msg.error(meta.result_msg)
-          return
-        }
+      }).then(({ data }) => {
         if (data.tasks.length && data.tasks[0].execution?.queue?.id) {
           navigate(
             `/workers-and-queues?id=${data.tasks[0].execution?.queue?.id}`,
@@ -102,14 +119,11 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
           ? [ctx.target?.id ?? ""]
           : ctx.selectedTasks.map((t) => t.id),
     })
-      .then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          msg.error(meta.result_msg)
-          return
-        }
+      .then(({ data }) => {
         notify.open({
           type: data.failed?.length ? "error" : "success",
-          message: "",
+          message: "info",
+          duration: 3,
           description: notificationMsg(
             data.succeeded?.length ?? 0,
             data.failed?.length ?? 0,
@@ -137,11 +151,7 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
         ctx.ctxMode === "single"
           ? [ctx.target?.id ?? ""]
           : ctx.selectedTasks.map((t) => t.id),
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        msg.error(meta.result_msg)
-        return
-      }
+    }).then(({ data }) => {
       notify.open({
         type: data.failed?.length ? "error" : "success",
         message: "",
@@ -156,10 +166,143 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
     })
   }
 
-  function deleteTasks() {}
+  function deleteTasks(deleteArtifacts: boolean) {
+    tasksDeleteMany({
+      ids: ctx.selectedTasks.map((t) => t.id),
+      delete_external_artifacts: deleteArtifacts,
+      delete_output_models: deleteArtifacts,
+      return_file_urls: true,
+      force: true,
+    })
+      .then(({ data }) => {
+        const deleteRes = {
+          failed: data.failed,
+          succeeded: data.succeeded,
+          urlsToDelete: getUrlsPerProvider(
+            data.succeeded
+              ?.map((deletedExperiment) => [
+                ...(deletedExperiment.urls?.artifact_urls ?? []),
+                ...(deletedExperiment.urls?.event_urls ?? []),
+                ...(deletedExperiment.urls?.model_urls ?? []),
+              ])
+              .flat() ?? [],
+          ),
+        }
+        // TODO delete s3 files
+
+        notify.open({
+          type: data.failed?.length ? "error" : "success",
+          message: "",
+          description: notificationMsg(
+            data.succeeded?.length ?? 0,
+            data.failed?.length ?? 0,
+            "experiment",
+            "delete",
+          ),
+        })
+        dispatchToParent("afterArchive")
+      })
+      .catch(() => {
+        msg.error("delete task failure")
+      })
+  }
+
+  function resetTasks(deleteArtifacts: boolean) {
+    tasksResetMany({
+      ids:
+        ctx.ctxMode === "single" && ctx.target
+          ? [ctx.target.id]
+          : selectionDisabledReset(ctx.selectedTasks).selectedFiltered.map(
+              (t) => t.id,
+            ),
+      delete_external_artifacts: deleteArtifacts,
+      delete_output_models: deleteArtifacts,
+      return_file_urls: true,
+      force: true,
+    })
+      .then(({ data }) => {
+        const resetRes = {
+          failed: data.failed,
+          succeeded: data.succeeded,
+          urlsToDelete: getUrlsPerProvider(
+            data.succeeded
+              ?.map((deletedExperiment) => [
+                ...(deletedExperiment.urls?.artifact_urls ?? []),
+                ...(deletedExperiment.urls?.event_urls ?? []),
+                ...(deletedExperiment.urls?.model_urls ?? []),
+              ])
+              .flat() ?? [],
+          ),
+        }
+        // TODO delete s3 files
+
+        notify.open({
+          type: data.failed?.length ? "error" : "success",
+          message: "",
+          description: notificationMsg(
+            data.succeeded?.length ?? 0,
+            data.failed?.length ?? 0,
+            "experiment",
+            "reset",
+          ),
+        })
+        dispatchToParent("afterReset")
+      })
+      .catch(() => {
+        msg.error("reset task failure")
+      })
+  }
+
+  function abortTasks() {
+    tasksStopMany({
+      ids:
+        ctx.ctxMode === "single" && ctx.target
+          ? [ctx.target.id]
+          : selectionDisabledAbort(ctx.selectedTasks).selectedFiltered.map(
+              (t) => t.id,
+            ),
+    })
+      .then(({ data }) => {
+        notify.open({
+          type: data.failed?.length ? "error" : "success",
+          message: "",
+          description: notificationMsg(
+            data.succeeded?.length ?? 0,
+            data.failed?.length ?? 0,
+            "experiment",
+            "abort",
+          ),
+        })
+        dispatchToParent("afterReset")
+      })
+      .catch(() => {
+        msg.error("abort task failure")
+      })
+  }
 
   return (
     <>
+      <AbortExperimentDialog
+        show={showAbortDialog}
+        onClose={(e) => {
+          setShowAbortDialog(false)
+          e && abortTasks()
+        }}
+      />
+      <DeleteExperimentDialog
+        show={showDeleteDialog}
+        onClose={(e, deleteArtifacts) => {
+          setShowDeleteDialog(false)
+          e && deleteTasks(deleteArtifacts)
+        }}
+      />
+      <ResetExperimentDialog
+        show={showResetDialog}
+        onClose={(e, deleteArtifacts) => {
+          setShowResetDialog(false)
+          e && resetTasks(deleteArtifacts)
+        }}
+      />
       <ShareExperimentDialog
         show={showShareDialog}
         onClose={(e) => {

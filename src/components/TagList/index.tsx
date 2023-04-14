@@ -1,10 +1,8 @@
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react"
-import { tagColorManager } from "@/components/TagList/tagColors"
-import { UserTag } from "@/components/TagList/UserTag"
+import { CSSProperties, useEffect, useRef, useState } from "react"
+import { tagColorManager } from "./tagColors"
+import { UserTag } from "./UserTag"
 import styles from "./index.module.scss"
-import { Input, Popover } from "antd"
-import { SearchOutlined } from "@ant-design/icons"
-import { cloneDeep } from "lodash"
+import { AddTagPanel, Option } from "./AddTagPanel"
 
 export interface Tag {
   caption: string
@@ -14,11 +12,6 @@ export interface Tag {
   }
 }
 
-interface Option {
-  label: ReactNode
-  value: string
-}
-
 const SYS_TAG_SHOW = ["shared"]
 export const TagList = (props: {
   tags: string[]
@@ -26,12 +19,11 @@ export const TagList = (props: {
   showRemove?: boolean
   style?: CSSProperties
   sysTags?: string[]
-  onUpdate?: (newTags: Tag[], oldTag: Tag[]) => void
+  onUpdate?: (op: string, tag: Tag) => void
 }) => {
   const { showAdd, showRemove, tags, style, sysTags, onUpdate } = props
   const [tagsList, setTagsList] = useState<Tag[]>([])
   const [showAddBtn, setShowAddBtn] = useState(false)
-  const [tagSearch, setTagSearch] = useState("")
   const [tagCanUse, setTagCanUse] = useState<Option[]>([])
   const [showAddPopup, setShowAddPopup] = useState(false)
 
@@ -41,7 +33,6 @@ export const TagList = (props: {
     function closeOutClick() {
       console.log("close out tag")
       setShowAddPopup(false)
-      setTagSearch("")
     }
 
     if (showAddPopup) {
@@ -66,45 +57,9 @@ export const TagList = (props: {
   }, [tags])
 
   function updateTags(op: string, t: Tag) {
-    switch (op) {
-      case "rm":
-        onUpdate?.(
-          [...tagsList.filter((tag) => t.caption !== tag.caption)],
-          cloneDeep(tagsList),
-        )
-        break
-      case "add":
-        onUpdate?.([...tagsList, t], cloneDeep(tagsList))
-        setTagSearch("")
-        setShowAddPopup(false)
-        break
-    }
+    onUpdate?.(op, t)
+    setShowAddPopup(false)
     setTagCanUse([])
-  }
-
-  function filterTags(e: string) {
-    setTagSearch(e)
-    if (!e) {
-      setTagCanUse(
-        tagColorManager.tags
-          .filter((v) => !tags.includes(v))
-          .map((v) => ({ label: v, value: v })),
-      )
-      return
-    }
-    const filteredTags = tagCanUse.filter((t) => t.value.includes(e))
-    if (filteredTags.length === 0 && !tagsList.some((v) => v.caption === e)) {
-      filteredTags.push({
-        label: (
-          <>
-            {e}
-            <span style={{ color: "blue" }}> (Create New)</span>
-          </>
-        ),
-        value: e,
-      })
-    }
-    setTagCanUse(filteredTags)
   }
 
   return (
@@ -132,42 +87,12 @@ export const TagList = (props: {
         />
       ))}
       {showAdd && (
-        <Popover
-          overlayClassName={styles.addTagDialog}
-          autoAdjustOverflow
-          arrow={false}
-          placement="bottomLeft"
-          open={showAddPopup}
-          content={
-            <div onClick={(e) => e.stopPropagation()}>
-              <Input
-                placeholder={"Add Tag"}
-                value={tagSearch}
-                onChange={(e) => filterTags(e.target.value)}
-                onInput={(e) =>
-                  filterTags((e.target as HTMLInputElement).value)
-                }
-                addonAfter={<SearchOutlined />}
-                bordered={false}
-                allowClear
-              />
-              <ul className={styles.tagOption}>
-                {tagCanUse.map((v) => (
-                  <li
-                    key={v.value}
-                    onClick={() =>
-                      updateTags("add", {
-                        caption: v.value,
-                        color: tagColorManager.getColor(v.value),
-                      })
-                    }
-                  >
-                    {v.label}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          }
+        <AddTagPanel
+          show={showAddPopup}
+          tags={tags}
+          tagCanUse={tagCanUse}
+          setTagCanUse={setTagCanUse}
+          updateTags={updateTags}
         >
           <div
             onClick={(e) => {
@@ -185,7 +110,7 @@ export const TagList = (props: {
               caption={"ADD TAG"}
             />
           </div>
-        </Popover>
+        </AddTagPanel>
       )}
     </div>
   )

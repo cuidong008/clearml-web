@@ -101,7 +101,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         label: "Share",
         key: "share",
         disabled: () => ctx.isArchive,
-        show: true,
+        show: false,
         ico: "al-ico-shared-item",
         onClick: () => {
           onItemClick("share", ctx.target)
@@ -139,46 +139,66 @@ export const ContextMenu = (props: ContextMenuProps) => {
         },
       },
       {
-        label: "Enqueue",
+        label: `Enqueue ${
+          ctx.ctxMode === "multi"
+            ? `( ${selectionDisabledEnqueue(getCheckTasks()).available} items )`
+            : ""
+        }`,
         key: "enqueue",
         disabled: () =>
           !!ctx.target && selectionDisabledEnqueue([ctx.target]).disable,
-        show:
-          !!ctx.target &&
-          !selectionDisabledEnqueue([ctx.target]).disable &&
-          !ctx.isArchive,
+        show: false, // not support temporary
+        // !!ctx.target &&
+        // !selectionDisabledEnqueue([ctx.target]).disable &&
+        // !ctx.isArchive,
         ico: "al-ico-enqueue",
         onClick: () => {},
       },
       {
-        label: "Dequeue",
+        label: `Dequeue ${
+          ctx.ctxMode === "multi"
+            ? `( ${selectionDisabledDequeue(getCheckTasks()).available} items )`
+            : ""
+        }`,
         key: "dequeue",
         disabled: () =>
           !!ctx.target && selectionDisabledDequeue([ctx.target]).disable,
-        show:
-          !!ctx.target &&
-          !selectionDisabledDequeue([ctx.target]).disable &&
-          !ctx.isArchive,
+        show: false, // not support temporary
+        // !!ctx.target &&
+        // !selectionDisabledDequeue([ctx.target]).disable &&
+        // !ctx.isArchive,
         ico: "al-ico-dequeue",
         onClick: () => {},
       },
       {
-        label: "Reset",
+        label: `Reset ${
+          ctx.ctxMode === "multi"
+            ? `( ${selectionDisabledReset(getCheckTasks()).available} items )`
+            : ""
+        }`,
         key: "reset",
         disabled: () =>
-          !!ctx.target && selectionDisabledReset([ctx.target]).disable,
+          !!ctx.target && selectionDisabledReset(ctx.selectedTasks).disable,
         show: true,
         ico: "al-ico-reset",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("reset", ctx.target)
+        },
       },
       {
-        label: "Abort",
+        label: `Abort ${
+          ctx.ctxMode === "multi"
+            ? `( ${selectionDisabledAbort(getCheckTasks()).available} items )`
+            : ""
+        }`,
         key: "abort",
         disabled: () =>
-          !!ctx.target && selectionDisabledAbort([ctx.target]).disable,
+          !!ctx.target && selectionDisabledAbort(ctx.selectedTasks).disable,
         show: true,
         ico: "al-ico-abort",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("abort", ctx.target)
+        },
       },
       {
         label: "Abort All Children",
@@ -191,7 +211,13 @@ export const ContextMenu = (props: ContextMenuProps) => {
         onClick: () => {},
       },
       {
-        label: "Publish",
+        label: `Publish ${
+          ctx.ctxMode === "multi"
+            ? `( ${
+                selectionDisabledPublishTasks(getCheckTasks()).available
+              } items )`
+            : ""
+        }`,
         key: "publish",
         disabled: () =>
           !!ctx.target && selectionDisabledPublishTasks([ctx.target]).disable,

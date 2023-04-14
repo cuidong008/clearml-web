@@ -1,5 +1,6 @@
 import { CloudProviders } from "@/types/enums"
 import { isNil, isUndefined } from "lodash"
+import { TasksOpManyResponseFailed } from "@/api/models/task"
 
 /**
  * @description 获取浏览器默认语言
@@ -77,4 +78,21 @@ export function notificationMsg(
     : `${totalNum === 1 ? "" : succeeded} ${
         totalNum > succeeded ? "of " + totalNum : ""
       } ${entityType}${succeeded > 1 ? "s" : ""} ${operationName} successfully`
+}
+
+export function parseErrors(
+  failed: Array<TasksOpManyResponseFailed>,
+  entities: { id: string; name: string }[],
+): {
+  id: string
+  name: string
+  message?: string
+}[] {
+  return failed.map((failedEntity) => ({
+    id: failedEntity.id,
+    name:
+      entities.find((entity) => entity.id === failedEntity.id)?.name ||
+      failedEntity.id,
+    message: failedEntity.error.msg,
+  }))
 }

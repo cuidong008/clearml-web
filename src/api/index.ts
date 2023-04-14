@@ -82,6 +82,10 @@ class RequestHttp {
           message.error(data.message).then()
           return Promise.reject(data)
         }
+        if (data.meta && data.meta.result_code !== 200) {
+          message.error(data.meta.result_msg)
+          return Promise.reject(new Error(data.meta.result_msg))
+        }
         // * 成功请求（在页面上除非特殊情况，否则不用处理失败逻辑）
         return data
       },

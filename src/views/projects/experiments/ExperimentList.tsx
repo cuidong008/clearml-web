@@ -149,7 +149,7 @@ export const ExperimentList = (props: {
                 e.stopPropagation()
                 e.preventDefault()
                 const { clientX, clientY } = e
-                onCtx(clientX, clientY, item, false)
+                onCtx(clientX, clientY, item, true)
               }}
             >
               <Checkbox

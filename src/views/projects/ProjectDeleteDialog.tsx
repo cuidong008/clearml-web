@@ -45,11 +45,7 @@ export const ProjectDeleteDialog = (props: {
         project: readyForDeletion?.project.id,
         delete_contents: deleteArtifacts,
       })
-        .then(({ data, meta }) => {
-          if (meta.result_code !== 200) {
-            message.error(meta.result_msg)
-            return
-          }
+        .then(({ data }) => {
           const result = {
             urlsToDelete: [
               ...(data.urls?.model_urls ?? []),

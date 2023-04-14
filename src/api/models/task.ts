@@ -56,15 +56,15 @@ export interface TasksUnArchiveManyRequest {
   status_message?: string
 }
 
-export interface TasksResetManyResponseError {
+export interface TasksOpManyResponseError {
   codes?: Array<number>
   msg?: string
   data?: object
 }
 
-export interface TasksResetManyResponseFailed {
-  id?: string
-  error?: TasksResetManyResponseError
+export interface TasksOpManyResponseFailed {
+  id: string
+  error: TasksOpManyResponseError
 }
 
 export interface TasksUnArchiveManyResponseSucceeded {
@@ -74,7 +74,7 @@ export interface TasksUnArchiveManyResponseSucceeded {
 
 export interface TasksUnArchiveManyResponse {
   succeeded?: Array<TasksUnArchiveManyResponseSucceeded>
-  failed?: Array<TasksResetManyResponseFailed>
+  failed?: Array<TasksOpManyResponseFailed>
 }
 
 export interface TasksArchiveRequest {
@@ -95,7 +95,7 @@ export interface TasksArchiveManyRequest {
 
 export interface TasksArchiveManyResponse {
   succeeded?: Array<{ id: string }>
-  failed?: Array<TasksResetManyResponseFailed>
+  failed?: Array<TasksOpManyResponseFailed>
 }
 
 export interface TasksGetByIdExRequest {
@@ -121,4 +121,74 @@ export interface TasksGetByIdExRequest {
 
 export interface TasksGetByIdExResponse {
   tasks?: Array<Task>
+}
+
+export interface TasksDeleteManyRequest {
+  ids: Array<string>
+  move_to_trash?: boolean
+  force?: boolean
+  return_file_urls?: boolean
+  delete_output_models?: boolean
+  delete_external_artifacts?: boolean
+}
+
+export interface TaskUrls {
+  model_urls?: Array<string>
+  event_urls?: Array<string>
+  artifact_urls?: Array<string>
+}
+
+export interface TasksDeleteManyResponseSucceeded {
+  id?: string
+  deleted?: boolean
+  updated_children?: number
+  updated_models?: number
+  deleted_models?: number
+  urls?: TaskUrls
+}
+
+export interface TasksDeleteManyResponse {
+  succeeded?: Array<TasksDeleteManyResponseSucceeded>
+  failed?: Array<TasksOpManyResponseFailed>
+}
+
+export interface TasksResetManyRequest {
+  ids: Array<string>
+  force?: boolean
+  clear_all?: boolean
+  return_file_urls?: boolean
+  delete_output_models?: boolean
+  delete_external_artifacts?: boolean
+}
+
+export interface TasksResetManyResponseSucceeded {
+  id?: string
+  dequeued?: boolean
+  updated?: number
+  fields?: object
+  deleted_models?: number
+  urls?: TaskUrls
+}
+
+export interface TasksResetManyResponse {
+  succeeded?: Array<TasksResetManyResponseSucceeded>
+  failed?: Array<TasksOpManyResponseFailed>
+}
+
+export interface TasksStopManyRequest {
+  ids: Array<string>
+  status_reason?: string
+  status_message?: string
+  force?: boolean
+}
+
+export interface TasksStopManyResponseSucceeded {
+  id?: string
+  updated?: number
+  fields?: object
+}
+
+export interface TasksStopManyResponse {
+  succeeded?: Array<TasksStopManyResponseSucceeded>
+  failed?: Array<TasksOpManyResponseFailed>
 }
