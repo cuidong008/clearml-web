@@ -75,11 +75,7 @@ export const Dashboard = () => {
         "created",
         "default_output_destination",
       ],
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        msg.error(meta.result_msg)
-        return
-      }
+    }).then(({ data }) => {
       setProjects(data.projects ?? [])
     })
   }, [showScope, orderBy, sortOrder, groupId, sharedProjects])
@@ -130,11 +126,7 @@ export const Dashboard = () => {
         "project.name",
       ],
       allow_public: false,
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        msg.error(meta.result_msg)
-        return
-      }
+    }).then(({ data }) => {
       setTasks(data.tasks ?? [])
     })
   }, [user, groupId, showScope, sharedProjects])

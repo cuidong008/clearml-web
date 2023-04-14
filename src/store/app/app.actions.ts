@@ -82,12 +82,7 @@ export const uploadUserPreference =
       setUserPreferences({
         preferences: { [field]: newValue },
       })
-        .then(({ data, meta }) => {
-          if (meta.result_code !== 200) {
-            message.error(meta.result_msg)
-            reject(new Error(meta.result_msg))
-            return
-          }
+        .then(({ data }) => {
           const { app } = getState()
           dispatch(
             setUserPreferencesAll({
@@ -134,11 +129,7 @@ export const getAllUser =
         only_fields: ["id", "name"],
         page_size: 10000,
         page: 0,
-      }).then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
-          reject()
-        }
+      }).then(({ data }) => {
         dispatch(setAllUser(data.users ?? []))
         resolve(data.users)
       })

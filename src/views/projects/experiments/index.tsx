@@ -148,11 +148,7 @@ export const Experiments = () => {
         filters: filteredInfo,
       })
       getTasksAllEx(request)
-        .then(({ data, meta }) => {
-          if (meta.result_code !== 200) {
-            msg.error(meta.result_msg)
-            return
-          }
+        .then(({ data }) => {
           let taskList: Task[] = []
           if (reload) {
             taskList = [...data.tasks]
@@ -374,6 +370,11 @@ export const Experiments = () => {
               return task
             }),
           )
+        break
+      case "afterReset":
+        fetchTasks(true, false)
+        dispatch(setSelectedTask(undefined))
+        break
     }
   }
 

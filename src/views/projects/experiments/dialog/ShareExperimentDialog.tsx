@@ -1,4 +1,4 @@
-import { Button, message, Modal } from "antd"
+import { Button, Modal } from "antd"
 import { CopyToClipboard } from "@/components/CopyToClipboard"
 import styles from "./dialog.module.scss"
 import { tasksUpdate } from "@/api/task"
@@ -28,11 +28,7 @@ export const ShareExperimentDialog = (props: {
       system_tags: shared
         ? ctx.target.system_tags?.filter((v) => v !== "shared")
         : [...(ctx.target.system_tags ?? []), "shared"],
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        message.error(meta.result_msg)
-        return
-      }
+    }).then(({ data }) => {
       setShared(!shared)
       ctx.target &&
         ctx.setCtx({ ...ctx, target: { ...ctx.target, ...data.fields } })

@@ -88,11 +88,7 @@ export const ProjectList = () => {
           "basename",
         ],
       })
-        .then(({ data, meta }) => {
-          if (meta.result_code !== 200) {
-            msg.error(meta.result_msg)
-            return
-          }
+        .then(({ data }) => {
           if (reload) {
             setProjects(() => data.projects)
           } else {
@@ -137,11 +133,7 @@ export const ProjectList = () => {
 
   function validateProjectDel(project: Project) {
     projectValidateDelete({ project: project.id })
-      .then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          msg.error(meta.result_msg)
-          return
-        }
+      .then(({ data }) => {
         const readyForDeletion: ReadyForDeletion = {
           project: project,
           experiments: {
@@ -192,11 +184,7 @@ export const ProjectList = () => {
 
   function projectRename(project: Project, newName: string) {
     projectUpdate({ project: project.id, name: newName })
-      .then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          msg.error(meta.result_msg)
-          return
-        }
+      .then(({ data }) => {
         setProjects(() =>
           projects.map((p) => {
             if (p.id === project.id) {

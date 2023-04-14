@@ -97,11 +97,7 @@ export const Overview = () => {
       return
     }
     projectUpdate({ project: projectSelected.id, description: info })
-      .then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          msg.error(meta.result_msg)
-          return
-        }
+      .then(({ data }) => {
         msg.success(
           `update project description "${projectSelected.name}" success`,
         )
@@ -149,11 +145,7 @@ export const Overview = () => {
       ],
       system_tags: ["-archived"],
       size: 1000,
-    }).then(({ data, meta }) => {
-      if (meta.result_code !== 200) {
-        msg.error(meta.result_msg)
-        return
-      }
+    }).then(({ data }) => {
       const graphicData = data.tasks?.map<ProjectStatsGraphData>((task) => {
         const started = new Date(task.started ?? new Date()).getTime()
         const end = started + (task.active_duration ?? 0) * 1000
@@ -180,11 +172,7 @@ export const Overview = () => {
       project: projectSelected?.id,
       include_subprojects: true,
     })
-      .then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          msg.error(meta.result_msg)
-          return
-        }
+      .then(({ data }) => {
         setVariants(
           sortBy(data.metrics, (item) =>
             item?.metric?.replace(":", "~").toLowerCase(),

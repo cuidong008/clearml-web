@@ -1,7 +1,7 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 import { ProjectList } from "./list"
 import styles from "./index.module.scss"
-import { message, Tabs } from "antd"
+import { Tabs } from "antd"
 import { useCallback, useEffect, useState } from "react"
 import { getAllProjectsEx } from "@/api/project"
 import { setProjectSelected } from "@/store/project/project.actions"
@@ -39,11 +39,7 @@ export const Projects = () => {
           "basename",
           "description",
         ],
-      }).then(({ data, meta }) => {
-        if (meta.result_code !== 200) {
-          message.error(meta.result_msg)
-          return
-        }
+      }).then(({ data }) => {
         if (data.projects.length) {
           dispatch(setProjectSelected(data.projects[0]))
         }
