@@ -14,10 +14,8 @@ import NotFound from "@/components/errors/404"
 import NotNetwork from "@/components/errors/500"
 import { Overview } from "@/views/projects/overview"
 import { ProjectList } from "@/views/projects/list"
-import { Experiments } from "@/views/projects/experiments"
 import { LayoutIndex } from "@/layout"
 import { Login } from "@/layout/login"
-import { DetailTabPanel } from "@/views/projects/experiments/details/DetailTabPanel"
 
 export const rootRouter: Array<RouteObject> = [
   {
@@ -51,17 +49,30 @@ export const rootRouter: Array<RouteObject> = [
       {
         path: ":projId/experiments",
         name: "experiments",
-        element: <Experiments />,
+        lazy: async () => {
+          const c = await import("@/views/projects/experiments")
+          return { Component: c.Experiments }
+        },
         children: [
           {
             path: ":expId/details",
             name: "experimentDetails",
-            element: <DetailTabPanel />,
+            lazy: async () => {
+              const c = await import(
+                "@/views/projects/experiments/details/DetailTabPanel"
+              )
+              return { Component: c.DetailTabPanel }
+            },
           },
           {
             path: ":expId/:output/details",
             name: "experimentDetails",
-            element: <DetailTabPanel />,
+            lazy: async () => {
+              const c = await import(
+                "@/views/projects/experiments/details/DetailTabPanel"
+              )
+              return { Component: c.DetailTabPanel }
+            },
           },
         ],
       },
