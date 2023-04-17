@@ -5,45 +5,24 @@ import {
   selectionDisabledAbort,
   selectionDisabledAbortAllChildren,
   selectionDisabledArchive,
+  selectionDisabledDelete,
   selectionDisabledMoveTo,
   selectionDisabledPublishTasks,
   selectionDisabledReset,
   selectionDisabledTags,
 } from "./items.utils"
-import { AddTagPanel, Option } from "@/components/TagList/AddTagPanel"
-import { useEffect, useState } from "react"
+import { AddTagPanel } from "@/components/TagList/AddTagPanel"
 import { Tag } from "@/components/TagList"
-import { tagColorManager } from "@/components/TagList/tagColors"
 
-export const ExperimentFooter = () => {
+export const ExperimentFooter = (props: {
+  onItemClick: (e: string, from: string, data?: string) => void
+}) => {
+  const { onItemClick } = props
   const ctx = useMenuCtx()
-  const [tagPanelOpen, setTagPanelOpen] = useState(false)
-  const [tagCanUse, setTagCanUse] = useState<Option[]>([])
 
-  useEffect(() => {
-    function closeOutClick() {
-      console.log("close out tag")
-      setTagPanelOpen(false)
-    }
-
-    if (tagPanelOpen) {
-      document.addEventListener("click", closeOutClick)
-    }
-    return () => {
-      document.removeEventListener("click", closeOutClick)
-    }
-  }, [tagPanelOpen])
-
-  useEffect(() => {
-    const tags = [...new Set(ctx.selectedTasks.map((t) => t.tags ?? []).flat())]
-    setTagCanUse(
-      tagColorManager.tags
-        .filter((v) => !tags.includes(v))
-        .map((v) => ({ label: v, value: v })),
-    )
-  }, [ctx.selectedTasks])
-
-  function updateTags(op: string, t: Tag) {}
+  function onAddTag(t: Tag) {
+    onItemClick("addTag", "footer", t.caption)
+  }
 
   return (
     <div className={styles.footer}>
@@ -64,19 +43,22 @@ export const ExperimentFooter = () => {
             type="text"
             disabled={selectionDisabledArchive(ctx.selectedTasks).disable}
             icon={<i className="al-icon al-ico-archive sm-md" />}
+            onClick={() => onItemClick("archive", "footer")}
           />
         )}
         {ctx.isArchive && (
           <>
             <Button
               type="text"
-              disabled={selectionDisabledReset(ctx.selectedTasks).disable}
+              disabled={selectionDisabledArchive(ctx.selectedTasks).disable}
               icon={<i className="al-icon al-ico-restore sm-md" />}
+              onClick={() => onItemClick("archive", "footer")}
             />
             <Button
               type="text"
-              disabled={selectionDisabledReset(ctx.selectedTasks).disable}
+              disabled={selectionDisabledDelete(ctx.selectedTasks).disable}
               icon={<i className="al-icon al-ico-trash sm-md" />}
+              onClick={() => onItemClick("delete", "footer")}
             />
           </>
         )}
@@ -85,11 +67,13 @@ export const ExperimentFooter = () => {
           type="text"
           disabled={selectionDisabledReset(ctx.selectedTasks).disable}
           icon={<i className="al-icon al-ico-reset sm-md" />}
+          onClick={() => onItemClick("reset", "footer")}
         />
         <Button
           type="text"
           disabled={selectionDisabledAbort(ctx.selectedTasks).disable}
           icon={<i className="al-icon al-ico-abort sm-md" />}
+          onClick={() => onItemClick("abort", "footer")}
         />
         <Button
           type="text"
@@ -105,17 +89,15 @@ export const ExperimentFooter = () => {
         />
         <Divider type="vertical" />
         <AddTagPanel
-          show={tagPanelOpen}
+          trigger="click"
           tags={[...new Set(ctx.selectedTasks.map((t) => t.tags ?? []).flat())]}
-          tagCanUse={tagCanUse}
-          setTagCanUse={setTagCanUse}
-          updateTags={updateTags}
+          onAddTag={onAddTag}
+          placement={"bottomLeft"}
         >
           <Button
             type="text"
             className={styles.override}
             disabled={selectionDisabledTags(ctx.selectedTasks).disable}
-            onMouseEnter={() => setTagPanelOpen(true)}
             icon={<i className="al-icon al-ico-tag sm-md" />}
           />
         </AddTagPanel>
