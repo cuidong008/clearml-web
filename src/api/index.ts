@@ -19,7 +19,7 @@ const config = {
   withCredentials: true,
 }
 
-declare interface Result<T = any> {
+export interface Result<T = any> {
   data: T
   meta: {
     id: string
