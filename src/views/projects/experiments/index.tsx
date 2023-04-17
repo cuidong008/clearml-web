@@ -28,7 +28,7 @@ import { useStoreSelector, useThunkDispatch } from "@/store"
 import { setSelectedTask, setTableColumn } from "@/store/task/task.actions"
 import { uploadUserPreference } from "@/store/app/app.actions"
 import { Outlet, useNavigate, useParams } from "react-router-dom"
-import { flatten, get, map } from "lodash"
+import { cloneDeep, flatten, get, map } from "lodash"
 import { hasValue } from "@/utils/global"
 import { AUTO_REFRESH_INTERVAL } from "@/utils/constant"
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
@@ -72,7 +72,6 @@ export const Experiments = () => {
     x: 0,
     y: 0,
     showMenu: false,
-    showFooter: false,
     target: undefined,
     selectedTasks: [],
     ctxMode: "single",
@@ -345,10 +344,10 @@ export const Experiments = () => {
     setCtxMenu(() => ctx)
   }
 
-  function dispatchCtxMenuAct(e: string, t?: Task, data?: object) {
+  function dispatchCtxMenuAct(e: string, t?: Task[]) {
     switch (e) {
       case "detail":
-        setView("list", t)
+        t && setView("list", t[0])
         break
       case "afterArchive":
         fetchTasks(true, false)
@@ -358,29 +357,42 @@ export const Experiments = () => {
         }
         break
       case "updateSelected":
-        t &&
+        if (t && t.length === 1) {
+          const selected = t[0]
+          if (selected.id === params["expId"]) {
+            dispatch(setSelectedTask(selected))
+          }
           setTasks(() =>
             tasks.map((task) => {
-              if (task.id === t.id) {
-                task = { ...task, ...data }
-                if (t.id && t.id === params["expId"]) {
-                  dispatch(setSelectedTask(task))
-                }
-                // update menu ctx selected tasks (bug when add new tag in detail
-                // and footer menu add tag panel not update may cause duplicate tag update to task)
-                if (ctxMenu.selectedTasks.some((v) => v.id === t.id)) {
-                  setCtxMenu({
-                    ...ctxMenu,
-                    selectedTasks: [
-                      ...ctxMenu.selectedTasks.filter((v) => v.id !== t.id),
-                      task,
-                    ],
-                  })
-                }
-              }
-              return task
+              return task.id === selected.id ? selected : task
             }),
           )
+          // update menu ctx selected tasks (bug when add new tag in detail
+          // and footer menu add tag panel not update may cause duplicate tag update to task)
+          if (ctxMenu.selectedTasks.some((v) => v.id === selected.id)) {
+            setCtxMenu({
+              ...ctxMenu,
+              selectedTasks: ctxMenu.selectedTasks.map((v) =>
+                v.id === selected.id ? selected : v,
+              ),
+            })
+          }
+        }
+        break
+      case "updateMany":
+        if (t) {
+          let tmpTasks = cloneDeep(tasks)
+          t.forEach((v) => {
+            if (v.id === params["expId"]) {
+              dispatch(setSelectedTask(v))
+            }
+            tmpTasks = tmpTasks.map((task) => {
+              return task.id === v.id ? v : task
+            })
+          })
+          setTasks(() => tmpTasks)
+          setCtxMenu({ ...ctxMenu, selectedTasks: t })
+        }
         break
       case "afterReset":
         fetchTasks(true, false)
@@ -422,7 +434,12 @@ export const Experiments = () => {
               }
               onClick={() => {
                 setShowArchive(!showArchive)
-                setCtxMenu({ ...ctxMenu, isArchive: !showArchive })
+                setCtxMenu({
+                  ...ctxMenu,
+                  isArchive: !showArchive,
+                  selectedTasks: [],
+                  target: undefined,
+                })
                 setSelectedTasks({ keys: [], rows: [] })
                 setView("table")
               }}

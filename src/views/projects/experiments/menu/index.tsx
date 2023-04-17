@@ -8,6 +8,7 @@ import {
   tasksResetMany,
   tasksStopMany,
   tasksUnArchiveMany,
+  tasksUpdate,
 } from "@/api/task"
 import { Button, message, notification } from "antd"
 import { ArchivePopupId } from "@/utils/constant"
@@ -16,16 +17,18 @@ import { WarnArchiveDialog } from "../dialog/WarnArchiveDialog"
 import { DeleteExperimentDialog } from "../dialog/DeleteExperimentDialog"
 import { ResetExperimentDialog } from "../dialog/ResetExperimentDialog"
 import { AbortExperimentDialog } from "../dialog/AbortExperimentDialog"
-import { useState } from "react"
+import React, { useState } from "react"
 import { uploadUserPreference } from "@/store/app/app.actions"
 import { ExperimentFooter } from "./ExperimentFooter"
 import { ContextMenu } from "./ContextMenu"
 import { useMenuCtx } from "./MenuCtx"
 import { getUrlsPerProvider, notificationMsg } from "@/utils/global"
 import { selectionDisabledAbort, selectionDisabledReset } from "./items.utils"
+import { TasksUpdateResponse } from "@/api/models/task"
+import { Result } from "@/api"
 
 interface ContextMenuProps {
-  dispatch: (e: string, t?: Task, data?: object) => void
+  dispatch: (e: string, t?: Task[]) => void
 }
 
 export const ExperimentMenu = (props: ContextMenuProps) => {
@@ -39,20 +42,25 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showResetDialog, setShowResetDialog] = useState(false)
   const [showAbortDialog, setShowAbortDialog] = useState(false)
+
   const [notify, notifyContext] = notification.useNotification()
   const [msg, msgContext] = message.useMessage()
   const dispatchThunk = useThunkDispatch()
 
-  function onMenuClick(e: string, t?: Task, data?: string) {
+  function onMenuClick(e: string, from: string, data?: string) {
+    if (from === "footer") {
+      ctx.ctxMode = "multi"
+      ctx.setCtx(ctx)
+    }
     switch (e) {
       case "detail":
-        dispatchToParent("detail", t)
+        dispatchToParent("detail", ctx.target ? [ctx.target] : [])
         break
       case "view":
         if (data === "full") {
-          navigate(`${t?.id}/full/details`)
+          navigate(`${ctx.target?.id}/full/details`)
         } else {
-          navigate(`${t?.id}/details`)
+          navigate(`${ctx.target?.id}/details`)
         }
         break
       case "mq":
@@ -65,7 +73,11 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
         setShowShareDialog(true)
         break
       case "archive":
-        ctx.target?.system_tags?.includes("archived")
+        ctx.ctxMode === "single"
+          ? ctx.target?.system_tags?.includes("archived")
+            ? doRestoreTask()
+            : doArchiveTask()
+          : ctx.selectedTasks.every((t) => t.system_tags?.includes("archived"))
           ? doRestoreTask()
           : doArchiveTask()
         break
@@ -77,6 +89,12 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
         break
       case "abort":
         setShowAbortDialog(true)
+        break
+      case "addTag":
+        data &&
+          (ctx.ctxMode === "multi"
+            ? updateTasksTags(data)
+            : updateTaskTags(data))
         break
     }
   }
@@ -280,6 +298,52 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
       })
   }
 
+  function updateTasksTags(tag: string) {
+    const allRequest = ctx.selectedTasks.map((t) =>
+      tasksUpdate({
+        task: t.id,
+        tags: [...(t.tags ?? []), tag],
+      }),
+    )
+    Promise.allSettled(allRequest)
+      .then(([...resp]) => {
+        for (let i = 0; i < resp.length; i++) {
+          if (resp[i].status === "fulfilled") {
+            const { value } = resp[i] as PromiseFulfilledResult<
+              Result<TasksUpdateResponse>
+            >
+            ctx.selectedTasks[i] = {
+              ...ctx.selectedTasks[i],
+              ...value.data.fields,
+            }
+          }
+        }
+        dispatchToParent("updateMany", ctx.selectedTasks)
+      })
+      .catch(() => {
+        msg.error("update tags for all selected experiments failure")
+      })
+  }
+
+  function updateTaskTags(tag: string) {
+    if (!ctx.target) {
+      return
+    }
+    tasksUpdate({
+      task: ctx.target.id,
+      tags: [...(ctx.target.tags ?? []), tag],
+    })
+      .then(({ data }) => {
+        ctx.target &&
+          dispatchToParent("updateSelected", [
+            { ...ctx.target, ...data.fields },
+          ])
+      })
+      .catch(() => {
+        msg.error("tags update failure")
+      })
+  }
+
   return (
     <>
       <AbortExperimentDialog
@@ -307,7 +371,8 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
         show={showShareDialog}
         onClose={(e) => {
           setShowShareDialog(false)
-          e && dispatchToParent("updateSelected", ctx.target, ctx.target)
+          e &&
+            dispatchToParent("updateSelected", ctx.target ? [ctx.target] : [])
         }}
       />
       <WarnArchiveDialog
@@ -333,7 +398,9 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
       {notifyContext}
       {msgContext}
       {ctx.target && <ContextMenu onItemClick={onMenuClick} />}
-      {ctx.selectedTasks.length > 1 && <ExperimentFooter />}
+      {ctx.selectedTasks.length > 1 && (
+        <ExperimentFooter onItemClick={onMenuClick} />
+      )}
     </>
   )
 }
