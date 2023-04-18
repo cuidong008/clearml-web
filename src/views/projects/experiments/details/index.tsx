@@ -40,6 +40,7 @@ export const ExperimentDetails = (props: {
 }) => {
   const params = useParams()
   const navigate = useNavigate()
+  const currentUser = useStoreSelector((state) => state.app.user)
   const selectedTask = useStoreSelector((state) => state.task.selectedTask)
   const { children, onTaskChange } = props
 
@@ -95,6 +96,7 @@ export const ExperimentDetails = (props: {
       <div>{curTask?.comment}</div>
       <Button
         onClick={startEditComment}
+        disabled={currentUser?.id !== curTask?.user?.id}
         type="text"
         style={{ fontSize: 12, marginTop: 10 }}
         size="small"
@@ -170,9 +172,11 @@ export const ExperimentDetails = (props: {
   }
 
   function startEditComment() {
-    setShowEditComment(true)
-    setActiveTab("info")
-    setNewComment(curTask?.comment ?? "")
+    if (currentUser?.id === curTask?.user?.id) {
+      setShowEditComment(true)
+      setActiveTab("info")
+      setNewComment(curTask?.comment ?? "")
+    }
   }
 
   return (
@@ -234,7 +238,9 @@ export const ExperimentDetails = (props: {
                   />
                   {!showEdit ? (
                     <div
-                      onClick={() => setShowEdit(true)}
+                      onClick={() =>
+                        setShowEdit(currentUser?.id === curTask?.user?.id)
+                      }
                       className={styles.nameContent}
                     >
                       <span>{curTask.name}</span>
@@ -291,6 +297,7 @@ export const ExperimentDetails = (props: {
                         content
                       ) : (
                         <Button
+                          disabled={currentUser?.id !== curTask?.user?.id}
                           onClick={startEditComment}
                           type="text"
                           size="small"
