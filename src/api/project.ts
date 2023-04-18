@@ -55,3 +55,7 @@ export function projectsGetUniqueMetricVariants(
     request,
   )
 }
+
+export function projectsGetAllExCanClone() {
+  return REQ.post<ProjectsGetAllExResponse>("/dr_projects.get_dr_all_ex", {})
+}

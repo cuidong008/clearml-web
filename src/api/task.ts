@@ -4,12 +4,18 @@ import {
   TasksArchiveManyResponse,
   TasksArchiveRequest,
   TasksArchiveResponse,
+  TasksCloneRequest,
+  TasksCloneResponse,
   TasksDeleteManyRequest,
   TasksDeleteManyResponse,
   TasksGetAllExRequest,
   TasksGetAllExResponse,
   TasksGetByIdExRequest,
   TasksGetByIdExResponse,
+  TasksMoveRequest,
+  TasksMoveResponse,
+  TasksPublishManyRequest,
+  TasksPublishManyResponse,
   TasksResetManyResponse,
   TasksStopManyRequest,
   TasksStopManyResponse,
@@ -174,4 +180,16 @@ export function tasksResetMany(request: TasksDeleteManyRequest) {
 
 export function tasksStopMany(request: TasksStopManyRequest) {
   return REQ.post<TasksStopManyResponse>("/tasks.stop_many", request)
+}
+
+export function tasksPublishMany(request: TasksPublishManyRequest) {
+  return REQ.post<TasksPublishManyResponse>("/tasks.publish_many", request)
+}
+
+export function tasksClone(request: TasksCloneRequest) {
+  return REQ.post<TasksCloneResponse>("/tasks.clone", request)
+}
+
+export function tasksMove(request: TasksMoveRequest) {
+  return REQ.post<TasksMoveResponse>("/tasks.move", request)
 }

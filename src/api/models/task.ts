@@ -1,6 +1,12 @@
 import { TaskStatusEnumType } from "@/types/enums"
 import { MultiFieldPatternData } from "@/types/common"
-import { Task } from "@/types/task"
+import {
+  ConfigurationItem,
+  Execution,
+  ParamsItem,
+  Task,
+  TaskModelItem,
+} from "@/types/task"
 
 export interface TasksGetAllExRequest {
   id?: Array<string>
@@ -191,4 +197,52 @@ export interface TasksStopManyResponseSucceeded {
 export interface TasksStopManyResponse {
   succeeded?: Array<TasksStopManyResponseSucceeded>
   failed?: Array<TasksOpManyResponseFailed>
+}
+
+export interface TasksPublishManyRequest {
+  ids: Array<string>
+  status_reason?: string
+  status_message?: string
+  force?: boolean
+  publish_model?: boolean
+}
+
+export interface TasksPublishManyResponse {
+  succeeded?: Array<TasksStopManyResponseSucceeded>
+  failed?: Array<TasksOpManyResponseFailed>
+}
+
+export interface TasksCloneRequest {
+  task: string
+  new_task_name?: string
+  new_task_comment?: string
+  new_task_tags?: Array<string>
+  new_task_system_tags?: Array<string>
+  new_task_parent?: string
+  new_task_project?: string
+  new_task_hyperparams?: { [key: string]: { [key: string]: ParamsItem } }
+  new_task_configuration?: { [key: string]: ConfigurationItem }
+  execution_overrides?: Execution
+  validate_references?: boolean
+  new_project_name?: string
+  new_task_input_models?: Array<TaskModelItem>
+  new_task_container?: { [key: string]: string }
+}
+
+export interface TasksCloneResponse {
+  id?: string
+  new_project?: {
+    id?: string
+    name?: string
+  }
+}
+
+export interface TasksMoveRequest {
+  ids: Array<string>
+  project?: string
+  project_name?: string
+}
+
+export interface TasksMoveResponse {
+  project_id: string
 }

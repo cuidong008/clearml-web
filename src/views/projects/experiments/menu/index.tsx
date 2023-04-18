@@ -1,10 +1,13 @@
 import { Task } from "@/types/task"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useStoreSelector, useThunkDispatch } from "@/store"
 import {
   getTasksAllEx,
   tasksArchiveMany,
+  tasksClone,
   tasksDeleteMany,
+  tasksMove,
+  tasksPublishMany,
   tasksResetMany,
   tasksStopMany,
   tasksUnArchiveMany,
@@ -26,6 +29,11 @@ import { getUrlsPerProvider, notificationMsg } from "@/utils/global"
 import { selectionDisabledAbort, selectionDisabledReset } from "./items.utils"
 import { TasksUpdateResponse } from "@/api/models/task"
 import { Result } from "@/api"
+import { AbortAllExperimentDialog } from "@/views/projects/experiments/dialog/AbortAllExperimentDialog"
+import { PublishExperimentDialog } from "@/views/projects/experiments/dialog/PublishExperimentDialog"
+import { CloneExperimentDialog } from "@/views/projects/experiments/dialog/CloneExperimentDialog"
+import { CloneData } from "@/types/common"
+import { MoveExperimentDialog } from "@/views/projects/experiments/dialog/MoveExperimentDialog"
 
 interface ContextMenuProps {
   dispatch: (e: string, t?: Task[]) => void
@@ -35,13 +43,19 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
   const { dispatch: dispatchToParent } = props
   const ctx = useMenuCtx()
   const navigate = useNavigate()
+  const params = useParams()
   const viewConf = useStoreSelector((state) => state.app.preferences.views)
   const storeSelectedTask = useStoreSelector((state) => state.task.selectedTask)
+
   const [showShareDialog, setShowShareDialog] = useState(false)
   const [showWarnDialog, setShowWarnDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showResetDialog, setShowResetDialog] = useState(false)
   const [showAbortDialog, setShowAbortDialog] = useState(false)
+  const [showAbortAllDialog, setShowAbortAllDialog] = useState(false)
+  const [showPublishDialog, setShowPublishDialog] = useState(false)
+  const [showCloneDialog, setShowCloneDialog] = useState(false)
+  const [showMoveDialog, setShowMoveDialog] = useState(false)
 
   const [notify, notifyContext] = notification.useNotification()
   const [msg, msgContext] = message.useMessage()
@@ -95,6 +109,18 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
           (ctx.ctxMode === "multi"
             ? updateTasksTags(data)
             : updateTaskTags(data))
+        break
+      case "abortAll":
+        setShowAbortAllDialog(true)
+        break
+      case "publish":
+        setShowPublishDialog(true)
+        break
+      case "clone":
+        setShowCloneDialog(true)
+        break
+      case "move":
+        setShowMoveDialog(true)
         break
     }
   }
@@ -344,8 +370,114 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
       })
   }
 
+  function publishTasks(needPublish: Task[]) {
+    tasksPublishMany({
+      ids: needPublish.map((t) => t.id),
+    })
+      .then(({ data }) => {
+        msg.open({
+          content: notificationMsg(
+            data.succeeded?.length ?? 0,
+            data.failed?.length ?? 0,
+            "experiment",
+            "publish",
+          ),
+          type: data.failed?.length ? "error" : "success",
+        })
+        dispatchToParent("afterReset")
+      })
+      .catch(() => {
+        msg.error("publish tasks failure")
+      })
+  }
+
+  function abortsAll(aborts: Task[]) {
+    tasksStopMany({
+      ids: aborts.map((t) => t.id),
+    })
+      .then(({ data }) => {
+        msg.open({
+          content: notificationMsg(
+            data.succeeded?.length ?? 0,
+            data.failed?.length ?? 0,
+            "experiment",
+            "abort all children",
+          ),
+          type: data.failed?.length ? "error" : "success",
+        })
+        dispatchToParent("afterReset")
+      })
+      .catch(() => {
+        msg.error("abort task's children failure")
+      })
+  }
+
+  function taskClone(cloneData: CloneData) {
+    console.log(cloneData)
+    tasksClone({
+      task: ctx.target?.id ?? "",
+      new_task_project: cloneData.project,
+      new_task_comment: cloneData.description,
+      new_task_name: cloneData.name,
+      new_project_name: cloneData.newProjectName,
+    }).then(({ data }) => {
+      if (data.new_project) {
+        navigate(
+          `/projects/${data.new_project.id}/experiments/${data.id}/details`,
+        )
+      } else {
+        navigate(
+          `/projects/${params["projId"]}/experiments/${data.id}/details`,
+          { replace: true },
+        )
+      }
+      dispatchToParent("afterReset")
+    })
+  }
+
+  function tasksMoveToProject(isNew: boolean, project: string) {
+    tasksMove({
+      ids:
+        ctx.ctxMode === "multi"
+          ? ctx.selectedTasks.map((t) => t.id)
+          : [ctx.target?.id ?? ""],
+      project: isNew ? "" : project,
+      project_name: isNew ? project : "",
+    }).then(({ data }) => {
+      navigate(`/projects/${data.project_id}/experiments`, { replace: true })
+    })
+  }
+
   return (
     <>
+      <MoveExperimentDialog
+        show={showMoveDialog}
+        onClose={(e, target) => {
+          setShowMoveDialog(false)
+          target && tasksMoveToProject(target.isNew, target.project)
+        }}
+      />
+      <CloneExperimentDialog
+        show={showCloneDialog}
+        onClose={(e) => {
+          setShowCloneDialog(false)
+          e && taskClone(e)
+        }}
+      />
+      <PublishExperimentDialog
+        show={showPublishDialog}
+        onClose={(e, needPublish) => {
+          setShowPublishDialog(false)
+          e && publishTasks(needPublish)
+        }}
+      />
+      <AbortAllExperimentDialog
+        show={showAbortAllDialog}
+        onClose={(e, aborts) => {
+          setShowAbortAllDialog(false)
+          e && abortsAll(aborts)
+        }}
+      />
       <AbortExperimentDialog
         show={showAbortDialog}
         onClose={(e) => {
