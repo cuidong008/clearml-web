@@ -6,7 +6,6 @@ import { MouseEvent, ReactNode, useEffect, useState } from "react"
 import { Tag } from "@/components/TagList/index"
 import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
 import { TooltipPlacement } from "antd/es/tooltip"
-import { useStoreSelector } from "@/store"
 
 const { defaultAlgorithm } = theme
 
@@ -23,7 +22,6 @@ export const AddTagPanel = (props: {
   onAddTag: (tag: Tag) => void
 }) => {
   const ctx = useMenuCtx()
-  const currentUser = useStoreSelector((state) => state.app.user)
   const { children, trigger, tags, placement, onAddTag } = props
   const [tagSearch, setTagSearch] = useState("")
   const [tagPanelOpen, setTagPanelOpen] = useState(false)
@@ -87,13 +85,12 @@ export const AddTagPanel = (props: {
   }
 
   const event = {
-    ...(trigger === "click" &&
-      ctx.target?.user?.id === currentUser?.id && {
-        onClick: (e: MouseEvent) => {
-          e.stopPropagation()
-          setTagPanelOpen(true)
-        },
-      }),
+    ...(trigger === "click" && {
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        setTagPanelOpen(true)
+      },
+    }),
   }
 
   return (

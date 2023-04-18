@@ -121,7 +121,7 @@ export const ExperimentDetails = (props: {
   }
 
   function updateTaskTags(op: string, tag: Tag) {
-    if (!curTask) {
+    if (!curTask || currentUser?.id !== curTask.user?.id) {
       return
     }
     const oldTags = cloneDeep(curTask.tags ?? [])
@@ -273,7 +273,7 @@ export const ExperimentDetails = (props: {
                     color="blue"
                     title={
                       <div style={{ fontSize: 12 }}>
-                        Copy full ID ${curTask.id}
+                        Copy full ID ${curTask.id} by click
                       </div>
                     }
                   >
@@ -292,6 +292,8 @@ export const ExperimentDetails = (props: {
                     </div>
                   </Tooltip>
                   <Popover
+                    placement="bottom"
+                    autoAdjustOverflow
                     content={
                       curTask.comment ? (
                         content
