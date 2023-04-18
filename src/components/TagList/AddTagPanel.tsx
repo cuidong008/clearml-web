@@ -2,35 +2,62 @@ import { ConfigProvider, Input, Popover, theme } from "antd"
 import { SearchOutlined } from "@ant-design/icons"
 import "./dialog.scss"
 import { tagColorManager } from "@/components/TagList/tagColors"
-import { ReactNode, useEffect, useState } from "react"
+import { MouseEvent, ReactNode, useEffect, useState } from "react"
 import { Tag } from "@/components/TagList/index"
+import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { TooltipPlacement } from "antd/es/tooltip"
 
 const { defaultAlgorithm } = theme
 
-export interface Option {
+interface Option {
   label: ReactNode
   value: string
 }
 
 export const AddTagPanel = (props: {
   children: JSX.Element
-  show: boolean
   tags: string[]
-  tagCanUse: Option[]
-  setTagCanUse: (e: Option[]) => void
-  updateTags: (op: string, tag: Tag) => void
+  trigger: "click" | "hover"
+  placement: TooltipPlacement
+  onAddTag: (tag: Tag) => void
 }) => {
-  const { children, show, tags, tagCanUse, setTagCanUse, updateTags } = props
+  const ctx = useMenuCtx()
+  const { children, trigger, tags, placement, onAddTag } = props
   const [tagSearch, setTagSearch] = useState("")
+  const [tagPanelOpen, setTagPanelOpen] = useState(false)
+  const [tagCanUse, setTagCanUse] = useState<Option[]>([])
 
   useEffect(() => {
-    if (!show) {
+    const tags = [...new Set(ctx.selectedTasks.map((t) => t.tags ?? []).flat())]
+    setTagCanUse(
+      tagColorManager.tags
+        .filter((v) => !tags.includes(v))
+        .map((v) => ({ label: v, value: v })),
+    )
+  }, [ctx.selectedTasks])
+
+  useEffect(() => {
+    function closeOutClick() {
+      console.log("close out tag")
+      setTagPanelOpen(false)
+    }
+
+    if (tagPanelOpen) {
+      document.addEventListener("click", closeOutClick)
+    }
+    return () => {
+      document.removeEventListener("click", closeOutClick)
+    }
+  }, [tagPanelOpen])
+
+  useEffect(() => {
+    if (tagPanelOpen) {
+      filterTags("")
+    } else {
       setTagSearch("")
       setTagCanUse([])
-    } else {
-      filterTags("")
     }
-  }, [show])
+  }, [tagPanelOpen])
 
   function filterTags(e: string) {
     setTagSearch(e)
@@ -57,6 +84,15 @@ export const AddTagPanel = (props: {
     setTagCanUse(filteredTags)
   }
 
+  const event = {
+    ...(trigger === "click" && {
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        setTagPanelOpen(true)
+      },
+    }),
+  }
+
   return (
     <ConfigProvider
       theme={{
@@ -75,8 +111,13 @@ export const AddTagPanel = (props: {
         overlayClassName="addTagDialog"
         autoAdjustOverflow
         arrow={false}
-        placement="bottomLeft"
-        open={show}
+        placement={placement}
+        trigger={trigger}
+        {...(trigger === "click"
+          ? { open: tagPanelOpen }
+          : {
+              onOpenChange: (e) => setTagPanelOpen(e),
+            })}
         content={
           <div onClick={(e) => e.stopPropagation()}>
             <Input
@@ -92,12 +133,13 @@ export const AddTagPanel = (props: {
               {tagCanUse.map((v) => (
                 <li
                   key={v.value}
-                  onClick={() =>
-                    updateTags("add", {
+                  onClick={() => {
+                    onAddTag({
                       caption: v.value,
                       color: tagColorManager.getColor(v.value),
                     })
-                  }
+                    setTagPanelOpen(false)
+                  }}
                 >
                   {v.label}
                 </li>
@@ -106,7 +148,7 @@ export const AddTagPanel = (props: {
           </div>
         }
       >
-        {children}
+        <div {...event}>{children}</div>
       </Popover>
     </ConfigProvider>
   )

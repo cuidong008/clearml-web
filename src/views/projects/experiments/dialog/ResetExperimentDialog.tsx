@@ -10,7 +10,9 @@ export const ResetExperimentDialog = (props: {
   const { show, onClose } = props
   const ctx = useMenuCtx()
   const [removeArtifacts, setRemoveArtifacts] = useState(true)
-  const filtered = selectionDisabledReset(ctx.selectedTasks)
+  const filtered = selectionDisabledReset(
+    ctx.ctxMode === "single" && ctx.target ? [ctx.target] : ctx.selectedTasks,
+  )
   const multi = ctx.ctxMode === "multi" && filtered.available > 1
   const canAbort = filtered.selectedFiltered
 

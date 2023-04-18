@@ -1,5 +1,4 @@
 import styles from "./index.module.scss"
-import { Task } from "@/types/task"
 import {
   selectionDisabledAbort,
   selectionDisabledAbortAllChildren,
@@ -17,10 +16,7 @@ import {
 import classNames from "classnames"
 import { useMenuCtx } from "./MenuCtx"
 import { useParams } from "react-router-dom"
-
-interface ContextMenuProps {
-  onItemClick: (e: string, t: Task | undefined, data?: any) => void
-}
+import { AddTagPanel } from "@/components/TagList/AddTagPanel"
 
 interface CtxMenuItem {
   label: string
@@ -31,7 +27,9 @@ interface CtxMenuItem {
   onClick?: () => void
 }
 
-export const ContextMenu = (props: ContextMenuProps) => {
+export const ContextMenu = (props: {
+  onItemClick: (e: string, from: string, data?: string) => void
+}) => {
   const { onItemClick } = props
   const ctx = useMenuCtx()
   const params = useParams()
@@ -53,7 +51,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         disabled: () => false,
         ico: "al-ico-experiment-view",
         onClick: () => {
-          onItemClick("detail", ctx.target)
+          onItemClick("detail", "ctx")
         },
       },
       {
@@ -66,7 +64,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         onClick: () => {
           onItemClick(
             "view",
-            ctx.target,
+            "ctx",
             params["output"] === "full" ? "table" : "full",
           )
         },
@@ -81,7 +79,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         show: true,
         ico: "al-ico-manage-queue",
         onClick: () => {
-          onItemClick("mq", ctx.target)
+          onItemClick("mq", "ctx")
         },
       },
       {
@@ -92,7 +90,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         show: true,
         ico: "al-ico-workers",
         onClick: () => {
-          onItemClick("viewWorker", ctx.target)
+          onItemClick("viewWorker", "ctx")
         },
       },
     ],
@@ -104,7 +102,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         show: false,
         ico: "al-ico-shared-item",
         onClick: () => {
-          onItemClick("share", ctx.target)
+          onItemClick("share", "ctx")
         },
       },
       {
@@ -119,7 +117,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         show: ctx.isArchive,
         ico: "al-ico-trash",
         onClick: () => {
-          onItemClick("delete", ctx.target)
+          onItemClick("delete", "ctx")
         },
       },
       {
@@ -135,7 +133,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
         show: true,
         ico: ctx.isArchive ? "al-ico-restore" : "al-ico-archive",
         onClick: () => {
-          onItemClick("archive", ctx.target)
+          onItemClick("archive", "ctx")
         },
       },
       {
@@ -178,11 +176,11 @@ export const ContextMenu = (props: ContextMenuProps) => {
         }`,
         key: "reset",
         disabled: () =>
-          !!ctx.target && selectionDisabledReset(ctx.selectedTasks).disable,
+          !!ctx.target && selectionDisabledReset(getCheckTasks()).disable,
         show: true,
         ico: "al-ico-reset",
         onClick: () => {
-          onItemClick("reset", ctx.target)
+          onItemClick("reset", "ctx")
         },
       },
       {
@@ -193,11 +191,11 @@ export const ContextMenu = (props: ContextMenuProps) => {
         }`,
         key: "abort",
         disabled: () =>
-          !!ctx.target && selectionDisabledAbort(ctx.selectedTasks).disable,
+          !!ctx.target && selectionDisabledAbort(getCheckTasks()).disable,
         show: true,
         ico: "al-ico-abort",
         onClick: () => {
-          onItemClick("abort", ctx.target)
+          onItemClick("abort", "ctx")
         },
       },
       {
@@ -206,9 +204,11 @@ export const ContextMenu = (props: ContextMenuProps) => {
         disabled: () => false,
         show:
           !!ctx.target &&
-          !selectionDisabledAbortAllChildren([ctx.target]).disable,
+          !selectionDisabledAbortAllChildren(getCheckTasks()).disable,
         ico: "al-ico-abort-all",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("abortAll", "ctx")
+        },
       },
       {
         label: `Publish ${
@@ -220,15 +220,22 @@ export const ContextMenu = (props: ContextMenuProps) => {
         }`,
         key: "publish",
         disabled: () =>
-          !!ctx.target && selectionDisabledPublishTasks([ctx.target]).disable,
+          !!ctx.target &&
+          selectionDisabledPublishTasks(getCheckTasks()).disable,
         show: true,
         ico: "al-ico-publish",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("publish", "ctx")
+        },
       },
     ],
     [
       {
-        label: "Add Tag",
+        label: `Add Tag ${
+          ctx.ctxMode === "multi"
+            ? `( ${selectionDisabledTags(getCheckTasks()).available} items )`
+            : ""
+        }`,
         key: "add-tag",
         disabled: () =>
           !!ctx.target && selectionDisabledTags([ctx.target]).disable,
@@ -244,19 +251,43 @@ export const ContextMenu = (props: ContextMenuProps) => {
         disabled: () => !ctx.target,
         show: true,
         ico: "al-ico-clone",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("clone", "ctx")
+        },
       },
       {
-        label: "Move to Project",
+        label: `Move to Project ${
+          ctx.ctxMode === "multi"
+            ? `( ${selectionDisabledMoveTo(getCheckTasks()).available} items )`
+            : ""
+        }`,
         key: "move-to",
         disabled: () =>
           !!ctx.target && selectionDisabledMoveTo([ctx.target]).disable,
         show: true,
         ico: "al-ico-move-to",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("move", "ctx")
+        },
       },
     ],
   ]
+
+  function generateMenuItem(item: CtxMenuItem) {
+    return (
+      <li
+        style={{ display: item.show ? "block" : "none" }}
+        onClick={item?.onClick}
+        key={item.key}
+        className={classNames(styles.ctxItem, {
+          [styles.disabled]: item.disabled(),
+        })}
+      >
+        <i className={classNames("al-icon sm-md", item.ico)} />
+        {item.label}
+      </li>
+    )
+  }
 
   return (
     <div
@@ -281,19 +312,22 @@ export const ContextMenu = (props: ContextMenuProps) => {
         {menu.map((group, index) => (
           <div key={`group-${index}`}>
             {group.map((item) =>
-              item.show ? (
-                <li
-                  onClick={item?.onClick}
+              item.key === "add-tag" ? (
+                <AddTagPanel
                   key={item.key}
-                  className={classNames(styles.ctxItem, {
-                    [styles.disabled]: item.disabled(),
-                  })}
+                  trigger="hover"
+                  onAddTag={(e) => onItemClick("addTag", "ctx", e.caption)}
+                  placement={"rightTop"}
+                  tags={
+                    ctx.ctxMode === "multi"
+                      ? ctx.selectedTasks.map((t) => t.tags ?? []).flat()
+                      : ctx.target?.tags ?? []
+                  }
                 >
-                  <i className={classNames("al-icon sm-md", item.ico)} />
-                  {item.label}
-                </li>
+                  {generateMenuItem(item)}
+                </AddTagPanel>
               ) : (
-                <div style={{ display: "none" }} key={item.key}></div>
+                generateMenuItem(item)
               ),
             )}
             {index < menu.length - 1 && <hr />}

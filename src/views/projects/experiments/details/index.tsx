@@ -36,7 +36,7 @@ import { DetailContext } from "@/views/projects/experiments/details/DetailContex
 const { defaultAlgorithm } = theme
 export const ExperimentDetails = (props: {
   children: JSX.Element
-  onTaskChange: (e: string, t?: Task, data?: any) => void
+  onTaskChange: (e: string, t?: Task[]) => void
 }) => {
   const params = useParams()
   const navigate = useNavigate()
@@ -114,7 +114,7 @@ export const ExperimentDetails = (props: {
     }).then(({ data }) => {
       setCurTask({ ...curTask, ...data.fields })
       setShowEdit(false)
-      onTaskChange("updateSelected", curTask, data.fields)
+      onTaskChange("updateSelected", [{ ...curTask, ...data.fields }])
     })
   }
 
@@ -132,7 +132,7 @@ export const ExperimentDetails = (props: {
     })
       .then(({ data }) => {
         setCurTask({ ...curTask, ...data.fields })
-        onTaskChange("updateSelected", curTask, data.fields)
+        onTaskChange("updateSelected", [{ ...curTask, ...data.fields }])
         notify.open({
           type: "success",
           duration: 3,
@@ -162,7 +162,7 @@ export const ExperimentDetails = (props: {
     })
       .then(({ data }) => {
         setCurTask({ ...curTask, ...data.fields })
-        onTaskChange("updateSelected", curTask, data.fields)
+        onTaskChange("updateSelected", [{ ...curTask, ...data.fields }])
       })
       .catch(() => {
         msg.error("tags update failure")
@@ -345,7 +345,6 @@ export const ExperimentDetails = (props: {
                         y: e.clientY + 10,
                         target: curTask,
                         ctxMode: "single",
-                        selectedTasks: [curTask],
                         showMenu: true,
                       })
                     }}

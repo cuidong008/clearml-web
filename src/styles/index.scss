@@ -62,11 +62,11 @@ html[schema="dark"] {
       color: $blue-300;
     }
   }
+}
 
-  .ant-notification-notice-btn {
-    span {
-      color: $neon-yellow !important;
-    }
+.ant-notification-notice-btn {
+  span {
+    color: $neon-yellow !important;
   }
 }
 

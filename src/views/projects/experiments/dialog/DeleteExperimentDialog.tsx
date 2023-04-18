@@ -22,7 +22,7 @@ export const DeleteExperimentDialog = (props: {
     >
       <div style={{ textAlign: "center" }}>
         <div>
-          <i className="al-ico-trash" style={{ fontSize: 60, height: 60 }} />
+          <i className="al-ico-trash al-icon icon mx-auto xxl" />
         </div>
         <span className="commonDialogTitle">
           {`DELETE EXPERIMENT${multi ? "S" : ""}`}

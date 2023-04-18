@@ -12,9 +12,14 @@
   .tagOption {
     max-height: 300px;
     overflow: auto;
+    padding-inline-start: 8px;
 
     li {
       cursor: pointer;
+      padding: 0 10px;
+      &:hover {
+        background: $blue-100;
+      }
     }
   }
 

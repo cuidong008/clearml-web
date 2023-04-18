@@ -80,7 +80,7 @@ export const TASKS_STATUS_LABELS = {
   [TaskStatusEnum.Published]: "Published",
   [TaskStatusEnum.Publishing]: "Publishing",
   [TaskStatusEnum.Failed]: "Failed",
-  [TaskStatusEnum.Stopped]: "Stopped",
+  [TaskStatusEnum.Stopped]: "Aborted",
   [TaskStatusEnum.Closed]: "Closed",
   [TaskStatusEnum.Unknown]: "Unknown",
   [TaskStatusEnum.Started]: "Started",
