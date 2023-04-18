@@ -1,0 +1,88 @@
+.editableSection {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  padding: 24px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: #ffffff;
+
+  h4 {
+    margin: 12px 0;
+    display: block;
+    position: relative;
+    color: $blue-400;
+    max-width: 200px;
+  }
+
+  &.editable {
+    &:hover {
+      .editBtn {
+        display: block;
+      }
+    }
+  }
+
+  &.editMode {
+    z-index: 101;
+    border: 1px dashed #8f9cc9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+  }
+
+  .inlineEdit {
+    .ant-form-item {
+      border: none;
+    }
+  }
+
+  .ant-form-item {
+    margin: 0;
+    padding: 6px 0;
+    border-bottom: 1px solid #cccccc;
+    color: #5a658e;
+    font-family: Heebo, sans-serif;
+
+    .ant-form-item-control-input {
+      min-height: 20px;
+    }
+
+    .ant-form-item-label {
+      width: 155px;
+
+      label {
+        height: 14px;
+        font-weight: 500;
+        color: #71758a;
+        font-size: 11px;
+        font-family: Heebo, sans-serif;
+      }
+    }
+  }
+
+  .primaryBtn {
+    background-color: #707ba3;
+    color: #fff;
+
+    &:hover {
+      color: #fff;
+      background-color: #384161;
+    }
+  }
+
+  .editBtn {
+    display: none;
+    position: absolute;
+    top: 28px;
+    right: 30px;
+  }
+
+  .formBtn {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}

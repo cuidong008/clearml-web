@@ -1,11 +1,14 @@
-import { TaskStatusEnumType } from "@/types/enums"
+import { TaskStatusEnumType, TaskTypeEnumType } from "@/types/enums"
 import { MultiFieldPatternData } from "@/types/common"
 import {
   ConfigurationItem,
+  Container,
   Execution,
   ParamsItem,
+  Script,
   Task,
   TaskModelItem,
+  TaskModels,
 } from "@/types/task"
 
 export interface TasksGetAllExRequest {
@@ -245,4 +248,29 @@ export interface TasksMoveRequest {
 
 export interface TasksMoveResponse {
   project_id: string
+}
+
+export interface TasksEditRequest {
+  task: string
+  force?: boolean
+  name?: string
+  tags?: Array<string>
+  system_tags?: Array<string>
+  type?: TaskTypeEnumType
+  comment?: string
+  parent?: string
+  project?: string
+  output_dest?: string
+  execution?: Execution
+  hyperparams?: { [key: string]: { [key: string]: ParamsItem } }
+  configuration?: { [key: string]: ConfigurationItem }
+  script?: Script
+  models?: TaskModels
+  container?: Container
+  runtime?: object
+}
+
+export interface TasksEditResponse {
+  updated?: number
+  fields?: object
 }

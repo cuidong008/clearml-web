@@ -1,8 +1,13 @@
 import { useDetailCtx } from "./DetailContext"
-import { Execution } from "@/views/experiments/tabs/Execution"
+import { Execution } from "../tabs/Execution"
+import styles from "./index.module.scss"
 
 export const DetailTabPanel = () => {
   const ctx = useDetailCtx()
 
-  return <div>{ctx.activeTab === "execution" && <Execution />}</div>
+  return (
+    <div className={styles.tabBody}>
+      {ctx.activeTab === "execution" && <Execution />}
+    </div>
+  )
 }
