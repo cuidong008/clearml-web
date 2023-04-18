@@ -1,7 +1,7 @@
 import { ConfigProvider, Input, Popover, theme } from "antd"
 import { SearchOutlined } from "@ant-design/icons"
 import "./dialog.scss"
-import { tagColorManager } from "@/components/TagList/tagColors"
+import { tagColorManager } from "./tagColors"
 import { MouseEvent, ReactNode, useEffect, useState } from "react"
 import { Tag } from "@/components/TagList/index"
 import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"

@@ -1,4 +1,4 @@
-import { useDetailCtx } from "@/views/projects/experiments/details/DetailContext"
+import { useDetailCtx } from "./DetailContext"
 
 export const DetailTabPanel = () => {
   const ctx = useDetailCtx()

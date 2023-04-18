@@ -1,6 +1,6 @@
 import { Modal } from "antd"
-import { selectionDisabledAbortAllChildren } from "@/views/projects/experiments/menu/items.utils"
-import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { selectionDisabledAbortAllChildren } from "../menu/items.utils"
+import { useMenuCtx } from "../menu/MenuCtx"
 import { getTasksAllEx } from "@/api/task"
 import { TaskStatusEnum } from "@/types/enums"
 import { useEffect, useState } from "react"

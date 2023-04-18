@@ -1,7 +1,7 @@
 import { TagColor } from "@/types/common"
 import styles from "./index.module.scss"
 import classNames from "classnames"
-import { Tag } from "@/components/TagList/index"
+import { Tag } from "./index"
 
 export const UserTag = (props: {
   color: TagColor

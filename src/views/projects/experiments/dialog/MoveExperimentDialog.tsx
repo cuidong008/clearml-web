@@ -1,11 +1,11 @@
 import { useStoreSelector } from "@/store"
-import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { useMenuCtx } from "../menu/MenuCtx"
 import { useEffect, useState } from "react"
 import { Project } from "@/types/project"
 import { Form, message, Modal, Select } from "antd"
 import { projectsGetAllExCanClone } from "@/api/project"
 import { Opt } from "@/types/common"
-import { selectionDisabledMoveTo } from "@/views/projects/experiments/menu/items.utils"
+import { selectionDisabledMoveTo } from "../menu/items.utils"
 
 export const MoveExperimentDialog = (props: {
   show: boolean

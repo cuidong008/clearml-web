@@ -8,7 +8,7 @@ import {
   TaskTypeEnum,
 } from "@/types/enums"
 import { tasksGetByIdEx, tasksUpdate } from "@/api/task"
-import { TASK_INFO_ONLY_FIELDS_BASE } from "@/views/projects/experiments/columnsLib"
+import { TASK_INFO_ONLY_FIELDS_BASE } from "../columnsLib"
 import { Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
 import {
@@ -27,11 +27,11 @@ import {
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons"
 import { useOnClickOutside } from "@/hooks/useClickOutside"
 import { Tag, TagList } from "@/components/TagList"
-import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { useMenuCtx } from "../menu/MenuCtx"
 import copy from "copy-to-clipboard"
 import { useStoreSelector } from "@/store"
 import { cloneDeep } from "lodash"
-import { DetailContext } from "@/views/projects/experiments/details/DetailContext"
+import { DetailContext } from "./DetailContext"
 
 const { defaultAlgorithm } = theme
 export const ExperimentDetails = (props: {
