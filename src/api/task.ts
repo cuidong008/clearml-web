@@ -8,6 +8,8 @@ import {
   TasksCloneResponse,
   TasksDeleteManyRequest,
   TasksDeleteManyResponse,
+  TasksEditRequest,
+  TasksEditResponse,
   TasksGetAllExRequest,
   TasksGetAllExResponse,
   TasksGetByIdExRequest,
@@ -192,4 +194,8 @@ export function tasksClone(request: TasksCloneRequest) {
 
 export function tasksMove(request: TasksMoveRequest) {
   return REQ.post<TasksMoveResponse>("/tasks.move", request)
+}
+
+export function tasksEdit(request: TasksEditRequest) {
+  return REQ.post<TasksEditResponse>("/tasks.edit", request)
 }

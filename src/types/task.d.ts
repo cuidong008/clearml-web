@@ -254,3 +254,9 @@ export interface ColumnDefine<T> extends Omit<ColumnType<T>, "dataIndex"> {
   valuePath?: string
   labelPath?: string
 }
+
+export interface Container {
+  image?: string
+  arguments?: string
+  setup_shell_script?: string
+}

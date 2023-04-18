@@ -51,6 +51,7 @@ export const ExperimentDetails = (props: {
   const [newTaskName, setNewTaskName] = useState("")
   const [newComment, setNewComment] = useState("")
   const [activeTab, setActiveTab] = useState("execution")
+  const [editing, setEditing] = useState(false)
 
   const [notify, notifyContext] = notification.useNotification()
   const [msg, msgContext] = message.useMessage()
@@ -395,11 +396,18 @@ export const ExperimentDetails = (props: {
             </>
           )}
           <DetailContext.Provider
-            value={{ activeTab, current: curTask, setCurrent: setCurTask }}
+            value={{
+              activeTab,
+              current: curTask,
+              setCurrent: setCurTask,
+              editing,
+              setEditing,
+            }}
           >
             {children}
           </DetailContext.Provider>
         </Spin>
+        {editing && <div className={styles.editingOverlay} />}
       </div>
     </ConfigProvider>
   )
