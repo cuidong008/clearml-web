@@ -77,3 +77,16 @@ export interface SortMeta {
   field: string
   order: number
 }
+
+export interface CloneData {
+  name: string
+  description: string
+  project: string
+  newProjectName: string
+}
+
+export interface Opt {
+  label: string
+  value: string
+  data: string
+}
