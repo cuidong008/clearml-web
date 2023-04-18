@@ -1,5 +1,5 @@
 import styles from "./index.module.scss"
-import { Button, Divider, Space } from "antd"
+import { Button, Divider, Space, Tooltip } from "antd"
 import { useMenuCtx } from "./MenuCtx"
 import {
   selectionDisabledAbort,
@@ -39,54 +39,100 @@ export const ExperimentFooter = (props: {
         </Button>
         <Divider type="vertical" />
         {!ctx.isArchive && (
-          <Button
-            type="text"
-            disabled={selectionDisabledArchive(ctx.selectedTasks).disable}
-            icon={<i className="al-icon al-ico-archive sm-md" />}
-            onClick={() => onItemClick("archive", "footer")}
-          />
-        )}
-        {ctx.isArchive && (
-          <>
+          <Tooltip
+            color="blue"
+            title={`Archive ( ${
+              selectionDisabledArchive(ctx.selectedTasks).available
+            } items )`}
+          >
             <Button
               type="text"
               disabled={selectionDisabledArchive(ctx.selectedTasks).disable}
-              icon={<i className="al-icon al-ico-restore sm-md" />}
+              icon={<i className="al-icon al-ico-archive sm-md" />}
               onClick={() => onItemClick("archive", "footer")}
             />
-            <Button
-              type="text"
-              disabled={selectionDisabledDelete(ctx.selectedTasks).disable}
-              icon={<i className="al-icon al-ico-trash sm-md" />}
-              onClick={() => onItemClick("delete", "footer")}
-            />
+          </Tooltip>
+        )}
+        {ctx.isArchive && (
+          <>
+            <Tooltip
+              color="blue"
+              title={`Restore from Archive ( ${
+                selectionDisabledArchive(ctx.selectedTasks).available
+              } items )`}
+            >
+              <Button
+                type="text"
+                disabled={selectionDisabledArchive(ctx.selectedTasks).disable}
+                icon={<i className="al-icon al-ico-restore sm-md" />}
+                onClick={() => onItemClick("archive", "footer")}
+              />
+            </Tooltip>
+            <Tooltip
+              color="blue"
+              title={`Delete ( ${
+                selectionDisabledDelete(ctx.selectedTasks).available
+              } items )`}
+            >
+              <Button
+                type="text"
+                disabled={selectionDisabledDelete(ctx.selectedTasks).disable}
+                icon={<i className="al-icon al-ico-trash sm-md" />}
+                onClick={() => onItemClick("delete", "footer")}
+              />
+            </Tooltip>
           </>
         )}
         <Divider type="vertical" />
-        <Button
-          type="text"
-          disabled={selectionDisabledReset(ctx.selectedTasks).disable}
-          icon={<i className="al-icon al-ico-reset sm-md" />}
-          onClick={() => onItemClick("reset", "footer")}
-        />
-        <Button
-          type="text"
-          disabled={selectionDisabledAbort(ctx.selectedTasks).disable}
-          icon={<i className="al-icon al-ico-abort sm-md" />}
-          onClick={() => onItemClick("abort", "footer")}
-        />
-        <Button
-          type="text"
-          disabled={
-            selectionDisabledAbortAllChildren(ctx.selectedTasks).disable
-          }
-          icon={<i className="al-icon al-ico-abort-all sm-md" />}
-        />
-        <Button
-          type="text"
-          disabled={selectionDisabledPublishTasks(ctx.selectedTasks).disable}
-          icon={<i className="al-icon al-ico-publish sm-md" />}
-        />
+        <Tooltip
+          color="blue"
+          title={`Reset ( ${
+            selectionDisabledReset(ctx.selectedTasks).available
+          } items )`}
+        >
+          <Button
+            type="text"
+            disabled={selectionDisabledReset(ctx.selectedTasks).disable}
+            icon={<i className="al-icon al-ico-reset sm-md" />}
+            onClick={() => onItemClick("reset", "footer")}
+          />
+        </Tooltip>
+        <Tooltip
+          color="blue"
+          title={`Abort ( ${
+            selectionDisabledAbort(ctx.selectedTasks).available
+          } items )`}
+        >
+          <Button
+            type="text"
+            disabled={selectionDisabledAbort(ctx.selectedTasks).disable}
+            icon={<i className="al-icon al-ico-abort sm-md" />}
+            onClick={() => onItemClick("abort", "footer")}
+          />
+        </Tooltip>
+        <Tooltip color="blue" title="Abort all children">
+          <Button
+            type="text"
+            disabled={
+              selectionDisabledAbortAllChildren(ctx.selectedTasks).disable
+            }
+            icon={<i className="al-icon al-ico-abort-all sm-md" />}
+            onClick={() => onItemClick("abortAll", "footer")}
+          />
+        </Tooltip>
+        <Tooltip
+          color="blue"
+          title={`Publish ( ${
+            selectionDisabledPublishTasks(ctx.selectedTasks).available
+          } items )`}
+        >
+          <Button
+            type="text"
+            disabled={selectionDisabledPublishTasks(ctx.selectedTasks).disable}
+            icon={<i className="al-icon al-ico-publish sm-md" />}
+            onClick={() => onItemClick("publish", "footer")}
+          />
+        </Tooltip>
         <Divider type="vertical" />
         <AddTagPanel
           trigger="click"
@@ -102,11 +148,19 @@ export const ExperimentFooter = (props: {
           />
         </AddTagPanel>
         <Divider type="vertical" />
-        <Button
-          type="text"
-          disabled={selectionDisabledMoveTo(ctx.selectedTasks).disable}
-          icon={<i className="al-icon al-ico-move-to sm-md" />}
-        />
+        <Tooltip
+          color="blue"
+          title={`Move to Project ( ${
+            selectionDisabledMoveTo(ctx.selectedTasks).available
+          } items )`}
+        >
+          <Button
+            type="text"
+            disabled={selectionDisabledMoveTo(ctx.selectedTasks).disable}
+            icon={<i className="al-icon al-ico-move-to sm-md" />}
+            onClick={() => onItemClick("move", "footer")}
+          />
+        </Tooltip>
       </Space>
     </div>
   )
