@@ -1,6 +1,6 @@
 import { Modal } from "antd"
-import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
-import { selectionDisabledPublishTasks } from "@/views/projects/experiments/menu/items.utils"
+import { useMenuCtx } from "../menu/MenuCtx"
+import { selectionDisabledPublishTasks } from "../menu/items.utils"
 import { Task } from "@/types/task"
 
 export const PublishExperimentDialog = (props: {

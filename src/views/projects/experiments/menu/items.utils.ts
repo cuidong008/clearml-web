@@ -1,6 +1,7 @@
 import { Task } from "@/types/task"
 import { TaskStatusEnum, TaskTypeEnum } from "@/types/enums"
 import { get } from "lodash"
+import store from "@/store"
 
 export const selectionAllIsArchive = (selectedTasks: Task[]) =>
   selectedTasks.every((s) => s?.system_tags?.includes("archived"))
@@ -37,7 +38,9 @@ export const selectionDisabledAbort = (selectedTasks: Task[]) => {
     (_selected) =>
       [TaskStatusEnum.Queued, TaskStatusEnum.InProgress].includes(
         _selected?.status ?? "unknown",
-      ) && !isReadOnly(_selected),
+      ) &&
+      !isReadOnly(_selected) &&
+      _selected.user?.id === store.getState().app.user?.id,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
@@ -49,7 +52,9 @@ export const selectionDisabledPublishTasks = (selectedTasks: Task[]) => {
         TaskStatusEnum.Closed,
         "completed",
         TaskStatusEnum.Failed,
-      ].includes(_selected?.status ?? "unknown") && !isReadOnly(_selected),
+      ].includes(_selected?.status ?? "unknown") &&
+      !isReadOnly(_selected) &&
+      _selected.user?.id === store.getState().app.user?.id,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
@@ -67,7 +72,9 @@ export const selectionDisabledReset = (selectedTasks: Task[]) => {
         TaskStatusEnum.Created,
         TaskStatusEnum.Published,
         TaskStatusEnum.Publishing,
-      ].includes(_selected?.status ?? "unknown") && !isReadOnly(_selected),
+      ].includes(_selected?.status ?? "unknown") &&
+      !isReadOnly(_selected) &&
+      _selected.user?.id === store.getState().app.user?.id,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
@@ -83,13 +90,18 @@ export const selectionDisabledAbortAllChildren = (selectedTasks: Task[]) => {
 }
 export const selectionDisabledDelete = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
-    (_selected) => selectionIsArchive(_selected) && !isReadOnly(_selected),
+    (_selected) =>
+      selectionIsArchive(_selected) &&
+      !isReadOnly(_selected) &&
+      _selected.user?.id === store.getState().app.user?.id,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
 export const selectionDisabledMoveTo = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
-    (_selected) => !isReadOnly(_selected),
+    (_selected) =>
+      !isReadOnly(_selected) &&
+      _selected.user?.id === store.getState().app.user?.id,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
@@ -127,13 +139,17 @@ export const selectionDisabledDequeue = (selectedTasks: Task[]) => {
 }
 export const selectionDisabledArchive = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
-    (_selected) => !isReadOnly(_selected),
+    (_selected) =>
+      !isReadOnly(_selected) &&
+      _selected.user?.id === store.getState().app.user?.id,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
 export const selectionDisabledTags = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
-    (_selected) => !isReadOnly(_selected),
+    (_selected) =>
+      !isReadOnly(_selected) &&
+      _selected.user?.id === store.getState().app.user?.id,
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }

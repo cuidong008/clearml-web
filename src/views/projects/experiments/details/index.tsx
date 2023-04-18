@@ -8,7 +8,7 @@ import {
   TaskTypeEnum,
 } from "@/types/enums"
 import { tasksGetByIdEx, tasksUpdate } from "@/api/task"
-import { TASK_INFO_ONLY_FIELDS_BASE } from "@/views/projects/experiments/columnsLib"
+import { TASK_INFO_ONLY_FIELDS_BASE } from "../columnsLib"
 import { Task } from "@/types/task"
 import { TaskIconLabel } from "@/components/TaskIconLabel"
 import {
@@ -27,11 +27,11 @@ import {
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons"
 import { useOnClickOutside } from "@/hooks/useClickOutside"
 import { Tag, TagList } from "@/components/TagList"
-import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { useMenuCtx } from "../menu/MenuCtx"
 import copy from "copy-to-clipboard"
 import { useStoreSelector } from "@/store"
 import { cloneDeep } from "lodash"
-import { DetailContext } from "@/views/projects/experiments/details/DetailContext"
+import { DetailContext } from "./DetailContext"
 
 const { defaultAlgorithm } = theme
 export const ExperimentDetails = (props: {
@@ -40,6 +40,7 @@ export const ExperimentDetails = (props: {
 }) => {
   const params = useParams()
   const navigate = useNavigate()
+  const currentUser = useStoreSelector((state) => state.app.user)
   const selectedTask = useStoreSelector((state) => state.task.selectedTask)
   const { children, onTaskChange } = props
 
@@ -95,6 +96,7 @@ export const ExperimentDetails = (props: {
       <div>{curTask?.comment}</div>
       <Button
         onClick={startEditComment}
+        disabled={currentUser?.id !== curTask?.user?.id}
         type="text"
         style={{ fontSize: 12, marginTop: 10 }}
         size="small"
@@ -119,7 +121,7 @@ export const ExperimentDetails = (props: {
   }
 
   function updateTaskTags(op: string, tag: Tag) {
-    if (!curTask) {
+    if (!curTask || currentUser?.id !== curTask.user?.id) {
       return
     }
     const oldTags = cloneDeep(curTask.tags ?? [])
@@ -170,9 +172,11 @@ export const ExperimentDetails = (props: {
   }
 
   function startEditComment() {
-    setShowEditComment(true)
-    setActiveTab("info")
-    setNewComment(curTask?.comment ?? "")
+    if (currentUser?.id === curTask?.user?.id) {
+      setShowEditComment(true)
+      setActiveTab("info")
+      setNewComment(curTask?.comment ?? "")
+    }
   }
 
   return (
@@ -234,7 +238,9 @@ export const ExperimentDetails = (props: {
                   />
                   {!showEdit ? (
                     <div
-                      onClick={() => setShowEdit(true)}
+                      onClick={() =>
+                        setShowEdit(currentUser?.id === curTask?.user?.id)
+                      }
                       className={styles.nameContent}
                     >
                       <span>{curTask.name}</span>
@@ -267,7 +273,7 @@ export const ExperimentDetails = (props: {
                     color="blue"
                     title={
                       <div style={{ fontSize: 12 }}>
-                        Copy full ID ${curTask.id}
+                        Copy full ID ${curTask.id} by click
                       </div>
                     }
                   >
@@ -286,11 +292,14 @@ export const ExperimentDetails = (props: {
                     </div>
                   </Tooltip>
                   <Popover
+                    placement="bottom"
+                    autoAdjustOverflow
                     content={
                       curTask.comment ? (
                         content
                       ) : (
                         <Button
+                          disabled={currentUser?.id !== curTask?.user?.id}
                           onClick={startEditComment}
                           type="text"
                           size="small"

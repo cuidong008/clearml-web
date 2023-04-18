@@ -37,7 +37,7 @@ import { ExperimentList } from "./ExperimentList"
 import { ExperimentMenu } from "./menu"
 import { ExperimentDetails } from "./details"
 import { NewExperimentDialog } from "./dialog/NewExperimentDialog"
-import { MenuContext, MenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { MenuContext, MenuCtx } from "./menu/MenuCtx"
 
 export const Experiments = () => {
   const selectedProject = useStoreSelector(

@@ -15,25 +15,30 @@ import {
 } from "@/api/task"
 import { Button, message, notification } from "antd"
 import { ArchivePopupId } from "@/utils/constant"
+import { useState } from "react"
+import { TasksUpdateResponse } from "@/api/models/task"
+import { Result } from "@/api"
+import { CloneData, ErrorMsg } from "@/types/common"
 import { ShareExperimentDialog } from "../dialog/ShareExperimentDialog"
 import { WarnArchiveDialog } from "../dialog/WarnArchiveDialog"
 import { DeleteExperimentDialog } from "../dialog/DeleteExperimentDialog"
 import { ResetExperimentDialog } from "../dialog/ResetExperimentDialog"
 import { AbortExperimentDialog } from "../dialog/AbortExperimentDialog"
-import React, { useState } from "react"
+import { MoveExperimentDialog } from "../dialog/MoveExperimentDialog"
+import { OperationFailedDialog } from "../dialog/OperationFailedDialog"
+import { AbortAllExperimentDialog } from "../dialog/AbortAllExperimentDialog"
+import { PublishExperimentDialog } from "../dialog/PublishExperimentDialog"
+import { CloneExperimentDialog } from "../dialog/CloneExperimentDialog"
 import { uploadUserPreference } from "@/store/app/app.actions"
 import { ExperimentFooter } from "./ExperimentFooter"
 import { ContextMenu } from "./ContextMenu"
 import { useMenuCtx } from "./MenuCtx"
-import { getUrlsPerProvider, notificationMsg } from "@/utils/global"
+import {
+  getUrlsPerProvider,
+  notificationMsg,
+  parseErrors,
+} from "@/utils/global"
 import { selectionDisabledAbort, selectionDisabledReset } from "./items.utils"
-import { TasksUpdateResponse } from "@/api/models/task"
-import { Result } from "@/api"
-import { AbortAllExperimentDialog } from "@/views/projects/experiments/dialog/AbortAllExperimentDialog"
-import { PublishExperimentDialog } from "@/views/projects/experiments/dialog/PublishExperimentDialog"
-import { CloneExperimentDialog } from "@/views/projects/experiments/dialog/CloneExperimentDialog"
-import { CloneData } from "@/types/common"
-import { MoveExperimentDialog } from "@/views/projects/experiments/dialog/MoveExperimentDialog"
 
 interface ContextMenuProps {
   dispatch: (e: string, t?: Task[]) => void
@@ -56,6 +61,8 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
   const [showPublishDialog, setShowPublishDialog] = useState(false)
   const [showCloneDialog, setShowCloneDialog] = useState(false)
   const [showMoveDialog, setShowMoveDialog] = useState(false)
+  const [showErrorDialog, setShowErrorDialog] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<ErrorMsg[]>([])
 
   const [notify, notifyContext] = notification.useNotification()
   const [msg, msgContext] = message.useMessage()
@@ -162,31 +169,39 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
         ctx.ctxMode === "single"
           ? [ctx.target?.id ?? ""]
           : ctx.selectedTasks.map((t) => t.id),
+    }).then(({ data }) => {
+      const err =
+        ctx.ctxMode === "single"
+          ? [{ id: ctx.target?.id, name: ctx.target?.name }]
+          : ctx.selectedTasks.map((t) => ({ id: t.id, name: t.name }))
+      notify.open({
+        type: data.failed?.length ? "error" : "success",
+        message: "info",
+        duration: 3,
+        description: notificationMsg(
+          data.succeeded?.length ?? 0,
+          data.failed?.length ?? 0,
+          "experiment",
+          "archive",
+        ),
+        btn: data.failed?.length ? (
+          <Button
+            type="text"
+            onClick={() => {
+              setShowErrorDialog(true)
+              setErrorMsg(parseErrors(data.failed ?? [], "archive", err))
+            }}
+          >
+            More Info
+          </Button>
+        ) : (
+          <Button type="text" onClick={() => doRestoreTask()}>
+            Undo
+          </Button>
+        ),
+      })
+      dispatchToParent("afterArchive")
     })
-      .then(({ data }) => {
-        notify.open({
-          type: data.failed?.length ? "error" : "success",
-          message: "info",
-          duration: 3,
-          description: notificationMsg(
-            data.succeeded?.length ?? 0,
-            data.failed?.length ?? 0,
-            "experiment",
-            "archive",
-          ),
-          btn: data.failed?.length ? (
-            <Button type="text">More Info</Button>
-          ) : (
-            <Button type="text" onClick={() => doRestoreTask()}>
-              Undo
-            </Button>
-          ),
-        })
-        dispatchToParent("afterArchive")
-      })
-      .catch((e) => {
-        console.log(e)
-      })
   }
 
   function doRestoreTask() {
@@ -450,6 +465,11 @@ export const ExperimentMenu = (props: ContextMenuProps) => {
 
   return (
     <>
+      <OperationFailedDialog
+        show={showErrorDialog}
+        onClose={() => setShowErrorDialog(false)}
+        failed={errorMsg}
+      />
       <MoveExperimentDialog
         show={showMoveDialog}
         onClose={(e, target) => {

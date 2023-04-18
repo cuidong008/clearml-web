@@ -90,3 +90,10 @@ export interface Opt {
   value: string
   data: string
 }
+
+export interface ErrorMsg {
+  id: string
+  action: string
+  name: string
+  message?: string
+}

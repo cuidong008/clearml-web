@@ -1,6 +1,7 @@
 import { CloudProviders } from "@/types/enums"
 import { isNil, isUndefined } from "lodash"
 import { TasksOpManyResponseFailed } from "@/api/models/task"
+import { ErrorMsg } from "@/types/common"
 
 /**
  * @description 获取浏览器默认语言
@@ -82,14 +83,12 @@ export function notificationMsg(
 
 export function parseErrors(
   failed: Array<TasksOpManyResponseFailed>,
-  entities: { id: string; name: string }[],
-): {
-  id: string
-  name: string
-  message?: string
-}[] {
+  action: string,
+  entities: { id?: string; name?: string }[],
+): ErrorMsg[] {
   return failed.map((failedEntity) => ({
     id: failedEntity.id,
+    action: action,
     name:
       entities.find((entity) => entity.id === failedEntity.id)?.name ||
       failedEntity.id,

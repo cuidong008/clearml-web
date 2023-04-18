@@ -3,7 +3,7 @@ import { CopyToClipboard } from "@/components/CopyToClipboard"
 import styles from "./dialog.module.scss"
 import { tasksUpdate } from "@/api/task"
 import { useEffect, useState } from "react"
-import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { useMenuCtx } from "../menu/MenuCtx"
 
 export const ShareExperimentDialog = (props: {
   show: boolean
