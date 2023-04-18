@@ -50,7 +50,7 @@ export const rootRouter: Array<RouteObject> = [
         path: ":projId/experiments",
         name: "experiments",
         lazy: async () => {
-          const c = await import("@/views/projects/experiments")
+          const c = await import("@/views/experiments")
           return { Component: c.Experiments }
         },
         children: [
@@ -59,7 +59,7 @@ export const rootRouter: Array<RouteObject> = [
             name: "experimentDetails",
             lazy: async () => {
               const c = await import(
-                "@/views/projects/experiments/details/DetailTabPanel"
+                "@/views/experiments/details/DetailTabPanel"
               )
               return { Component: c.DetailTabPanel }
             },
@@ -69,7 +69,7 @@ export const rootRouter: Array<RouteObject> = [
             name: "experimentDetails",
             lazy: async () => {
               const c = await import(
-                "@/views/projects/experiments/details/DetailTabPanel"
+                "@/views/experiments/details/DetailTabPanel"
               )
               return { Component: c.DetailTabPanel }
             },

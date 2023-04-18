@@ -4,7 +4,7 @@ import "./dialog.scss"
 import { tagColorManager } from "./tagColors"
 import { MouseEvent, ReactNode, useEffect, useState } from "react"
 import { Tag } from "@/components/TagList/index"
-import { useMenuCtx } from "@/views/projects/experiments/menu/MenuCtx"
+import { useMenuCtx } from "@/views/experiments/menu/MenuCtx"
 import { TooltipPlacement } from "antd/es/tooltip"
 
 const { defaultAlgorithm } = theme
