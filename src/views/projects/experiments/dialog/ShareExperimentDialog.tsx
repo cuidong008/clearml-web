@@ -47,10 +47,7 @@ export const ShareExperimentDialog = (props: {
     >
       <div style={{ textAlign: "center" }}>
         <div>
-          <i
-            className="al-ico-get-link-dialog"
-            style={{ fontSize: 60, height: 60 }}
-          />
+          <i className="al-ico-get-link-dialog al-icon icon mx-auto xxl" />
         </div>
         <span className="commonDialogTitle">SHARE EXPERIMENT PUBLICLY</span>
         {shared && (

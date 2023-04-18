@@ -19,7 +19,7 @@ export const WarnArchiveDialog = (props: {
     >
       <div style={{ textAlign: "center" }}>
         <div>
-          <i className="al-ico-archive" style={{ fontSize: 60, height: 60 }} />
+          <i className="al-ico-archive al-icon icon mx-auto xxl" />
         </div>
         <span className="commonDialogTitle">
           ARCHIVE A PUBLICLY SHARED TASK
