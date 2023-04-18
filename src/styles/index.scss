@@ -62,11 +62,27 @@ html[schema="dark"] {
       color: $blue-300;
     }
   }
+
+  .commonDialogTitle {
+    color: $blue-50;
+  }
+
+  .subDialogHeader {
+    color: $blue-200;
+  }
 }
 
 .ant-notification-notice-btn {
   span {
     color: $neon-yellow !important;
+  }
+}
+
+html[schema="light"] {
+  .ant-notification-notice-btn {
+    span {
+      color: $blue-500 !important;
+    }
   }
 }
 
@@ -101,14 +117,4 @@ html[schema="dark"] {
   text-align: center;
   color: $blue-400;
   margin-left: 10px !important;
-}
-
-html[schema="dark"] {
-  .commonDialogTitle {
-    color: $blue-50;
-  }
-
-  .subDialogHeader {
-    color: $blue-200;
-  }
 }

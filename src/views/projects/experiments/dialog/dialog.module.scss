@@ -110,6 +110,35 @@
   }
 }
 
+.errorDialog {
+  padding: 10px;
+
+  .errorsTitle {
+    margin-bottom: 12px;
+    color: $blue-300;
+    font-size: 15px;
+    text-align: left;
+  }
+
+  .listContainer {
+    padding: 12px 12px 12px 30px;
+    border: 1px solid #d4d6e0;
+    border-radius: 4px;
+    max-height: 180px;
+    overflow: auto;
+  }
+
+  li {
+    display: flex;
+    text-align: left;
+    margin-bottom: 6px;
+  }
+
+  .errorReason {
+    font-size: 12px;
+  }
+}
+
 html[schema="dark"] {
   .step {
     color: $blue-100 !important;
@@ -117,5 +146,13 @@ html[schema="dark"] {
 
   .subNote {
     color: $blue-300 !important;
+  }
+
+  .errorsTitle {
+    color: $blue-700;
+  }
+
+  .listContainer {
+    border: 1px solid $blue-480;
   }
 }
