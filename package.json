@@ -2,18 +2,13 @@
   "name": "deekeeper-fe",
   "private": true,
   "version": "0.0.0",
-  "packageManager": "pnpm@7.26.3",
-  "engines": {
-    "npm": "No-npm!",
-    "yarn": "No-yarn!"
-  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --fix --quiet ./src",
     "preview": "vite preview",
     "prepare": "husky install",
-    "lint-staged": "pnpx lint-staged"
+    "lint-staged": "npx lint-staged"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -64,6 +59,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
     "prettier": "^2.8.7",
     "sass": "^1.62.0",
     "typescript": "^4.9.5",
