@@ -1,43 +1,195 @@
-import { MultiFieldPatternData } from "@/types/common";
-import { TaskStatusEnum } from "@/types/enums";
-import { Task } from "@/types/task";
-import REQ from "@/api/index";
+import REQ from "@/api/index"
 import {
-  ProjectsGetAllExRequest,
-  ProjectsGetAllExResponse,
-} from "@/api/project";
+  TasksArchiveManyRequest,
+  TasksArchiveManyResponse,
+  TasksArchiveRequest,
+  TasksArchiveResponse,
+  TasksCloneRequest,
+  TasksCloneResponse,
+  TasksDeleteManyRequest,
+  TasksDeleteManyResponse,
+  TasksGetAllExRequest,
+  TasksGetAllExResponse,
+  TasksGetByIdExRequest,
+  TasksGetByIdExResponse,
+  TasksMoveRequest,
+  TasksMoveResponse,
+  TasksPublishManyRequest,
+  TasksPublishManyResponse,
+  TasksResetManyResponse,
+  TasksStopManyRequest,
+  TasksStopManyResponse,
+  TasksUnArchiveManyRequest,
+  TasksUnArchiveManyResponse,
+  TasksUpdateRequest,
+  TasksUpdateResponse,
+} from "./models/task"
+import { SortMeta } from "@/types/common"
+import { ColumnDefine, FilterMap, Task } from "@/types/task"
+import { flatten } from "lodash"
+import { TaskStatusEnumType } from "@/types/enums"
+import { hasValue } from "@/utils/global"
+import { SP_TOKEN } from "@/utils/constant"
 
-export interface TasksGetAllExRequest {
-  id?: Array<string>;
-  name?: string;
-  user?: Array<string>;
-  project?: Array<string>;
-  page?: number;
-  page_size?: number;
-  order_by?: Array<string>;
-  type?: Array<string>;
-  tags?: Array<string>;
-  system_tags?: Array<string>;
-  status?: Array<TaskStatusEnum>;
-  only_fields?: Array<string>;
-  parent?: string;
-  status_changed?: Array<string>;
-  search_text?: string;
-  _all_?: MultiFieldPatternData;
-  _any_?: MultiFieldPatternData;
-  include_subprojects?: boolean;
-  search_hidden?: boolean;
-  scroll_id?: string;
-  refresh_scroll?: boolean;
-  size?: number;
-  allow_public?: boolean;
+export const encodeOrder = (orders: SortMeta[]): string[] =>
+  orders.map((order) => `${order.order === -1 ? "-" : ""}${order.field}`)
+export const MINIMUM_ONLY_FIELDS: string[] = [
+  "name",
+  "status",
+  "system_tags",
+  "project",
+  "company",
+  "last_change",
+  "started",
+  "last_iteration",
+  "tags",
+  "user.name",
+  "runtime.progress",
+]
+const extractFilter = (field: string, filters?: FilterMap) => {
+  return filters?.[field]?.value?.map((f) => f.toString())
+}
+export const createFiltersFromStore = (
+  _tableFilters: FilterMap | undefined,
+  removeEmptyValues = true,
+) => {
+  if (!_tableFilters) {
+    return []
+  }
+  return Object.keys(_tableFilters).reduce(
+    (returnTableFilters, currentFilterName) => {
+      const value = _tableFilters?.[currentFilterName]?.value
+      if (removeEmptyValues && (!hasValue(value) || value?.length === 0)) {
+        return returnTableFilters
+      }
+      if (Array.isArray(value) && value[0]) {
+        const filter = value[0].toString()
+        if (filter.includes(SP_TOKEN) && filter !== SP_TOKEN) {
+          const part = filter.split(SP_TOKEN)
+          returnTableFilters[currentFilterName] = part.map((p) =>
+            p !== "" ? p : null,
+          )
+        }
+      } else {
+        returnTableFilters[currentFilterName] = value
+      }
+      return returnTableFilters
+    },
+    {} as Record<string, any>,
+  )
 }
 
-export interface TasksGetAllExResponse {
-  tasks?: Array<Task>;
-  scroll_id?: string;
+export function getGetAllQuery({
+  refreshScroll = false,
+  scrollId = null,
+  projectId,
+  cols,
+  filters,
+  archived,
+  orderFields = [],
+  selectedIds = [],
+  isCompare,
+  pageSize = 15,
+}: {
+  refreshScroll?: boolean
+  scrollId: string | null
+  projectId: string
+  archived: boolean
+  filters?: FilterMap
+  orderFields?: SortMeta[]
+  selectedIds?: string[]
+  deep?: boolean
+  isCompare?: boolean
+  pageSize?: number
+  cols: ColumnDefine<Task>[]
+}): TasksGetAllExRequest {
+  const tagsFilter = filters?.["tags"]?.value?.[0].toString()
+  const statusFilter = extractFilter("status", filters)
+  const typeFilter = extractFilter("type", filters)
+  const tagsFilterAnd = tagsFilter?.includes("^&")
+  const userFilter = extractFilter("user", filters)
+  const parentFilter = extractFilter("parent", filters)
+  const systemTagsFilter = archived
+    ? ["__$and", "archived"]
+    : ["__$and", "__$not", "archived", "__$not", "pipeline"]
+  const selectCols = flatten<string>(
+    cols.map((col) => (col.getter.length ? col.getter : [col.dataIndex])),
+  )
+  const otherFilters = createFiltersFromStore(filters, true)
+  const only_fields = [
+    "execution",
+    ...new Set([...MINIMUM_ONLY_FIELDS, ...selectCols]),
+  ]
+  return {
+    ...otherFilters,
+    id: selectedIds,
+    project: [projectId],
+    scroll_id: scrollId || null, // null to create new scroll (undefined doesn't generate scroll)
+    refresh_scroll: refreshScroll,
+    size: pageSize,
+    order_by: encodeOrder(orderFields),
+    type: typeFilter,
+    user: userFilter && userFilter?.length > 0 ? userFilter : [],
+    ...(statusFilter &&
+      statusFilter.length && { status: statusFilter as TaskStatusEnumType[] }),
+    ...(parentFilter && parentFilter.length > 0 && { parent: parentFilter }),
+    ...(systemTagsFilter?.length > 0 && { system_tags: systemTagsFilter }),
+    ...(tagsFilter && {
+      tags: [
+        tagsFilterAnd ? "__$and" : "__$or",
+        ...tagsFilter.split(tagsFilterAnd ? "^&" : "^|"),
+      ],
+    }),
+    // include_subprojects: deep && !projectFilter,
+    search_hidden: true,
+    only_fields,
+  }
 }
 
-export function getAllTasksEx(request: TasksGetAllExRequest) {
-  return REQ.post<TasksGetAllExResponse>("/tasks.get_all_ex", request);
+export function getTasksAllEx(request: TasksGetAllExRequest) {
+  return REQ.post<TasksGetAllExResponse>("/tasks.get_all_ex", request)
+}
+
+export function tasksUpdate(request: TasksUpdateRequest) {
+  return REQ.post<TasksUpdateResponse>("/tasks.update", request)
+}
+
+export function tasksArchive(request: TasksArchiveRequest) {
+  return REQ.post<TasksArchiveResponse>("/tasks.archive", request)
+}
+
+export function tasksArchiveMany(request: TasksArchiveManyRequest) {
+  return REQ.post<TasksArchiveManyResponse>("/tasks.archive_many", request)
+}
+
+export function tasksUnArchiveMany(request: TasksUnArchiveManyRequest) {
+  return REQ.post<TasksUnArchiveManyResponse>("/tasks.unarchive_many", request)
+}
+
+export function tasksGetByIdEx(request: TasksGetByIdExRequest) {
+  return REQ.post<TasksGetByIdExResponse>("/tasks.get_by_id_ex", request)
+}
+
+export function tasksDeleteMany(request: TasksDeleteManyRequest) {
+  return REQ.post<TasksDeleteManyResponse>("/tasks.delete_many", request)
+}
+
+export function tasksResetMany(request: TasksDeleteManyRequest) {
+  return REQ.post<TasksResetManyResponse>("/tasks.reset_many", request)
+}
+
+export function tasksStopMany(request: TasksStopManyRequest) {
+  return REQ.post<TasksStopManyResponse>("/tasks.stop_many", request)
+}
+
+export function tasksPublishMany(request: TasksPublishManyRequest) {
+  return REQ.post<TasksPublishManyResponse>("/tasks.publish_many", request)
+}
+
+export function tasksClone(request: TasksCloneRequest) {
+  return REQ.post<TasksCloneResponse>("/tasks.clone", request)
+}
+
+export function tasksMove(request: TasksMoveRequest) {
+  return REQ.post<TasksMoveResponse>("/tasks.move", request)
 }

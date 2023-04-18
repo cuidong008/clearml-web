@@ -1,19 +1,19 @@
 import {
-  EXPERIMENTS_STATUS_LABELS,
-  EXPERIMENTS_TYPE_LABELS,
-  TaskStatusEnum,
-  TaskTypeEnum,
-} from "@/types/enums";
-import styles from "./index.module.scss";
-import classNames from "classnames";
+  TASKS_STATUS_LABELS,
+  TASKS_TYPE_LABELS,
+  TaskStatusEnumType,
+  TaskTypeEnumType,
+} from "@/types/enums"
+import styles from "./index.module.scss"
+import classNames from "classnames"
 
 export const CircleStatus = (props: {
-  status?: TaskStatusEnum;
-  type?: TaskTypeEnum;
-  defaultStatus?: string;
+  status?: TaskStatusEnumType
+  type?: TaskTypeEnumType
+  defaultStatus?: string
 }) => {
-  const { status, type, defaultStatus } = props;
-  const st = status ? status : type ? type : "";
+  const { status, type, defaultStatus } = props
+  const st = status ? status : type ? type : ""
 
   return (
     <div className={styles.counterContainer}>
@@ -23,7 +23,7 @@ export const CircleStatus = (props: {
             className={classNames(
               "icon sm-md white",
               defaultStatus,
-              `i-${status}`
+              `i-${status}`,
             )}
           ></i>
         )}
@@ -31,18 +31,18 @@ export const CircleStatus = (props: {
           <i
             className={classNames(
               "al-icon lg al-color white",
-              `al-ico-type-${type.replace("_", "-")}`
+              `al-ico-type-${type.replace("_", "-")}`,
             )}
           ></i>
         )}
       </div>
       <div className={styles.counterLabel}>
         {status
-          ? EXPERIMENTS_STATUS_LABELS[status]
+          ? TASKS_STATUS_LABELS[status]
           : type
-          ? EXPERIMENTS_TYPE_LABELS[type]
+          ? TASKS_TYPE_LABELS[type]
           : ""}
       </div>
     </div>
-  );
-};
+  )
+}

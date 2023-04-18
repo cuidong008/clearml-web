@@ -1,0 +1,263 @@
+.customFilterDropdown {
+  .dropdownBody {
+    padding: 10px 10px 0 10px;
+
+    .switch {
+      margin: 5px;
+      text-align: right;
+    }
+
+    li {
+      padding: 4px;
+    }
+  }
+
+  .filterBtn {
+    margin-top: 6px;
+    border-top: 1px solid #dddddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 6px;
+  }
+}
+
+.experiments {
+  position: relative;
+
+  .headerLeft {
+    position: absolute;
+    top: -44px;
+    left: 10px;
+    z-index: 100;
+
+    :global(.ant-radio-group) {
+      display: block;
+    }
+  }
+
+  .headerRight {
+    position: absolute;
+    top: -44px;
+    right: 10px;
+    z-index: 100;
+
+    i {
+      font-size: 20px;
+      display: inline;
+      line-height: 36px;
+      cursor: pointer;
+    }
+  }
+
+  .experimentTable {
+    display: block;
+    overflow: auto !important;
+    height: calc(100% - 2px);
+    border-right: 1px solid $blue-500;
+
+    &.activeList {
+      transition: 0.3s;
+    }
+
+    .loadMore {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .cardList {
+      :global(.ant-list-item) {
+        border: none;
+      }
+
+      .listHeader {
+        height: 40px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .title {
+          color: $blue-300;
+          font-weight: 500;
+          font-size: 14px;
+          font-family: Heebo, sans-serif;
+        }
+
+        .filterItem {
+          display: flex;
+          align-items: center;
+          font-family: Heebo, sans-serif;
+          font-weight: bold;
+          font-size: 12px;
+
+          i {
+            font-size: 18px;
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .card {
+        width: 100%;
+        cursor: pointer;
+        user-select: none;
+
+        :global(.ant-card-body) {
+          display: grid;
+          grid-template-columns: 20px 32px 1fr;
+          align-items: center;
+          gap: 8px 12px;
+          grid-template-areas:
+            "tkCbx tkType tkName"
+            ". . tkTags"
+            ". . tkData";
+        }
+
+        :global(.tkCbx) {
+          grid-area: tkCbx;
+          margin-right: auto;
+        }
+
+        :global(.tkType) {
+          grid-area: tkType;
+          display: flex;
+          justify-content: center;
+        }
+
+        .name {
+          display: flex;
+          min-width: 0;
+          margin-right: 12px;
+
+          span {
+            flex: 1;
+            font-weight: 500;
+            min-width: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+
+        :global(.tkName) {
+          grid-area: tkName;
+          display: flex;
+          overflow: hidden;
+
+          .status {
+            display: flex;
+            margin-left: auto;
+          }
+        }
+
+        :global(.tkTags) {
+          grid-area: tkTags;
+          display: flex;
+          min-height: 20px;
+          min-width: 0;
+          margin-right: 12px;
+        }
+
+        :global(.tkData) {
+          grid-area: tkData;
+          display: flex;
+          justify-content: space-between;
+          overflow: hidden;
+          color: $blue-300;
+          white-space: nowrap;
+
+          .dot {
+            padding: 0 6px;
+          }
+        }
+      }
+    }
+  }
+
+  .splitBar {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color: $blue-800;
+  }
+}
+
+html[schema="light"] {
+  .listHeader {
+    background: $blue-100;
+  }
+
+  .filterItem {
+    color: $blue-400;
+  }
+
+  .card {
+    &:hover {
+      background-color: $blue-50 !important;
+    }
+
+    &.selected {
+      background-color: $blue-100;
+    }
+  }
+}
+
+html[schema="dark"] {
+  .filterItem {
+    color: $blue-200;
+  }
+
+  .card {
+    &:hover {
+      background-color: $blue-600 !important;
+    }
+
+    &.selected {
+      background-color: $blue-500;
+    }
+
+    :global(.tkName) {
+      color: #f2f4fc;
+    }
+  }
+
+  .taskTable {
+    :global(.ant-table-cell) {
+      color: #dce0ee;
+      font-family: Heebo, sans-serif;
+
+      span {
+        color: #dce0ee;
+        font-family: Heebo, sans-serif;
+      }
+    }
+
+    :global(.ant-table-filter-trigger.active) {
+      span {
+        color: $neon-yellow !important;
+      }
+    }
+
+    :global(.ant-table-column-sorter-down.active) {
+      color: $neon-yellow !important;
+    }
+
+    :global(.ant-table-column-sorter-up.active) {
+      color: $neon-yellow !important;
+    }
+  }
+
+  .listHeader {
+    background: $blue-600;
+  }
+
+  .splitBar {
+    background: $blue-900;
+    color: #ffffff !important;
+  }
+}

@@ -1,0 +1,71 @@
+@mixin icon($url) {
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  background-size: contain;
+  display: inline-block;
+}
+
+.i-queued {
+  @include icon("@/assets/icons/pending.svg");
+}
+
+.i-in_progress,
+.i-Uploading {
+  @include icon("@/assets/icons/running-green.svg");
+}
+
+.i-completed,
+.i-Final {
+  @include icon("@/assets/icons/completed.svg");
+}
+
+.i-stopped {
+  @include icon("@/assets/icons/completed.svg");
+}
+
+.i-dequeu {
+  @include icon("@/assets/icons/dequeue.svg");
+}
+
+.i-closed {
+  @include icon("@/assets/icons/completed.svg");
+}
+
+.i-failed {
+  @include icon("@/assets/icons/failed.svg");
+}
+
+.i-published {
+  @include icon("@/assets/icons/published-neon.svg");
+}
+
+.i-created {
+  @include icon("@/assets/icons/draft-light-blue.svg");
+}
+
+.i-alert {
+  @include icon("@/assets/icons/alert.svg");
+}
+
+.i-markdown {
+  @include icon("@/assets/icons/markdown.svg");
+}
+
+.i-welcome-researcher {
+  @include icon("@/assets/icons/welcome-researcher.svg");
+}
+
+.i-idCard {
+  @include icon("@/assets/icons/idcard.svg");
+  width: 20px;
+  height: 16px;
+}
+
+.new-experiment-table {
+  height: 120px;
+  background-image: url("@/assets/icons/new-experiment-table.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}

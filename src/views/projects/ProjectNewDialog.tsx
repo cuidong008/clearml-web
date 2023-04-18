@@ -1,13 +1,22 @@
-import { Form, Input, message, Modal } from "antd";
-import { projectCreate } from "@/api/project";
-import { URI_REGEX } from "@/utils/constant";
+import { Form, Input, message, Modal } from "antd"
+import { projectCreate } from "@/api/project"
+import { URI_REGEX } from "@/utils/constant"
+import { useEffect, useRef } from "react"
 
 export const ProjectNewDialog = (props: {
-  show: boolean;
-  onClose: (e: boolean) => void;
+  show: boolean
+  onClose: (e: boolean) => void
 }) => {
-  const { show, onClose } = props;
-  const [form] = Form.useForm();
+  const { show, onClose } = props
+  const [form] = Form.useForm()
+  const formRef = useRef(null)
+  const [msg, msgContext] = message.useMessage()
+
+  useEffect(() => {
+    if (formRef.current && show) {
+      form.resetFields()
+    }
+  }, [show])
 
   function createNewProject() {
     form.validateFields().then((values) => {
@@ -18,13 +27,13 @@ export const ProjectNewDialog = (props: {
         default_output_destination: values.default_output_destination,
       })
         .then(({ data }) => {
-          data.id && onClose(true);
-          message.success("create project success");
+          data.id && onClose(true)
+          msg.success("create project success")
         })
         .catch(() => {
-          message.error("create project success");
-        });
-    });
+          msg.error("create project failed")
+        })
+    })
   }
 
   return (
@@ -34,6 +43,7 @@ export const ProjectNewDialog = (props: {
       onCancel={() => onClose(false)}
       title={<div></div>}
     >
+      {msgContext}
       <div style={{ textAlign: "center" }}>
         <div>
           <i
@@ -41,25 +51,14 @@ export const ProjectNewDialog = (props: {
             style={{ color: "#8492c2", fontSize: 60 }}
           />
         </div>
-        <span
-          style={{
-            fontSize: 24,
-            fontWeight: 300,
-            marginTop: 10,
-            color: "#8492c2",
-            display: "block",
-            fontFamily: "Heebo,sans-serif",
-          }}
-        >
-          New Project
-        </span>
+        <span className="commonDialogTitle">New Project</span>
       </div>
-      <Form layout={"vertical"} form={form}>
+      <Form layout={"vertical"} ref={formRef} form={form}>
         <Form.Item
           label="Project name"
           name={"name"}
           required={true}
-          rules={[{ required: true }]}
+          rules={[{ required: true, min: 3 }]}
         >
           <Input />
         </Form.Item>
@@ -75,12 +74,12 @@ export const ProjectNewDialog = (props: {
                 if (
                   value &&
                   !new RegExp(
-                    `${URI_REGEX.S3_WITH_BUCKET}$|${URI_REGEX.S3_WITH_BUCKET_AND_HOST}$|${URI_REGEX.FILE}$|${URI_REGEX.NON_AWS_S3}$|${URI_REGEX.GS_WITH_BUCKET}$|${URI_REGEX.GS_WITH_BUCKET_AND_HOST}$`
+                    `${URI_REGEX.S3_WITH_BUCKET}$|${URI_REGEX.S3_WITH_BUCKET_AND_HOST}$|${URI_REGEX.FILE}$|${URI_REGEX.NON_AWS_S3}$|${URI_REGEX.GS_WITH_BUCKET}$|${URI_REGEX.GS_WITH_BUCKET_AND_HOST}$`,
                   ).test(value)
                 ) {
-                  return Promise.reject(new Error("please enter right format"));
+                  return Promise.reject(new Error("please enter right format"))
                 }
-                return Promise.resolve();
+                return Promise.resolve()
               },
             },
           ]}
@@ -89,5 +88,5 @@ export const ProjectNewDialog = (props: {
         </Form.Item>
       </Form>
     </Modal>
-  );
-};
+  )
+}

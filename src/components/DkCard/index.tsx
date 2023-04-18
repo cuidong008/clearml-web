@@ -1,17 +1,17 @@
-import { ReactNode, useState } from "react";
-import styles from "./index.module.scss";
-import classNames from "classnames";
+import { ReactNode, useState } from "react"
+import styles from "./index.module.scss"
+import classNames from "classnames"
 
 export const DkCard = (props: {
-  showFolder: boolean;
-  showAdd?: boolean;
-  cardHeader?: ReactNode;
-  cardBody?: ReactNode;
-  cardFooter?: ReactNode;
-  subCard?: ReactNode;
-  subFolderTitle?: string;
-  oneTabMode?: boolean;
-  height?: number;
+  showFolder: boolean
+  showAdd?: boolean
+  cardHeader?: ReactNode
+  cardBody?: ReactNode
+  cardFooter?: ReactNode
+  subCard?: ReactNode
+  subFolderTitle?: string
+  oneTabMode?: boolean
+  height?: number
 }) => {
   const {
     showFolder,
@@ -23,10 +23,10 @@ export const DkCard = (props: {
     subFolderTitle,
     subCard,
     height,
-  } = props;
-  const [mainHovered, setMainHovered] = useState(false);
-  const [secHovered, setSecHovered] = useState(false);
-  const [showSec, setShowSec] = useState(false);
+  } = props
+  const [mainHovered, setMainHovered] = useState(false)
+  const [secHovered, setSecHovered] = useState(false)
+  const [showSec, setShowSec] = useState(false)
   return (
     <div className={styles.dkCard}>
       {showFolder && (
@@ -34,8 +34,8 @@ export const DkCard = (props: {
           <div
             className={styles.firstTab}
             onClick={(e) => {
-              e.stopPropagation();
-              setShowSec(false);
+              e.stopPropagation()
+              setShowSec(false)
             }}
           >
             {!showSec ? (
@@ -47,27 +47,27 @@ export const DkCard = (props: {
               >
                 {!oneTabMode && secHovered && (
                   <path
+                    className={styles["tbf1"]}
                     d="M30.06,0H64V20H30.06C29.93,19.78,30.06,11.93,30.06,0Z"
-                    fill="#5a658e"
                   />
                 )}
                 {!oneTabMode && !secHovered && (
                   <path
+                    className={styles["tbf2"]}
                     d="M30.06,0H64V20H30.06C29.93,19.78,30.06,11.93,30.06,0Z"
-                    fill="#2c3246"
                   />
                 )}
                 {mainHovered ? (
                   <path
+                    className={styles["tbf3"]}
                     d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
-                    fill="#5a658e"
                     onMouseEnter={() => setMainHovered(true)}
                     onMouseLeave={() => setMainHovered(false)}
                   />
                 ) : (
                   <path
+                    className={styles["tbf4"]}
                     d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
-                    fill="#384161"
                     onMouseEnter={() => setMainHovered(true)}
                     onMouseLeave={() => setMainHovered(false)}
                   />
@@ -82,22 +82,22 @@ export const DkCard = (props: {
               >
                 {mainHovered ? (
                   <path
+                    className={styles["tbf5"]}
                     d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
-                    fill="#5a658e"
                     onMouseEnter={() => setMainHovered(true)}
                     onMouseLeave={() => setMainHovered(false)}
                   />
                 ) : (
                   <path
+                    className={styles["tbf6"]}
                     d="M35.61,0H6A6,6,0,0,0,0,6V20H60C44.82,12.36,49.37,0,35.61,0Z"
-                    fill="#384161"
                     onMouseEnter={() => setMainHovered(true)}
                     onMouseLeave={() => setMainHovered(false)}
                   />
                 )}
                 <path
+                  className={styles["tbf7"]}
                   d="M64,0V20H30C45.18,12.36,40.63,0,54.39,0Z"
-                  fill="#2c3246"
                 />
               </svg>
             )}
@@ -111,8 +111,8 @@ export const DkCard = (props: {
                   [styles.secTabActive]: showSec,
                 })}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setShowSec(true);
+                  e.stopPropagation()
+                  setShowSec(true)
                 }}
                 onMouseEnter={() => setSecHovered(true)}
                 onMouseLeave={() => setSecHovered(false)}
@@ -125,8 +125,8 @@ export const DkCard = (props: {
                   [styles.showSecTab]: showSec,
                 })}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setShowSec(true);
+                  e.stopPropagation()
+                  setShowSec(true)
                 }}
               >
                 <svg
@@ -137,14 +137,14 @@ export const DkCard = (props: {
                 >
                   {(showSec || !secHovered) && (
                     <path
+                      className={styles["tbs1"]}
                       d="M3.61,0C17.37,0,12.82,12.36,28,20H0V0Z"
-                      fill="#2c3246"
                     />
                   )}
                   {!showSec && secHovered && (
                     <path
+                      className={styles["tbs2"]}
                       d="M3.61,0C17.37,0,12.82,12.36,28,20H0V0Z"
-                      fill="#5a658e"
                     />
                   )}
                 </svg>
@@ -191,12 +191,12 @@ export const DkCard = (props: {
             <div
               className={classNames(
                 "al-icon al-ico-plus al-color",
-                styles.plusIcon
+                styles.plusIcon,
               )}
             />
           </div>
         )}
       </div>
     </div>
-  );
-};
+  )
+}

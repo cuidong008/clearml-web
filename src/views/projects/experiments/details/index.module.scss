@@ -1,0 +1,238 @@
+.experimentInfo {
+  background: white;
+  border-left: 1px solid $blue-500;
+  height: calc(100% - 2px);
+  width: 100%;
+  color: $blue-400;
+
+  :global(.ant-spin-nested-loading),
+  :global(.ant-spin-container) {
+    height: 100%;
+  }
+
+  .statusLine {
+    background: white;
+    height: 32px;
+    position: relative;
+
+    .label {
+      display: flex;
+      justify-content: center;
+      padding: 2px 12px 0 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .view-only {
+      padding-left: 4px;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    &::before {
+      content: "";
+      border-top: 6px solid;
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+
+    > span {
+      display: inline-flex;
+      align-items: center;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: $blue-600;
+
+      &::before,
+      &::after {
+        content: "";
+        display: block;
+        position: relative;
+        width: 0;
+        height: 0;
+        border-bottom: 32px solid white;
+      }
+
+      &::before {
+        left: -1px;
+        border-right: 16px solid transparent;
+      }
+
+      &::after {
+        right: -1px;
+        border-left: 16px solid transparent;
+      }
+    }
+
+    &.published {
+      &::before {
+        border-color: $neon-yellow;
+      }
+
+      span {
+        background-color: $neon-yellow;
+      }
+    }
+
+    &.in_progress {
+      &::before {
+        border-color: #50e3c2;
+      }
+
+      span {
+        background-color: #50e3c2;
+      }
+    }
+
+    &.queued {
+      &::before {
+        border-color: #c4f0e4;
+      }
+
+      span {
+        background-color: #c4f0e4;
+      }
+    }
+
+    &.created {
+      &::before {
+        border-color: #dbdee6;
+      }
+
+      span {
+        background-color: #dbdee6;
+      }
+    }
+
+    &.failed {
+      &::before {
+        border-color: $strong-red;
+      }
+
+      span {
+        background-color: $strong-red;
+        color: $blue-25;
+      }
+    }
+
+    &.completed,
+    &.stopped {
+      &::before {
+        border-color: $completed-blue;
+      }
+
+      span {
+        background-color: $completed-blue;
+        color: $blue-25;
+      }
+    }
+  }
+
+  .infoHeader {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 24px;
+
+    .experimentName {
+      width: 100%;
+      display: flex;
+
+      .typeIcon {
+        margin: 0 20px 0 0;
+      }
+
+      .nameEditor {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        :global(.ant-btn-icon-only) {
+          color: $blue-400;
+        }
+      }
+
+      .nameContent {
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+        min-height: 32px;
+        width: 100%;
+        font-family: Heebo, sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        padding-right: 1.5rem !important;
+        max-width: calc(100% - 120px);
+
+        span {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        &:hover {
+          &:after {
+            content: "\e983";
+            font-family: trains, serif;
+            margin-left: 3px;
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+          }
+        }
+      }
+    }
+
+    .idNumber {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      height: 16px;
+      user-select: none;
+      color: $blue-400;
+      background-color: $blue-50;
+      border-radius: 2px;
+      white-space: nowrap;
+      line-height: 1;
+
+      .hash {
+        padding: 0 6px;
+        font-family: $font-family-monospace;
+        font-size: 12px;
+
+        span {
+          font-family: serif;
+        }
+      }
+    }
+  }
+
+  .middleHeader {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding-left: 60px;
+  }
+
+  :global(.ant-tabs .ant-tabs-tab) {
+    font-size: 12px;
+    font-family: Heebo, sans-serif;
+    font-weight: 500;
+    color: #8e95ab;
+
+    :global(.ant-tabs-tab + .ant-tabs-tab) {
+      margin-left: 20px;
+    }
+  }
+}
+
+:global(.ant-tabs-ink-bar.ant-tabs-ink-bar-animated) {
+  height: 3px;
+}

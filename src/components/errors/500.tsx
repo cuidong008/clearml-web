@@ -1,12 +1,12 @@
-import { Button, Result } from "antd";
-import { useNavigate } from "react-router-dom";
-import "./index.scss";
+import { Button, Result } from "antd"
+import { useNavigate } from "react-router-dom"
+import "./index.scss"
 
 const NotNetwork = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const goHome = () => {
-    navigate("/");
-  };
+    navigate("/")
+  }
   return (
     <Result
       status="500"
@@ -18,7 +18,7 @@ const NotNetwork = () => {
         </Button>
       }
     />
-  );
-};
+  )
+}
 
-export default NotNetwork;
+export default NotNetwork

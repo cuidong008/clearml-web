@@ -1,0 +1,35 @@
+include:
+  - project: "deeproute-projects/public/cicd-common"
+    ref: development
+    file: "/project-auth/global.gitlab-ci.yml"
+  - project: "deeproute-projects/public/cicd-common"
+    ref: development
+    file: "/project-auth/build.gitlab-ci.yml"
+
+
+stages:
+  - deploy
+
+.build_docker:
+    script:
+        - docker build -t "$IMAGE" -t $IMAGE_LATEST -f $DOCKERFILE_NAME ${EXTRA_DOCKER_BUILD_ARGUMENT} .
+
+deploy:
+  extends: .deploy
+  image: "${DEPLOY_IMAGE_NAME}:${DEPLOY_IMAGE_VERSION}"
+  variables:
+      EXTRA_DOCKER_BUILD_ARGUMENT: " \
+        --build-arg BUILD_API_GATEWAY=http://stg-mlp-api-gateway.deeproute.cn \
+        --build-arg BUILD_NODE_ENV=${env_name} \
+        --build-arg API_SWIM_HEADER=(ml-platform-api-evaluation=swimlane-00)"
+      DOCKERFILE_NAME: "Dockerfile"
+      CUSTOM_SUB_IMAGE_NAME: "mlp/${CI_PROJECT_NAME}"
+  tags:
+    - build
+  before_script:
+      - env_name=$CI_COMMIT_BRANCH
+  rules:
+    - if: $CI_COMMIT_BRANCH == "development"
+      when: always
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: manual

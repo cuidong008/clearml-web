@@ -1,16 +1,19 @@
-import { toggleSideBar } from "@/store/app/app.actions";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { connect } from "react-redux";
-import styles from "./index.module.scss";
+import { toggleSideBar } from "@/store/app/app.actions"
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons"
+import { useDispatch } from "react-redux"
+import styles from "./index.module.scss"
+import { useStoreSelector } from "@/store"
 
-const Hamburger = (props: any) => {
-  const { sidebarCollapsed, toggleSideBar } = props;
-
+export const Hamburger = () => {
+  const sidebarCollapsed = useStoreSelector(
+    (state) => state.app.sidebarCollapsed,
+  )
+  const dispatch = useDispatch()
   return (
     <div
       className={styles.collapsed}
       onClick={() => {
-        toggleSideBar(!sidebarCollapsed);
+        dispatch(toggleSideBar())
       }}
     >
       {sidebarCollapsed ? (
@@ -19,9 +22,5 @@ const Hamburger = (props: any) => {
         <MenuFoldOutlined id="isCollapse" />
       )}
     </div>
-  );
-};
-
-const mapStateToProps = (state: any) => state.app;
-const mapDispatchToProps = { toggleSideBar };
-export default connect(mapStateToProps, mapDispatchToProps)(Hamburger);
+  )
+}

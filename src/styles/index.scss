@@ -1,14 +1,16 @@
 @import "@/assets/fonts/trains-icons.scss";
 @import "@/assets/fonts/heebo.scss";
 @import "./status.scss";
+@import "@/assets/icons/icon-svg.scss";
 
 html,
 body,
 #root {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 ol,
@@ -31,24 +33,55 @@ ul {
   min-height: 54px;
 }
 
-/* scroll bar */
+html[schema="dark"] {
+  ::-webkit-scrollbar-thumb {
+    background-color: $blue-400;
+  }
+}
+
+html[schema="light"] {
+  ::-webkit-scrollbar-thumb {
+    background-color: #acacac;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 4px;
-  height: 6px;
-  background-color: $blue-300;
+  height: 4px;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: $blue-200;
   border-radius: 20px;
-  box-shadow: inset 0 0 0 $blue-200;
 }
 
-html[data-type="dark"] {
+html[schema="dark"] {
   .ant-table-thead {
     .ant-table-cell {
       background: $blue-700;
       color: $blue-300;
+    }
+  }
+
+  .commonDialogTitle {
+    color: $blue-50;
+  }
+
+  .subDialogHeader {
+    color: $blue-200;
+  }
+}
+
+.ant-notification-notice-btn {
+  span {
+    color: $neon-yellow !important;
+  }
+}
+
+html[schema="light"] {
+  .ant-notification-notice-btn {
+    span {
+      color: $blue-500 !important;
     }
   }
 }
@@ -68,4 +101,20 @@ html[data-type="dark"] {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.commonDialogTitle {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 10px;
+  color: #8492c2;
+  display: block;
+  font-family: Heebo, sans-serif;
+}
+
+.subDialogHeader {
+  font-size: 14px;
+  text-align: center;
+  color: $blue-400;
+  margin-left: 10px !important;
 }

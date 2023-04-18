@@ -1,13 +1,13 @@
-import { DkCard } from "@/components/DkCard";
-import { Task } from "@/types/task";
-import styles from "./index.module.scss";
-import { CircleStatus } from "@/components/CircleStatus";
-import { Button } from "antd";
-import { CopyFilled } from "@ant-design/icons";
-import classNames from "classnames";
+import { DkCard } from "@/components/DkCard"
+import { Task } from "@/types/task"
+import styles from "./index.module.scss"
+import { CircleStatus } from "@/components/CircleStatus"
+import { Button } from "antd"
+import { CopyFilled } from "@ant-design/icons"
+import classNames from "classnames"
 
 export const ExperimentCard = (props: { experiment: Task }) => {
-  const { experiment } = props;
+  const { experiment } = props
 
   return (
     <div className={styles.experimentCard}>
@@ -22,11 +22,7 @@ export const ExperimentCard = (props: { experiment: Task }) => {
             <div style={{ paddingTop: 5 }}>
               <div className={styles.taskId}>
                 <span className={styles.subTitle}>ID: {experiment?.id} </span>
-                <Button
-                  size="small"
-                  type="text"
-                  icon={<CopyFilled style={{ color: "#fff" }} />}
-                />
+                <Button size="small" type="text" icon={<CopyFilled />} />
               </div>
             </div>
           </div>
@@ -54,5 +50,5 @@ export const ExperimentCard = (props: { experiment: Task }) => {
         }
       />
     </div>
-  );
-};
+  )
+}

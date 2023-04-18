@@ -1,22 +1,33 @@
-import { Layout } from "antd";
-import { connect } from "react-redux";
-import { Route, Routes } from "react-router-dom";
-import "./index.scss";
-import { useState } from "react";
-import { AuthRouter, rootRouter } from "@/router";
-import NavHeader from "@/layout/nav";
-import LayoutMenu from "@/layout/sidebar";
+import { Layout } from "antd"
+import { Outlet } from "react-router-dom"
+import "./index.scss"
+import { useEffect, useState } from "react"
+import { AuthRouter } from "@/router/lib"
+import { NavHeader } from "@/layout/nav"
+import { LayoutMenu } from "@/layout/sidebar"
+import { getAllUser, getLoginUser } from "@/store/app/app.actions"
+import { useStoreSelector, useThunkDispatch } from "@/store"
 
-const { Header, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout
 
-const LayoutIndex = (props: any) => {
-  const { themeConfig } = props;
-  const [breadCrumbList, setBreadCrumbList] = useState<Record<any, any>>({});
+export const LayoutIndex = () => {
+  const sidebarCollapsed = useStoreSelector(
+    (state) => state.app.sidebarCollapsed,
+  )
+  const themeConfig = useStoreSelector((state) => state.app.themeConfig)
+  const user = useStoreSelector((state) => state.app.user)
+  const dispatch = useThunkDispatch()
+  const [breadCrumbList, setBreadCrumbList] = useState<Record<any, any>>({})
+
+  useEffect(() => {
+    dispatch(getLoginUser())
+    dispatch(getAllUser())
+  }, [dispatch])
 
   return (
     <Layout style={{ minHeight: "100vh", minWidth: "100vw" }}>
       <Sider
-        collapsed={props.sidebarCollapsed}
+        collapsed={sidebarCollapsed}
         theme={themeConfig.isDark ? "dark" : "light"}
       >
         <LayoutMenu setBreadCrumbList={setBreadCrumbList} />
@@ -29,39 +40,14 @@ const LayoutIndex = (props: any) => {
         >
           <NavHeader breadCrumbList={breadCrumbList} />
         </Header>
-        <Content style={{ padding: "0 20px" }}>
-          <AuthRouter>
-            <Routes>
-              {rootRouter.map((item) =>
-                item.children?.length ? (
-                  <Route
-                    key={item.name}
-                    path={item.path}
-                    element={item.element}
-                  >
-                    {item.children.map((r) => (
-                      <Route
-                        key={item.name}
-                        path={r.path}
-                        element={r.element}
-                      ></Route>
-                    ))}
-                  </Route>
-                ) : (
-                  <Route
-                    key={item.name}
-                    path={item.path}
-                    element={item.element}
-                  />
-                )
-              )}
-            </Routes>
-          </AuthRouter>
+        <Content>
+          {user?.id && (
+            <AuthRouter>
+              <Outlet />
+            </AuthRouter>
+          )}
         </Content>
       </Layout>
     </Layout>
-  );
-};
-
-const mapStateToProps = (state: any) => state.app;
-export default connect(mapStateToProps, {})(LayoutIndex);
+  )
+}
