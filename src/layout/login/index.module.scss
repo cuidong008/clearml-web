@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+html[schema="dark"] {
+  .container {
+    background: $blue-800;
+  }
+}
+
+.card {
+  width: 330px;
+  height: fit-content;
+  margin: auto;
+}
+
+.errorMessage {
+  color: rgb(240, 80, 80);
+}

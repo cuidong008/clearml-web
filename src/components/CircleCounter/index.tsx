@@ -1,26 +1,26 @@
-import classNames from "classnames";
-import { filesize } from "filesize";
-import styles from "./index.module.scss";
-import { CircleTypeEnum } from "@/types/enums";
+import classNames from "classnames"
+import { filesize } from "filesize"
+import styles from "./index.module.scss"
+import { CircleTypeEnum } from "@/types/enums"
 
 export const CircleCounter = (props: {
-  counter: number | string | { value: number | string; label: string }[];
-  label?: string;
-  underLabel?: string;
-  type?: CircleTypeEnum;
+  counter: number | string | { value: number | string; label: string }[]
+  label?: string
+  underLabel?: string
+  type?: CircleTypeEnum
 }) => {
-  const { counter, underLabel, label, type } = props;
+  const { counter, underLabel, label, type } = props
 
   function transformFileSize(val: number | string) {
     if (typeof val !== "number") {
-      return val;
+      return val
     }
     return filesize(val, {
       base: 10,
       round: 0,
       spacer: "",
       symbols: { kB: "K", k: "K", B: " ", MB: "M", GB: "G" },
-    }) as string;
+    }) as string
   }
 
   return (
@@ -29,7 +29,7 @@ export const CircleCounter = (props: {
         className={classNames(
           styles.circleCounter,
           styles[type ?? CircleTypeEnum.empty],
-          Array.isArray(counter) ? styles.multi : ""
+          Array.isArray(counter) ? styles.multi : "",
         )}
       >
         {Array.isArray(counter) ? (
@@ -47,7 +47,7 @@ export const CircleCounter = (props: {
                 <div
                   className={classNames(
                     styles.subCounter,
-                    c.value === "N/A" ? styles.noValue : ""
+                    c.value === "N/A" ? styles.noValue : "",
                   )}
                 >
                   {transformFileSize(c.value)}
@@ -69,5 +69,5 @@ export const CircleCounter = (props: {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

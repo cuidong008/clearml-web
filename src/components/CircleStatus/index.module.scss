@@ -19,6 +19,7 @@ $font-size: 18px;
 .counterContainer {
   text-align: center;
   padding: 8px;
+
   .circle {
     display: flex;
     align-items: center;
@@ -32,27 +33,35 @@ $font-size: 18px;
     &.published {
       background-color: $neon-yellow;
     }
+
     &.in_progress {
       background-color: #50e3c2;
     }
+
     &.queued {
       background-color: #c4f0e4;
     }
+
     &.created {
       background-color: $blue-300;
     }
+
     &.failed {
       background-color: $failed-red;
     }
+
     &.stopped {
       background-color: $completed-blue;
     }
+
     &.completed {
       background-color: $completed-blue;
     }
+
     &.in_progress {
       background-color: $running-green;
     }
+
     &.closed {
       background-color: $pending-gray;
     }
@@ -65,6 +74,7 @@ $font-size: 18px;
       background-color: $blue-300;
     }
   }
+
   .counterLabel {
     font-size: 10px;
     font-weight: 500;

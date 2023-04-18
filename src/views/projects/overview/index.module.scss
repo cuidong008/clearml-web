@@ -1,0 +1,162 @@
+.overview {
+  height: calc(100% - 70px);
+  overflow-y: auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+
+  .metricPanel {
+    max-height: 340px;
+    min-height: 48px;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto 16px;
+    overflow: hidden;
+    box-sizing: content-box;
+
+    :global(.ant-collapse-item.ant-collapse-item-active) {
+      box-sizing: border-box;
+
+      :global(.ant-collapse-content) {
+        height: 290px;
+
+        :global(.ant-collapse-content-box) {
+          height: 100%;
+        }
+      }
+    }
+
+    .metricHeader {
+      display: flex;
+      align-items: center;
+      position: relative;
+
+      .metricSelect {
+        position: absolute;
+        left: calc(50% - 90px);
+      }
+    }
+
+    .legend {
+      margin-top: -4px;
+      text-align: center;
+
+      .entry {
+        margin: 0 12px;
+
+        &:before {
+          content: " ";
+          display: inline-block;
+          border-radius: 50%;
+          width: 12px;
+          height: 12px;
+          margin-right: 6px;
+        }
+      }
+    }
+
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100% - 30px);
+      width: 100%;
+
+      .noDataTitle {
+        font-size: 14px;
+        font-weight: normal;
+        margin: 24px 0;
+        text-decoration: underline;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          color: $blue-400;
+        }
+      }
+    }
+  }
+
+  .newOverview {
+    flex: 1;
+    width: 100%;
+    min-height: 300px;
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    .noDataTitle {
+      font-size: 20px;
+      color: #dce0ee;
+      font-weight: 500;
+      margin: 24px 0;
+    }
+
+    .noDataBtn {
+      font-size: 12px;
+      font-weight: 500;
+      color: #384161;
+      height: 32px;
+      border-radius: 4px;
+      background-color: #d3ff00;
+      padding: 0 32px;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .markdown {
+    flex: 1;
+    width: 100%;
+    min-height: 300px;
+    margin: 0 auto;
+  }
+}
+
+html[schema="dark"] {
+  .metricPanel {
+    background: $blue-900;
+
+    .legend {
+      color: $blue-100;
+    }
+
+    .metricSelect {
+      :global(.ant-btn) {
+        background-color: $blue-600;
+        border-color: $blue-600;
+        color: $blue-50;
+
+        &:hover {
+          background-color: $blue-500;
+          border-color: $blue-500;
+          color: $blue-200;
+        }
+      }
+    }
+  }
+
+  .metricDialogPanel {
+    background: $blue-900;
+  }
+}
+
+.metricDialog {
+  .metricSearch {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .searchInput {
+      flex: 1;
+      margin-right: 10px;
+    }
+  }
+}

@@ -12,11 +12,12 @@
     align-items: center;
     justify-content: space-between;
 
+    .ant-btn {
+      color: #fff;
+    }
+
     .projectName {
       max-width: 280px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
       font-weight: 500;
       font-size: 14px;
       color: #c3cdf0;
@@ -64,5 +65,31 @@
         background-color: $blue-400;
       }
     }
+  }
+}
+
+html[schema="light"] {
+  .cardName {
+    .projectName {
+      color: $blue-600 !important;
+    }
+
+    .ant-btn {
+      color: $blue-800;
+    }
+  }
+
+  .subProjectsList {
+    a {
+      color: $blue-800;
+
+      &:hover {
+        background-color: $blue-300;
+      }
+    }
+  }
+
+  .footerTitle {
+    color: $blue-600;
   }
 }

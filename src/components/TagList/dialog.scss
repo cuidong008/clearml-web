@@ -1,0 +1,29 @@
+.addTagDialog {
+  .ant-input-group-addon {
+    border: none !important;
+    background: transparent;
+  }
+
+  .ant-popover-inner-content {
+    background-color: #ffffff !important;
+    color: #222222 !important;
+  }
+
+  .tagOption {
+    max-height: 300px;
+    overflow: auto;
+    padding-inline-start: 8px;
+
+    li {
+      cursor: pointer;
+      padding: 0 10px;
+      &:hover {
+        background: $blue-100;
+      }
+    }
+  }
+
+  .ant-input-wrapper {
+    border-bottom: 2px solid #0d0e15;
+  }
+}

@@ -1,0 +1,131 @@
+.rc-md-editor {
+  border-radius: 3px;
+  border-width: 2px;
+
+  .editor-container .sec-md .input {
+    overflow-y: auto !important;
+  }
+
+  .section.sec-html.visible {
+    border: none;
+  }
+
+  .custom-html-style {
+    ol {
+      li {
+        list-style: decimal;
+      }
+    }
+
+    ul {
+      li {
+        list-style: disc;
+
+        li {
+          list-style: circle;
+        }
+      }
+    }
+  }
+}
+
+.cheatSheetWrap {
+  padding: 12px;
+  height: 700px;
+  overflow-y: auto;
+}
+
+html[schema="dark"] {
+  .cheatSheetWrap {
+    background: $blue-800;
+  }
+
+  .rc-md-editor {
+    background: $blue-900 !important;
+    border-color: $blue-900;
+    color: white;
+
+    .button-wrap .button {
+      color: $blue-200;
+
+      &:hover {
+        color: $blue-400;
+      }
+    }
+
+    .header-list .list-item:hover {
+      background: $blue-500 !important;
+      color: $blue-100 !important;
+    }
+
+    .rc-md-navigation {
+      border-color: $blue-700;
+      background: $blue-600 !important;
+    }
+
+    .editor-container .sec-md .input {
+      background: $blue-900;
+      color: white;
+    }
+
+    .editor-container .section {
+      border-color: $blue-500;
+    }
+
+    .custom-html-style {
+      color: $blue-100;
+
+      a {
+        color: $completed-blue;
+      }
+
+      hr {
+        border-top: 1px solid $blue-200;
+      }
+
+      ol {
+        li {
+          text-decoration-color: $blue-200;
+        }
+      }
+
+      ul {
+        li {
+          text-decoration-color: $blue-200;
+        }
+      }
+
+      code,
+      pre {
+        background-color: $blue-600;
+      }
+
+      blockquote {
+        color: $blue-200;
+        border-left: 10px solid $grey-purple;
+      }
+
+      table {
+        border: 1px solid $blue-300;
+      }
+
+      table tr {
+        border: 1px solid $blue-300;
+      }
+
+      table th {
+        border: 1px solid $blue-300;
+        background-color: $blue-650;
+      }
+
+      table td {
+        border: 1px solid $blue-300;
+      }
+    }
+
+    .drop-wrap {
+      background-color: $blue-700 !important;
+      border-color: $blue-900;
+    }
+  }
+}

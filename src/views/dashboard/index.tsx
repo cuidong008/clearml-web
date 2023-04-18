@@ -1,38 +1,71 @@
-import { ProjectCard } from "@/components/ProjectCard";
-import { useEffect, useRef, useState } from "react";
-import { Project } from "@/types/project";
-import styles from "./index.module.scss";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Table, Tooltip } from "antd";
-import { getAllProjectsEx } from "@/api/project";
-import Column from "antd/es/table/Column";
-import { getAllTasksEx } from "@/api/task";
-import { Task } from "@/types/task";
-import { TaskIconLabel } from "@/components/TaskIconLabel";
-import { TaskStatusLabel } from "@/components/TaskStatusLabel";
-import dayjs from "dayjs";
-import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog";
+import { ProjectCard } from "@/components/ProjectCard"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Project } from "@/types/project"
+import styles from "./index.module.scss"
+import { Link, useNavigate } from "react-router-dom"
+import { Button, message, Table, Typography } from "antd"
+import { getAllProjectsEx } from "@/api/project"
+import Column from "antd/es/table/Column"
+import { getTasksAllEx } from "@/api/task"
+import { Task } from "@/types/task"
+import { TaskIconLabel } from "@/components/TaskIconLabel"
+import { TaskStatusLabel } from "@/components/TaskStatusLabel"
+import dayjs from "dayjs"
+import { ProjectNewDialog } from "@/views/projects/ProjectNewDialog"
+import { ProjectListHeader } from "@/views/projects/ProjectListHeader"
+import { StoreState } from "@/types/store"
+import { useStoreSelector } from "@/store"
 
-const Dashboard = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const ref = useRef<HTMLDivElement>(null);
-  const [newProjDialog, setNewProjDialog] = useState(false);
-  const navigate = useNavigate();
+export const Dashboard = () => {
+  const { showScope, sortOrder, orderBy, groupId, sharedProjects } =
+    useStoreSelector((state: StoreState) => state.project)
+  const user = useStoreSelector((state) => state.app.user)
 
-  useEffect(() => {
-    getProjectList();
-    getRecentTasks();
-  }, []);
+  const [projects, setProjects] = useState<Project[]>([])
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [newProjDialog, setNewProjDialog] = useState(false)
 
-  function getProjectList() {
+  const ref = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
+  const [msg, msgContext] = message.useMessage()
+
+  function generateUserScopeObj() {
+    return showScope === "my"
+      ? { active_users: [user ? user.id : ""] }
+      : showScope === "public"
+      ? { active_users: [groupId] }
+      : {
+          id: sharedProjects.length
+            ? sharedProjects.map((r) => r.id)
+            : ["none"],
+        }
+  }
+
+  function checkQueryCondition(): boolean {
+    if (showScope === "public" && groupId === "") {
+      return false
+    }
+    if (showScope === "my" && !user) {
+      return false
+    }
+    return !(showScope === "share" && !sharedProjects.length)
+  }
+
+  const fetchRecentProjects = useCallback(() => {
+    setProjects([])
+    if (!checkQueryCondition()) {
+      return
+    }
+    const active_user = generateUserScopeObj()
     getAllProjectsEx({
       stats_for_state: "active",
       include_stats: true,
       check_own_contents: true,
-      order_by: ["featured", "-last_update"],
+      ...(showScope !== "my" && { stats_get_all: true }),
+      order_by: ["featured", sortOrder === "desc" ? "-" + orderBy : orderBy],
       page: 0,
       page_size: 6,
+      ...active_user,
       include_stats_filter: { system_tags: ["-pipeline"] },
       allow_public: false,
       only_fields: [
@@ -43,12 +76,25 @@ const Dashboard = () => {
         "default_output_destination",
       ],
     }).then(({ data }) => {
-      setProjects(data.projects ?? []);
-    });
-  }
+      setProjects(data.projects ?? [])
+    })
+  }, [showScope, orderBy, sortOrder, groupId, sharedProjects])
 
-  function getRecentTasks() {
-    getAllTasksEx({
+  const fetchTaskRecent = useCallback(() => {
+    if (!checkQueryCondition()) {
+      return
+    }
+    const queryScope =
+      showScope === "my"
+        ? { user: [user ? user.id : ""] }
+        : showScope === "public"
+        ? { user: [groupId] }
+        : {
+            project: sharedProjects.length
+              ? sharedProjects.map((r) => r.id)
+              : ["none"],
+          }
+    getTasksAllEx({
       page: 0,
       page_size: 5,
       order_by: ["-last_update"],
@@ -60,6 +106,7 @@ const Dashboard = () => {
         "in_progress",
         "completed",
       ],
+      ...queryScope,
       type: [
         "__$not",
         "annotation_manual",
@@ -78,20 +125,30 @@ const Dashboard = () => {
         "started",
         "project.name",
       ],
-      system_tags: ["-archived", "-pipeline"],
       allow_public: false,
     }).then(({ data }) => {
-      setTasks(data.tasks ?? []);
-    });
-  }
+      setTasks(data.tasks ?? [])
+    })
+  }, [user, groupId, showScope, sharedProjects])
+
+  useEffect(() => {
+    fetchRecentProjects()
+    fetchTaskRecent()
+  }, [])
+
+  useEffect(() => {
+    fetchRecentProjects()
+    fetchTaskRecent()
+  }, [orderBy, sortOrder, groupId, showScope, sharedProjects])
 
   return (
     <div className={styles.dashboardBody}>
+      {msgContext}
       <ProjectNewDialog
         show={newProjDialog}
         onClose={(e) => {
-          setNewProjDialog(false);
-          e && getProjectList();
+          setNewProjDialog(false)
+          e && fetchRecentProjects()
         }}
       />
       <div className={styles.recent}>
@@ -100,6 +157,7 @@ const Dashboard = () => {
             <div className={styles.recentTitle}>
               RECENT PROJECTS
               <Link to={"/projects"}>VIEW ALL</Link>
+              <ProjectListHeader />
             </div>
             <div>
               {projects.length > 3 && (
@@ -115,12 +173,16 @@ const Dashboard = () => {
           {projects.map((p) => (
             <div
               key={p.id}
-              onClick={() => navigate(`/projects/${p.id}/experiments`)}
+              onClick={() =>
+                navigate(`/projects/${p.id}/experiments`, {
+                  state: { target: "experiments" },
+                })
+              }
             >
               <ProjectCard project={p} />
             </div>
           ))}
-          {projects.length < 4 && (
+          {projects.length < 4 && showScope === "my" && (
             <div onClick={() => setNewProjDialog(true)}>
               <ProjectCard showAdd={true} />
             </div>
@@ -163,22 +225,36 @@ const Dashboard = () => {
                 dataIndex="name"
                 title="TITLE"
                 render={(name) => (
-                  <Tooltip title={name} color={"blue"}>
-                    <div className="ellipsis" style={{ maxWidth: 450 }}>
-                      {name}
-                    </div>
-                  </Tooltip>
+                  <Typography.Text
+                    ellipsis={{
+                      tooltip: {
+                        color: "blue",
+                        title: name,
+                        placement: "bottom",
+                      },
+                    }}
+                    style={{ maxWidth: 450 }}
+                  >
+                    {name}
+                  </Typography.Text>
                 )}
               />
               <Column
                 dataIndex={["project", "name"]}
                 title="PROJECT"
                 render={(name) => (
-                  <Tooltip title={name} color={"blue"}>
-                    <div className="ellipsis" style={{ maxWidth: 450 }}>
-                      {name}
-                    </div>
-                  </Tooltip>
+                  <Typography.Text
+                    ellipsis={{
+                      tooltip: {
+                        color: "blue",
+                        title: name,
+                        placement: "bottom",
+                      },
+                    }}
+                    style={{ maxWidth: 450 }}
+                  >
+                    {name}
+                  </Typography.Text>
                 )}
               />
               <Column
@@ -207,7 +283,5 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-export default Dashboard;
+  )
+}

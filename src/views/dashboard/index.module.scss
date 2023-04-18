@@ -68,7 +68,7 @@
   padding: 0;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 
   i {
     margin-right: 3px;
@@ -95,7 +95,7 @@
   }
 }
 
-html[data-type="light"] {
+html[schema="light"] {
   .recentTitle {
     color: $blue-500;
   }

@@ -19,21 +19,7 @@
 
     .middleTab {
       font: normal normal 500 12px/20px "Heebo", sans-serif;
-
       white-space: nowrap;
-      color: $blue-grey;
-
-      &.secTabActive {
-        color: $blue-200;
-      }
-
-      background-color: $blue-600;
-
-      &.tabHovered:not(.showSecTab) {
-        background-color: $blue-400;
-        color: $blue-200;
-      }
-
       padding-right: 6px;
     }
 
@@ -49,7 +35,6 @@
     transition: $transition-fast;
     height: 226px;
     width: 100%;
-    background-color: $blue-500;
     border-radius: 0 6px 6px 6px;
     overflow: hidden;
     font-family: Heebo, sans-serif, sans-serif;
@@ -59,14 +44,12 @@
       height: 100%;
       position: absolute;
       padding-top: 10px;
-      background-color: $card-bg;
       display: flex;
       flex-direction: column;
 
       footer {
         margin-top: auto;
         position: relative;
-        background-color: $card-footer-bg;
       }
 
       header {
@@ -89,10 +72,6 @@
         flex: 1 1;
         align-items: center;
       }
-
-      &.firstTabHover {
-        background-color: $blue-400 !important;
-      }
     }
 
     .secondTabContainer {
@@ -100,7 +79,6 @@
       height: 100%;
       position: absolute;
       border-radius: 6px;
-      background: $blue-600;
     }
 
     .plusCard {
@@ -111,15 +89,190 @@
       display: flex;
       cursor: pointer;
 
+      .plusIcon {
+        width: 48px;
+        height: 48px;
+        font-size: 48px;
+      }
+    }
+  }
+}
+
+html[schema="dark"] {
+  .firstTab {
+    .tbf1 {
+      fill: $blue-400;
+    }
+
+    .tbf2 {
+      fill: $blue-600;
+    }
+
+    .tbf3 {
+      fill: $blue-400;
+    }
+
+    .tbf4 {
+      fill: $blue-500;
+    }
+
+    .tbf5 {
+      fill: $blue-400;
+    }
+
+    .tbf6 {
+      fill: $blue-500;
+    }
+
+    .tbf7 {
+      fill: $blue-600;
+    }
+  }
+
+  .middleTab {
+    color: $blue-grey;
+
+    &.secTabActive {
+      color: $blue-200;
+    }
+
+    background-color: $blue-600;
+
+    &.tabHovered:not(.showSecTab) {
+      background-color: $blue-400;
+      color: $blue-200;
+    }
+  }
+
+  .secondTab {
+    .tbs1 {
+      fill: $blue-600;
+    }
+
+    .tbs2 {
+      fill: $blue-400;
+    }
+  }
+
+  .cardContainer {
+    background-color: $blue-500;
+
+    .firstTabContainer {
+      background-color: $blue-500;
+
+      footer {
+        background-color: $blue-600;
+      }
+
+      &.firstTabHover {
+        background-color: $blue-400 !important;
+      }
+    }
+
+    .secondTabContainer {
+      background: $blue-600;
+    }
+
+    .plusCard {
       &.plusCardHover {
         background-color: $blue-400 !important;
       }
 
       .plusIcon {
         color: $blue-300;
-        width: 48px;
-        height: 48px;
-        font-size: 48px;
+      }
+
+      &:hover {
+        .plusIcon {
+          color: $blue-700;
+        }
+      }
+    }
+  }
+}
+
+html[schema="light"] {
+  .firstTab {
+    .tbf1 {
+      fill: $blue-100;
+    }
+
+    .tbf2 {
+      fill: $blue-200;
+    }
+
+    .tbf3 {
+      fill: $blue-100;
+    }
+
+    .tbf4 {
+      fill: $blue-50;
+    }
+
+    .tbf5 {
+      fill: $blue-100;
+    }
+
+    .tbf6 {
+      fill: $blue-50;
+    }
+
+    .tbf7 {
+      fill: $blue-200;
+    }
+  }
+
+  .middleTab {
+    color: $blue-800;
+
+    &.secTabActive {
+      color: $blue-600;
+    }
+
+    background-color: $blue-200;
+
+    &.tabHovered:not(.showSecTab) {
+      background-color: $blue-100;
+      color: $blue-400;
+    }
+  }
+
+  .secondTab {
+    .tbs1 {
+      fill: $blue-200;
+    }
+
+    .tbs2 {
+      fill: $blue-100;
+    }
+  }
+
+  .cardContainer {
+    background-color: $blue-50;
+
+    .firstTabContainer {
+      background-color: $blue-50;
+
+      footer {
+        background-color: $cloudy-blue-two;
+      }
+
+      &.firstTabHover {
+        background-color: $blue-100 !important;
+      }
+    }
+
+    .secondTabContainer {
+      background: $blue-200;
+    }
+
+    .plusCard {
+      &.plusCardHover {
+        background-color: $blue-100 !important;
+      }
+
+      .plusIcon {
+        color: $blue-300;
       }
 
       &:hover {

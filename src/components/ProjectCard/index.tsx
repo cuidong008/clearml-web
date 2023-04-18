@@ -1,69 +1,91 @@
-import { Project } from "@/types/project";
-import * as React from "react";
-import { useState } from "react";
-import classNames from "classnames";
-import styles from "./index.module.scss";
-
-import { Button, Input, Menu, Popover, Space, Tooltip } from "antd";
+import { Project } from "@/types/project"
+import React, { useEffect, useState } from "react"
+import classNames from "classnames"
+import styles from "./index.module.scss"
+import { Button, Input, Menu, Popover, Space, Tooltip, Typography } from "antd"
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteFilled,
   EditFilled,
   MenuOutlined,
-  ShareAltOutlined,
-} from "@ant-design/icons";
-import { CircleCounter } from "@/components/CircleCounter";
-import { CircleTypeEnum } from "@/types/enums";
-import { DkCard } from "@/components/DkCard";
+} from "@ant-design/icons"
+import { CircleCounter } from "@/components/CircleCounter"
+import { CircleTypeEnum } from "@/types/enums"
+import { DkCard } from "@/components/DkCard"
+import { useNavigate } from "react-router-dom"
+
+export interface MenuInfo {
+  key: string
+  keyPath: string[]
+  /** @deprecated This will not support in future. You should avoid to use this */
+  item: React.ReactInstance
+  domEvent: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
+}
 
 export const ProjectCard = (props: {
-  project?: Project;
-  showMenu?: boolean;
-  showAdd?: boolean;
+  project?: Project
+  showMenu?: boolean
+  showAdd?: boolean
+  editProjId?: string
+  dispatch?: (action: string, project?: Project, data?: string) => void
 }) => {
-  const { project, showMenu, showAdd } = props;
-  const [showRename, setShowRename] = useState(false);
-  const [open, setOpen] = useState(false);
+  const { project, showMenu, showAdd, dispatch, editProjId } = props
+  const [projectNewName, setProjectNewName] = useState("")
+  const [showRename, setShowRename] = useState(false)
+  const navigate = useNavigate()
 
-  function startRename() {
-    setOpen(false);
+  useEffect(() => {
+    if (project?.id !== editProjId && showRename) {
+      setShowRename(() => false)
+    }
+  }, [editProjId, project, showRename])
+
+  function startRename(e: MenuInfo) {
+    e.domEvent.stopPropagation()
+    setProjectNewName(project?.name ?? "")
+    setShowRename(true)
+    dispatch?.("setEditProj", project)
   }
 
   function startShare() {
-    setOpen(false);
+    dispatch?.("share", project)
   }
 
-  function startDelete() {
-    setOpen(false);
+  function startDelete(e: MenuInfo) {
+    e.domEvent.stopPropagation()
+    dispatch?.("delete", project)
+  }
+
+  function emitRename() {
+    dispatch?.("rename", project, projectNewName)
+    setShowRename(false)
   }
 
   function convertSecToDaysHrsMinsSec(secs: number) {
-    const dayInSec = 60 * 60 * 24;
-    const hourInSec = 60 * 60;
-    const minInSec = 60;
-    const d = Math.floor(secs / dayInSec);
-    const h = Math.floor((secs - d * dayInSec) / hourInSec);
-    const m = Math.floor((secs - (d * dayInSec + h * hourInSec)) / minInSec);
-    const s = secs % 60;
-    const H = h < 10 ? "0" + h : h;
-    const M = m < 10 ? "0" + m : m;
-    const S = s < 10 ? "0" + s : s;
-    return `${
-      d === 1 ? d + " DAY " : d > 1 ? d + " DAYS " : ""
-    } ${H}:${M}:${S}`;
+    const dayInSec = 60 * 60 * 24
+    const hourInSec = 60 * 60
+    const minInSec = 60
+    const d = Math.floor(secs / dayInSec)
+    const h = Math.floor((secs - d * dayInSec) / hourInSec)
+    const m = Math.floor((secs - (d * dayInSec + h * hourInSec)) / minInSec)
+    const s = secs % 60
+    const H = h < 10 ? "0" + h : h
+    const M = m < 10 ? "0" + m : m
+    const S = s < 10 ? "0" + s : s
+    return `${d === 1 ? d + " DAY " : d > 1 ? d + " DAYS " : ""} ${H}:${M}:${S}`
   }
 
   function shortProjectName(value: string): string {
-    const shortName = value.substring(value.lastIndexOf("/") + 1);
+    const shortName = value.substring(value.lastIndexOf("/") + 1)
     return `${
       (value.startsWith("[") && !shortName.startsWith("[") ? "[" : "") +
       shortName
-    }`;
+    }`
   }
 
   function subProjectNameTrans(value: string) {
-    const count = (value.match(/\//g) || []).length;
+    const count = (value.match(/\//g) || []).length
 
     if (count > 1) {
       return (
@@ -77,13 +99,13 @@ export const ProjectCard = (props: {
             {value.substring(value.lastIndexOf("/"))}
           </div>
         </>
-      );
+      )
     }
     return (
       <div className={classNames(styles.subPath, styles.doubleWidth)}>
         {value}
       </div>
-    );
+    )
   }
 
   return (
@@ -96,44 +118,64 @@ export const ProjectCard = (props: {
           <>
             {project && (
               <div className={styles.cardName}>
-                <Tooltip title={project.name} placement="bottom" color={"blue"}>
-                  <span className={styles.projectName}>
+                {!showRename && (
+                  <Typography.Text
+                    className={styles.projectName}
+                    ellipsis={{
+                      tooltip: {
+                        color: "blue",
+                        title: project.name,
+                        placement: "bottom",
+                      },
+                    }}
+                  >
                     {shortProjectName(project.name)}
-                  </span>
-                </Tooltip>
-                {showRename && (
+                  </Typography.Text>
+                )}
+                {showRename && editProjId === project.id && (
                   <Space>
-                    <Input />
-                    <Button type="text" icon={<CheckOutlined />} />
-                    <Button type="text" icon={<CloseOutlined />} />
+                    <Input
+                      value={projectNewName}
+                      onChange={(e) => setProjectNewName(e.target.value)}
+                    />
+                    <Button
+                      type="text"
+                      icon={<CheckOutlined />}
+                      onClick={() => emitRename()}
+                    />
+                    <Button
+                      type="text"
+                      icon={<CloseOutlined />}
+                      onClick={() => setShowRename(false)}
+                    />
                   </Space>
                 )}
                 {showMenu && (
                   <Popover
-                    open={open}
-                    trigger={"click"}
                     placement={"bottomLeft"}
+                    destroyTooltipOnHide
                     content={
-                      <div onClick={(e) => e.stopPropagation()}>
+                      <div>
                         <Menu
                           items={[
                             {
                               key: "rename",
                               icon: <EditFilled />,
                               label: "Rename",
-                              onClick: startRename,
+                              onClick: (e) => startRename(e),
                             },
-                            {
-                              key: "share",
-                              icon: <ShareAltOutlined />,
-                              label: "Share",
-                              onClick: startShare,
-                            },
+                            // {
+                            //   key: "share",
+                            //   icon: <ShareAltOutlined />,
+                            //   label: "Share",
+                            //   disabled: true,
+                            //   onClick: startShare,
+                            // },
                             {
                               key: "delete",
                               icon: <DeleteFilled />,
                               label: "Delete",
-                              onClick: startDelete,
+                              onClick: (e) => startDelete(e),
                             },
                           ]}
                         />
@@ -145,11 +187,9 @@ export const ProjectCard = (props: {
                       style={{
                         background: "none",
                         borderColor: "transparent",
-                        color: "#fff",
                       }}
                       onClick={(e) => {
-                        e.stopPropagation();
-                        setOpen(true);
+                        e.stopPropagation()
                       }}
                       icon={<MenuOutlined />}
                     />
@@ -203,7 +243,7 @@ export const ProjectCard = (props: {
               <div className={styles.footerTitle}>
                 COMPUTE TIME:{" "}
                 {convertSecToDaysHrsMinsSec(
-                  project.stats?.active?.total_runtime ?? 0
+                  project.stats?.active?.total_runtime ?? 0,
                 )}
               </div>
             )}
@@ -213,7 +253,16 @@ export const ProjectCard = (props: {
         subCard={
           <div className={styles.subProjectsList}>
             {project?.sub_projects?.map((p) => (
-              <a key={p.id} style={{ display: "flex", alignItems: "center" }}>
+              <a
+                key={p.id}
+                style={{ display: "flex", alignItems: "center" }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(`/projects/${p.id}/experiments`, {
+                    state: { target: "experiments" },
+                  })
+                }}
+              >
                 <Tooltip title={p.name} placement="bottom" color={"blue"}>
                   {subProjectNameTrans(p.name)}
                 </Tooltip>
@@ -223,5 +272,5 @@ export const ProjectCard = (props: {
         }
       />
     </div>
-  );
-};
+  )
+}

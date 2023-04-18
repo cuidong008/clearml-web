@@ -1,32 +1,30 @@
-import { RouteObject } from "@/types/router";
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { lazyLoad } from "./utils";
-
-export const AuthRouter = (props: { children: JSX.Element }) => {
-  const { children } = props;
-  const { pathname } = useLocation();
-  if (pathname.includes("/share")) {
-    return children;
-  }
-  // * 判断是否有Token
-  const token = "123"; //store.getState().user.token;
-  if (!token) return <Navigate to="/login" replace />;
-  // todo add auth logic
-  // * 当前账号有权限返回 Router，正常访问页面
-  return children;
-};
+import { RouteObject } from "@/types/router"
+import React from "react"
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Navigate,
+  Route,
+} from "react-router-dom"
+import { Dashboard } from "@/views/dashboard"
+import { Projects } from "@/views/projects"
+import WorkerAndQueues from "@/views/workerAndQueues"
+import NotAuth from "@/components/errors/403"
+import NotFound from "@/components/errors/404"
+import NotNetwork from "@/components/errors/500"
+import { Overview } from "@/views/projects/overview"
+import { ProjectList } from "@/views/projects/list"
+import { LayoutIndex } from "@/layout"
+import { Login } from "@/layout/login"
 
 export const rootRouter: Array<RouteObject> = [
   {
-    path: "/",
-    name: "home",
-    element: <Navigate to={"/dashboard"} />,
-  },
-  {
     path: "/dashboard",
     name: "dashboard",
-    element: lazyLoad(React.lazy(() => import("@/views/dashboard"))),
+    async lazy() {
+      const { Dashboard } = await import("@/views/dashboard")
+      return { Component: Dashboard }
+    },
     meta: {
       requiresAuth: false,
       title: "Dashboard",
@@ -35,7 +33,7 @@ export const rootRouter: Array<RouteObject> = [
   },
   {
     path: "/projects",
-    element: lazyLoad(React.lazy(() => import("@/views/projects"))),
+    element: <Projects />,
     name: "projects",
     meta: {
       requiresAuth: true,
@@ -44,9 +42,49 @@ export const rootRouter: Array<RouteObject> = [
     },
     children: [
       {
+        path: ":projId/projects",
+        name: "projectsChilds",
+        element: <ProjectList />,
+      },
+      {
         path: ":projId/experiments",
-        name: "a",
-        element: <div id="2"></div>,
+        name: "experiments",
+        lazy: async () => {
+          const c = await import("@/views/projects/experiments")
+          return { Component: c.Experiments }
+        },
+        children: [
+          {
+            path: ":expId/details",
+            name: "experimentDetails",
+            lazy: async () => {
+              const c = await import(
+                "@/views/projects/experiments/details/DetailTabPanel"
+              )
+              return { Component: c.DetailTabPanel }
+            },
+          },
+          {
+            path: ":expId/:output/details",
+            name: "experimentDetails",
+            lazy: async () => {
+              const c = await import(
+                "@/views/projects/experiments/details/DetailTabPanel"
+              )
+              return { Component: c.DetailTabPanel }
+            },
+          },
+        ],
+      },
+      {
+        path: ":projId/overview",
+        name: "overview",
+        element: <Overview />,
+      },
+      {
+        path: ":projId/models",
+        name: "models",
+        element: <div id="3"></div>,
       },
     ],
   },
@@ -82,7 +120,7 @@ export const rootRouter: Array<RouteObject> = [
   },
   {
     path: "/workers-and-queues",
-    element: lazyLoad(React.lazy(() => import("@/views/workerAndQueues"))),
+    element: <WorkerAndQueues />,
     name: "workers-and-queues",
     meta: {
       requiresAuth: true,
@@ -122,21 +160,50 @@ export const rootRouter: Array<RouteObject> = [
   {
     path: "/403",
     name: "403",
-    element: lazyLoad(React.lazy(() => import("@/components/errors/403"))),
+    element: <NotAuth />,
   },
   {
     path: "/404",
     name: "404",
-    element: lazyLoad(React.lazy(() => import("@/components/errors/404"))),
+    element: <NotFound />,
   },
   {
     path: "/500",
     name: "500",
-    element: lazyLoad(React.lazy(() => import("@/components/errors/500"))),
+    element: <NotNetwork />,
   },
-  {
-    path: "*",
-    name: "hide",
-    element: <Navigate to="/404" />,
-  },
-];
+]
+
+function genRoutes(root: RouteObject[]) {
+  return root.map((item) =>
+    item.children?.length ? (
+      <Route
+        key={item.name}
+        path={item.path}
+        lazy={item.lazy}
+        element={item.element}
+      >
+        {genRoutes(item.children)}
+      </Route>
+    ) : (
+      <Route
+        key={item.name}
+        path={item.path}
+        lazy={item.lazy}
+        element={item.element}
+      />
+    ),
+  )
+}
+
+const routes = createRoutesFromElements(
+  <>
+    <Route path={"/"} element={<Navigate to={"/dashboard"} />} />
+    <Route path="/" element={<LayoutIndex />}>
+      {genRoutes(rootRouter)}
+    </Route>
+    <Route path={"/login"} element={<Login />} />
+    <Route path={"*"} element={<Navigate to={"/404"} />} />
+  </>,
+)
+export const AppRouter = createBrowserRouter(routes)
