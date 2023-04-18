@@ -176,7 +176,7 @@ export const ContextMenu = (props: {
         }`,
         key: "reset",
         disabled: () =>
-          !!ctx.target && selectionDisabledReset(ctx.selectedTasks).disable,
+          !!ctx.target && selectionDisabledReset(getCheckTasks()).disable,
         show: true,
         ico: "al-ico-reset",
         onClick: () => {
@@ -191,7 +191,7 @@ export const ContextMenu = (props: {
         }`,
         key: "abort",
         disabled: () =>
-          !!ctx.target && selectionDisabledAbort(ctx.selectedTasks).disable,
+          !!ctx.target && selectionDisabledAbort(getCheckTasks()).disable,
         show: true,
         ico: "al-ico-abort",
         onClick: () => {
@@ -204,9 +204,11 @@ export const ContextMenu = (props: {
         disabled: () => false,
         show:
           !!ctx.target &&
-          !selectionDisabledAbortAllChildren([ctx.target]).disable,
+          !selectionDisabledAbortAllChildren(getCheckTasks()).disable,
         ico: "al-ico-abort-all",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("abortAll", "ctx")
+        },
       },
       {
         label: `Publish ${
@@ -218,19 +220,20 @@ export const ContextMenu = (props: {
         }`,
         key: "publish",
         disabled: () =>
-          !!ctx.target && selectionDisabledPublishTasks([ctx.target]).disable,
+          !!ctx.target &&
+          selectionDisabledPublishTasks(getCheckTasks()).disable,
         show: true,
         ico: "al-ico-publish",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("publish", "ctx")
+        },
       },
     ],
     [
       {
         label: `Add Tag ${
           ctx.ctxMode === "multi"
-            ? `( ${
-                selectionDisabledPublishTasks(getCheckTasks()).available
-              } items )`
+            ? `( ${selectionDisabledTags(getCheckTasks()).available} items )`
             : ""
         }`,
         key: "add-tag",
@@ -248,16 +251,24 @@ export const ContextMenu = (props: {
         disabled: () => !ctx.target,
         show: true,
         ico: "al-ico-clone",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("clone", "ctx")
+        },
       },
       {
-        label: "Move to Project",
+        label: `Move to Project ${
+          ctx.ctxMode === "multi"
+            ? `( ${selectionDisabledMoveTo(getCheckTasks()).available} items )`
+            : ""
+        }`,
         key: "move-to",
         disabled: () =>
           !!ctx.target && selectionDisabledMoveTo([ctx.target]).disable,
         show: true,
         ico: "al-ico-move-to",
-        onClick: () => {},
+        onClick: () => {
+          onItemClick("move", "ctx")
+        },
       },
     ],
   ]
