@@ -8,9 +8,12 @@ export const AbortExperimentDialog = (props: {
 }) => {
   const { show, onClose } = props
   const ctx = useMenuCtx()
-  const filtered = selectionDisabledAbort(ctx.selectedTasks)
+  const filtered = selectionDisabledAbort(
+    ctx.ctxMode === "single" && ctx.target ? [ctx.target] : ctx.selectedTasks,
+  )
   const multi = ctx.ctxMode === "multi" && filtered.available > 1
   const canAbort = filtered.selectedFiltered
+
   return (
     <Modal
       width={550}
