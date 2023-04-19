@@ -117,7 +117,7 @@ export interface Script {
   version_num?: string
   entry_point?: string
   working_dir?: string
-  requirements?: object
+  requirements?: Record<string, any>
   diff?: string
 }
 

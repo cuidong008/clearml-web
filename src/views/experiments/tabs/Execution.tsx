@@ -1,9 +1,13 @@
 import { EditableSection } from "../shared/EditableSection"
-import { Form, Input, Select } from "antd"
+import { Button, Form, Input, Select } from "antd"
 import { useDetailCtx } from "@/views/experiments/details/DetailContext"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Script, Task } from "@/types/task"
 import { tasksEdit } from "@/api/task"
+import { selectionDisabledEditable } from "@/views/experiments/menu/items.utils"
+import { EditableTextView } from "@/views/experiments/shared/EditableTextView"
+import classNames from "classnames"
+import styles from "@/views/experiments/shared/EditableTextView/index.module.scss"
 
 const scriptOptions = [
   {
@@ -37,10 +41,10 @@ export const Execution = () => {
     sourceForm.setFieldsValue(ctx.current?.script)
     if (script) {
       setScriptType(
-        script?.branch
-          ? "branch"
-          : script?.version_num
+        script?.version_num
           ? "version_num"
+          : script?.branch
+          ? "branch"
           : script?.tag
           ? "tag"
           : "version_num",
@@ -81,17 +85,17 @@ export const Execution = () => {
     <div>
       <EditableSection
         label={<h4>SOURCE CODE</h4>}
-        editable={true}
+        editable={selectionDisabledEditable(curData)}
         onEdit={(e) => {
           if (e) {
             setEditSection("source")
           } else {
             setEditSection("")
             setScriptType(
-              curData?.script?.branch
-                ? "branch"
-                : curData?.script?.version_num
+              curData?.script?.version_num
                 ? "version_num"
+                : curData?.script?.branch
+                ? "branch"
                 : curData?.script?.tag
                 ? "tag"
                 : "version_num",
@@ -136,7 +140,11 @@ export const Execution = () => {
                 </Form.Item>
               </div>
             ) : (
-              <div>{`${curData?.script?.[scriptType] ?? ""}`}</div>
+              <div>{`${curData?.script?.[scriptType] ?? ""}${
+                scriptType === "version_num" && curData?.script?.branch
+                  ? ` (in branch ${curData.script.branch})`
+                  : ""
+              }`}</div>
             )}
           </Form.Item>
           <Form.Item label="SCRIPT PATH" name="entry_point">
@@ -155,29 +163,33 @@ export const Execution = () => {
           </Form.Item>
         </Form>
       </EditableSection>
-      <EditableSection
-        label={<h4>UNCOMMITTED CHANGES</h4>}
-        editable={true}
+      <EditableTextView
+        text={curData?.script?.diff}
+        label={"UNCOMMITTED CHANGES"}
+        customBtn={
+          <Button className={classNames(styles.panelBtn)}>DISCARD DIFFS</Button>
+        }
+        editable={selectionDisabledEditable(curData)}
         onEdit={(e) => (e ? setEditSection("changes") : setEditSection(""))}
-      >
-        <div></div>
-      </EditableSection>
+      />
+      <EditableTextView
+        text={curData?.script?.requirements?.pip}
+        label={"INSTALLED PACKAGES"}
+        customBtn={
+          <Button className={classNames(styles.panelBtn)}>CLEAR</Button>
+        }
+        editable={selectionDisabledEditable(curData)}
+        onEdit={(e) => (e ? setEditSection("packages") : setEditSection(""))}
+      />
       <EditableSection
-        editable={true}
+        editable={selectionDisabledEditable(curData)}
         label={<h4>CONTAINER</h4>}
         onEdit={(e) => (e ? setEditSection("container") : setEditSection(""))}
       >
         <h4></h4>
       </EditableSection>
       <EditableSection
-        editable={true}
-        label={<h4>INSTALLED PACKAGES</h4>}
-        onEdit={(e) => (e ? setEditSection("packages") : setEditSection(""))}
-      >
-        <div></div>
-      </EditableSection>
-      <EditableSection
-        editable={true}
+        editable={selectionDisabledEditable(curData)}
         label={
           <h4 style={{ fontWeight: 500, color: "#71758A", fontSize: 11 }}>
             SETUP SHELL SCRIPT
@@ -188,7 +200,7 @@ export const Execution = () => {
         <div></div>
       </EditableSection>
       <EditableSection
-        editable={true}
+        editable={selectionDisabledEditable(curData)}
         label={<h4>OUTPUT</h4>}
         onEdit={(e) => (e ? setEditSection("output") : setEditSection(""))}
       >
