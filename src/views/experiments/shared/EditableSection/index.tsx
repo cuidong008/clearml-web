@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import "./index.scss"
+import styles from "./index.module.scss"
 import { Button } from "antd"
 import { useDetailCtx } from "../../details/DetailContext"
 import { ReactNode, useState } from "react"
@@ -29,21 +29,24 @@ export const EditableSection = (props: {
 
   return (
     <div
-      className={classNames("editableSection", {
-        editMode: edit,
-        editable: editable,
+      className={classNames("editPanel", styles.editableSection, {
+        [styles.editMode]: edit,
+        [styles.editable]: editable,
       })}
       onDoubleClick={() => editable && startEdit()}
     >
       {editable && !edit && (
-        <Button className="editBtn primaryBtn" onClick={() => startEdit()}>
+        <Button
+          className={classNames(styles.editBtn, "primaryBtn")}
+          onClick={() => startEdit()}
+        >
           EDIT
         </Button>
       )}
       {label}
       {children}
       {editable && edit && (
-        <div className="formBtn">
+        <div className={styles.formBtn}>
           <Button onClick={() => stopEdit()}>CANCEL</Button>
           <Button
             className="primaryBtn"

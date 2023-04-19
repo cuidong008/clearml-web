@@ -235,6 +235,36 @@
   .tabBody {
     height: calc(100% - 150px);
     overflow: auto;
+
+    :global(.editPanel) {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: 100%;
+      padding: 24px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background: #ffffff;
+    }
+
+    :global(.primaryBtn) {
+      background-color: #707ba3;
+      color: #fff;
+      border: none;
+
+      &:hover {
+        color: #fff;
+        background-color: #384161;
+      }
+    }
+
+    h4 {
+      margin: 12px 0;
+      display: block;
+      position: relative;
+      color: $blue-400;
+      max-width: 200px;
+    }
   }
 
   .editingOverlay {
