@@ -159,7 +159,7 @@ export const Information = () => {
             <div>{curData?.id ? curData.id : "N/A"}</div>
           </Form.Item>
           {map(curData?.runtime, (v, k) => (
-            <Form.Item key={k} label={k.toUpperCase()}>
+            <Form.Item key={k} label={k}>
               <div>{v ? v : "N/A"}</div>
             </Form.Item>
           ))}

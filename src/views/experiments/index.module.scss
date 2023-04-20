@@ -54,7 +54,7 @@
   .experimentTable {
     display: block;
     overflow: auto !important;
-    height: calc(100% - 2px);
+    height: calc(100% - 0px);
     border-right: 1px solid $blue-500;
 
     &.activeList {

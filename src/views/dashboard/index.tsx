@@ -124,6 +124,7 @@ export const Dashboard = () => {
         "last_update",
         "started",
         "project.name",
+        "project.id",
       ],
       allow_public: false,
     }).then(({ data }) => {
@@ -213,6 +214,12 @@ export const Dashboard = () => {
               rowKey="id"
               pagination={false}
               size="middle"
+              onRow={(record) => ({
+                onDoubleClick: () =>
+                  navigate(
+                    `/projects/${record.project?.id}/experiments/${record.id}/details`,
+                  ),
+              })}
             >
               <Column
                 dataIndex="type"
