@@ -167,14 +167,7 @@ export const EditableTextView = (props: {
             }
           }}
         >
-          {!showSearch && (
-            <Button
-              onMouseEnter={() => setShowSearch(true)}
-              className={classNames(styles.panelBtn)}
-              icon={<SearchOutlined />}
-            />
-          )}
-          {showSearch && (
+          {showSearch ? (
             <div className={styles.searchTool}>
               <Input
                 placeholder="Type to search"
@@ -211,6 +204,12 @@ export const EditableTextView = (props: {
                 />
               </div>
             </div>
+          ) : (
+            <Button
+              onMouseEnter={() => setShowSearch(true)}
+              className={classNames(styles.panelBtn)}
+              icon={<SearchOutlined />}
+            />
           )}
         </div>
         <Button
@@ -239,10 +238,7 @@ export const EditableTextView = (props: {
         )}
       </Space>
       {typeof label === "string" ? <h4>{label}</h4> : label}
-      {!text && (
-        <div className={styles.emptyText}>{emptyText ?? "No data to show"}</div>
-      )}
-      {text && (
+      {text ? (
         <div className={styles.textScrollView} ref={ref}>
           {lines.map((line, k) => (
             <div key={k} className={styles.line}>
@@ -265,6 +261,8 @@ export const EditableTextView = (props: {
             </div>
           ))}
         </div>
+      ) : (
+        <div className={styles.emptyText}>{emptyText ?? "No data to show"}</div>
       )}
     </div>
   )
