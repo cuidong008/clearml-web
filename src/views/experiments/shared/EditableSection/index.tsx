@@ -2,7 +2,7 @@ import classNames from "classnames"
 import styles from "./index.module.scss"
 import { Button } from "antd"
 import { useDetailCtx } from "../../details/DetailContext"
-import { ReactNode, useState } from "react"
+import { CSSProperties, ReactNode, useState } from "react"
 
 export const EditableSection = (props: {
   children: JSX.Element
@@ -10,9 +10,10 @@ export const EditableSection = (props: {
   editable: boolean
   onEdit?: (e: boolean) => void
   onSave?: () => Promise<boolean>
+  style?: CSSProperties
 }) => {
   const ctx = useDetailCtx()
-  const { children, editable, label, onEdit, onSave } = props
+  const { children, editable, label, onEdit, onSave, style } = props
   const [edit, setEdit] = useState(false)
 
   function startEdit() {
@@ -33,6 +34,7 @@ export const EditableSection = (props: {
         [styles.editMode]: edit,
         [styles.editable]: editable,
       })}
+      style={style}
       onDoubleClick={() => editable && startEdit()}
     >
       {editable && !edit && (

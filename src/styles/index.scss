@@ -103,18 +103,20 @@ html[schema="light"] {
   text-overflow: ellipsis;
 }
 
-.commonDialogTitle {
-  font-size: 24px;
-  font-weight: 300;
-  margin-top: 10px;
-  color: #8492c2;
-  display: block;
-  font-family: Heebo, sans-serif;
-}
+html[schema="dark"] {
+  .commonDialogTitle {
+    font-size: 24px;
+    font-weight: 300;
+    margin-top: 10px;
+    color: #8492c2;
+    display: block;
+    font-family: Heebo, sans-serif;
+  }
 
-.subDialogHeader {
-  font-size: 14px;
-  text-align: center;
-  color: $blue-400;
-  margin-left: 10px !important;
+  .subDialogHeader {
+    font-size: 14px;
+    text-align: center;
+    color: $blue-400;
+    margin-left: 10px !important;
+  }
 }
