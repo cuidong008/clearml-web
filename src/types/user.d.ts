@@ -18,7 +18,7 @@ export interface CurrentUser {
   family_name?: string
   role?: string
   avatar?: string
-  company?: {
+  company: {
     id?: string
     name?: string
   }

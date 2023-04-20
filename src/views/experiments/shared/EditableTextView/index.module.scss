@@ -1,0 +1,120 @@
+.editableTextView {
+  .btnBar {
+    position: absolute;
+    right: 40px;
+    top: 70px;
+
+    .searchTool {
+      background-color: $blue-500;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      transition: 0.3s;
+
+      :global(.ant-input-group-wrapper) {
+        width: auto;
+      }
+
+      :global(.ant-input-affix-wrapper .ant-input) {
+        color: $blue-200 !important;
+      }
+
+      :global(.ant-input::-webkit-input-placeholder) {
+        color: $blue-200 !important;
+      }
+
+      :global(.ant-input-group-addon) {
+        border: none;
+        color: $blue-280;
+      }
+
+      .count {
+        color: $blue-100;
+      }
+
+      .upDown {
+        color: $blue-200;
+        cursor: pointer;
+
+        &.disabled {
+          cursor: not-allowed;
+          color: $blue-480;
+
+          i {
+            pointer-events: none;
+          }
+        }
+
+        &:hover:not(.disabled) {
+          color: $blue-100;
+        }
+      }
+
+      :global(.ant-radio-button-wrapper:not(:first-child)::before) {
+        border-color: $blue-480;
+      }
+    }
+  }
+
+  .panelBtn {
+    padding: 5px 10px;
+    background-color: $blue-600;
+    color: $blue-280;
+    border: none;
+    min-width: 40px;
+    z-index: 100;
+    width: auto !important;
+    height: 32px !important;
+
+    &:hover {
+      color: $blue-100;
+      background-color: $blue-500;
+    }
+  }
+
+  .textScrollView {
+    padding: 16px 0 0 16px;
+    border-radius: 4px;
+    background: #0d0e15;
+    min-height: 250px;
+    max-height: 300px;
+    height: 100%;
+    color: $white;
+    overflow: auto;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+
+    &.disabled {
+      color: $blue-400;
+    }
+
+    .line {
+      height: 22px;
+      white-space: pre;
+
+      ::selection {
+        background-color: darken($neon-yellow, 20%);
+      }
+
+      .found {
+        &::selection {
+          background-color: $white;
+          color: darken($neon-yellow, 20%);
+        }
+
+        background-color: darken($neon-yellow, 20%);
+        border-radius: 4px;
+        padding: 0 2px;
+
+        &.current {
+          background-color: darken($orangada, 10%);
+
+          &::selection {
+            background-color: $white;
+            color: darken($orangada, 10%);
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,8 +5,10 @@ import store from "@/store"
 
 export const selectionAllIsArchive = (selectedTasks: Task[]) =>
   selectedTasks.every((s) => s?.system_tags?.includes("archived"))
+
 export const selectionIsArchive = (selectedTasks: Task) =>
   selectedTasks?.system_tags?.includes("archived")
+
 export const canEnqueue = (task: Task): boolean =>
   task &&
   (TaskStatusEnum.Created === task.status ||
@@ -23,16 +25,37 @@ export const canContinue = (task: Task): boolean =>
   ) &&
   task.type !== TaskTypeEnum.ManualAnnotation &&
   !!task.execution?.queue
+
 export const countAvailableAndIsDisable = (selectedFiltered: Task[]) => ({
   available: selectedFiltered.length,
   disable: selectedFiltered.length === 0,
 })
+
 export const isReadOnly = (item: Task) => {
   if (get(item, "id") === "*") {
     return false
   }
   return !get(item, "company.id") || !!get(item, "readOnly")
 }
+
+export const isSharedAndNotOwner = (
+  item: Task,
+  activeWorkSpace: { id?: string; name?: string },
+): boolean =>
+  !!item.system_tags?.includes("shared") &&
+  !!item.company?.id &&
+  !!activeWorkSpace?.id &&
+  item.company.id !== activeWorkSpace.id
+
+export const selectionDisabledEditable = (task?: Task) => {
+  return (
+    !!task &&
+    task.status === TaskStatusEnum.Created &&
+    !isReadOnly(task) &&
+    !isSharedAndNotOwner(task, store.getState().app.user?.company ?? {})
+  )
+}
+
 export const selectionDisabledAbort = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>
@@ -44,6 +67,7 @@ export const selectionDisabledAbort = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledPublishTasks = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>
@@ -58,6 +82,7 @@ export const selectionDisabledPublishTasks = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledPublishModels = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) => !isReadOnly(_selected) && !_selected?.ready,
@@ -88,6 +113,7 @@ export const selectionDisabledAbortAllChildren = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledDelete = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>
@@ -97,6 +123,7 @@ export const selectionDisabledDelete = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledMoveTo = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>
@@ -105,6 +132,7 @@ export const selectionDisabledMoveTo = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledQueue = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>
@@ -112,6 +140,7 @@ export const selectionDisabledQueue = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledViewWorker = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>
@@ -119,24 +148,28 @@ export const selectionDisabledViewWorker = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledContinue = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) => canContinue(_selected) && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledEnqueue = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) => canEnqueue(_selected) && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledDequeue = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) => canDequeue(_selected) && !isReadOnly(_selected),
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledArchive = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>
@@ -145,6 +178,7 @@ export const selectionDisabledArchive = (selectedTasks: Task[]) => {
   )
   return { selectedFiltered, ...countAvailableAndIsDisable(selectedFiltered) }
 }
+
 export const selectionDisabledTags = (selectedTasks: Task[]) => {
   const selectedFiltered = selectedTasks.filter(
     (_selected) =>

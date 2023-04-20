@@ -64,6 +64,7 @@ export const TASK_INFO_ONLY_FIELDS_BASE = [
   "script.entry_point",
   "script.working_dir",
   "script.requirements",
+  "script.diff",
   "system_tags",
   "published",
   "last_iteration",
