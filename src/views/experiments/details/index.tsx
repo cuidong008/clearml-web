@@ -174,8 +174,8 @@ export const ExperimentDetails = (props: {
     if (currentUser?.id === curTask?.user?.id) {
       setActiveTab("info")
       setTimeout(() => {
-        const event1 = new MouseEvent("dblclick", { bubbles: true })
-        document.querySelector(".commentEdit")?.dispatchEvent(event1)
+        const eventTriggerEdit = new MouseEvent("dblclick", { bubbles: true })
+        document.querySelector(".commentEdit")?.dispatchEvent(eventTriggerEdit)
       }, 200)
     }
   }
