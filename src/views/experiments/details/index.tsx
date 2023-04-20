@@ -47,9 +47,7 @@ export const ExperimentDetails = (props: {
   const [curTask, setCurTask] = useState<Task>()
   const [loading, setLoading] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
-  const [showEditComment, setShowEditComment] = useState(false)
   const [newTaskName, setNewTaskName] = useState("")
-  const [newComment, setNewComment] = useState("")
   const [activeTab, setActiveTab] = useState("execution")
   const [editing, setEditing] = useState(false)
 
@@ -174,9 +172,11 @@ export const ExperimentDetails = (props: {
 
   function startEditComment() {
     if (currentUser?.id === curTask?.user?.id) {
-      setShowEditComment(true)
       setActiveTab("info")
-      setNewComment(curTask?.comment ?? "")
+      setTimeout(() => {
+        const event1 = new MouseEvent("dblclick", { bubbles: true })
+        document.querySelector(".commentEdit")?.dispatchEvent(event1)
+      }, 200)
     }
   }
 
