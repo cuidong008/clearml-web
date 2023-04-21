@@ -236,6 +236,27 @@
     height: calc(100% - 145px);
     overflow: auto;
 
+    :global(.noOutputData) {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
+      display: block;
+      text-align: center;
+      color: #ced1dc;
+      h3 {
+        font-family: Heebo, sans-serif;
+        font-weight: 500;
+        margin-top: 0;
+      }
+
+      i {
+        height: 100px;
+        width: 100px;
+        color: $blue-250;
+      }
+    }
+
     :global(.editPanel) {
       display: flex;
       flex-direction: column;

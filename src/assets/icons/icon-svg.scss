@@ -63,6 +63,10 @@
   height: 16px;
 }
 
+.i-no-log {
+  @include icon("@/assets/icons/no-log.svg");
+}
+
 .new-experiment-table {
   height: 120px;
   background-image: url("@/assets/icons/new-experiment-table.png");

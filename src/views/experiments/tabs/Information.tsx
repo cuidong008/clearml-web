@@ -3,18 +3,21 @@ import { useDetailCtx } from "@/views/experiments/details/DetailContext"
 import React, { useEffect, useState } from "react"
 import { Task } from "@/types/task"
 import { selectionDisabledEditable } from "@/views/experiments/menu/items.utils"
-import { Form, Input } from "antd"
+import { Form, Input, message, Space } from "antd"
 import dayjs from "dayjs"
 import { tasksUpdate } from "@/api/task"
 import { transformDateToPeriod } from "@/utils/transformer"
 import { map } from "lodash"
 import { Link } from "react-router-dom"
+import copy from "copy-to-clipboard"
 
 export const Information = () => {
   const ctx = useDetailCtx()
   const [curData, setCurData] = useState<Task>()
   const [editComment, setEditComment] = useState(false)
   const [newComment, setNewComment] = useState("")
+
+  const [msg, msgContext] = message.useMessage()
 
   useEffect(() => {
     setCurData(() => ctx.current)
@@ -43,6 +46,7 @@ export const Information = () => {
 
   return (
     <div style={{ maxWidth: 1200 }}>
+      {msgContext}
       <EditableSection
         editable={selectionDisabledEditable(curData)}
         label={<h4>DESCRIPTION:</h4>}
@@ -150,7 +154,28 @@ export const Information = () => {
             <div>{curData?.user?.name ? curData.user.name : "N/A"}</div>
           </Form.Item>
           <Form.Item label="PARENT TASK">
-            <div>{curData?.parent?.name ? curData.parent.name : "N/A"}</div>
+            <div>
+              {curData?.parent?.name ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Link
+                    to={`/projects/${curData.parent.project?.id}/experiments/${curData.parent.id}/details`}
+                  >
+                    {curData.parent.name}
+                  </Link>
+                  <i
+                    className="al-icon al-ico-copy-to-clipboard sm-md pointer"
+                    onClick={() => {
+                      copy(
+                        `${window.location.origin}/projects/${curData?.parent?.project?.id}/experiments/${curData?.parent?.id}/details`,
+                      )
+                      msg.success("copied link to clipboard")
+                    }}
+                  />
+                </div>
+              ) : (
+                "N/A"
+              )}
+            </div>
           </Form.Item>
           <Form.Item label="PROJECT">
             <div>{curData?.project?.name ? curData.project.name : "N/A"}</div>

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import styles from "./index.module.scss"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import classNames from "classnames"
@@ -39,6 +39,7 @@ export const ExperimentDetails = (props: {
   onTaskChange: (e: string, t?: Task[]) => void
 }) => {
   const params = useParams()
+  const [search] = useSearchParams()
   const navigate = useNavigate()
   const currentUser = useStoreSelector((state) => state.app.user)
   const selectedTask = useStoreSelector((state) => state.task.selectedTask)
@@ -48,7 +49,9 @@ export const ExperimentDetails = (props: {
   const [loading, setLoading] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
   const [newTaskName, setNewTaskName] = useState("")
-  const [activeTab, setActiveTab] = useState("execution")
+  const [activeTab, setActiveTab] = useState(
+    search.get("section") ?? "execution",
+  )
   const [editing, setEditing] = useState(false)
 
   const [notify, notifyContext] = notification.useNotification()
@@ -88,7 +91,7 @@ export const ExperimentDetails = (props: {
       (params["expId"] && selectedTask?.id === params["expId"])
     )
       getTaskInfo()
-  }, [params, selectedTask])
+  }, [params["expId"], selectedTask])
 
   const content = (
     <div style={{ width: 200, fontSize: 12 }}>
@@ -380,7 +383,11 @@ export const ExperimentDetails = (props: {
               </div>
               <Tabs
                 activeKey={activeTab}
-                onChange={(e) => setActiveTab(e)}
+                onChange={(e) => {
+                  setActiveTab(e)
+                  search.set("section", e)
+                  navigate(`${location.pathname}?${search}`)
+                }}
                 centered
                 items={[
                   { label: "EXECUTION", key: "execution" },

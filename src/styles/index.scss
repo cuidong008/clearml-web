@@ -33,16 +33,8 @@ ul {
   min-height: 54px;
 }
 
-html[schema="dark"] {
-  ::-webkit-scrollbar-thumb {
-    background-color: $blue-400;
-  }
-}
-
-html[schema="light"] {
-  ::-webkit-scrollbar-thumb {
-    background-color: #acacac;
-  }
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 ::-webkit-scrollbar {
@@ -55,34 +47,9 @@ html[schema="light"] {
   border-radius: 20px;
 }
 
-html[schema="dark"] {
-  .ant-table-thead {
-    .ant-table-cell {
-      background: $blue-700;
-      color: $blue-300;
-    }
-  }
-
-  .commonDialogTitle {
-    color: $blue-50;
-  }
-
-  .subDialogHeader {
-    color: $blue-200;
-  }
-}
-
 .ant-notification-notice-btn {
   span {
     color: $neon-yellow !important;
-  }
-}
-
-html[schema="light"] {
-  .ant-notification-notice-btn {
-    span {
-      color: $blue-500 !important;
-    }
   }
 }
 
@@ -96,6 +63,22 @@ html[schema="light"] {
   }
 }
 
+.commonDialogTitle {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 10px;
+  color: #8492c2;
+  display: block;
+  font-family: Heebo, sans-serif;
+}
+
+.subDialogHeader {
+  font-size: 14px;
+  text-align: center;
+  color: $blue-200;
+  margin-left: 10px !important;
+}
+
 .ellipsis {
   display: block;
   overflow: hidden;
@@ -104,19 +87,54 @@ html[schema="light"] {
 }
 
 html[schema="dark"] {
-  .commonDialogTitle {
-    font-size: 24px;
-    font-weight: 300;
-    margin-top: 10px;
-    color: #8492c2;
-    display: block;
-    font-family: Heebo, sans-serif;
+  .ant-table-thead {
+    .ant-table-cell {
+      background: $blue-700;
+      color: $blue-300;
+    }
   }
 
-  .subDialogHeader {
-    font-size: 14px;
-    text-align: center;
-    color: $blue-400;
-    margin-left: 10px !important;
+  .ant-modal-body {
+    .al-icon {
+      color: $blue-200;
+    }
+
+    .commonDialogTitle {
+      color: $blue-50;
+    }
+
+    .subDialogHeader {
+      color: $blue-200;
+    }
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: $blue-400;
+  }
+}
+
+html[schema="light"] {
+  .ant-modal-body {
+    .al-icon {
+      color: $blue-400;
+    }
+
+    .commonDialogTitle {
+      color: $blue-400;
+    }
+
+    .subDialogHeader {
+      color: $blue-600;
+    }
+  }
+
+  .ant-notification-notice-btn {
+    span {
+      color: $blue-500 !important;
+    }
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #acacac;
   }
 }
