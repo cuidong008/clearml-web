@@ -1,0 +1,61 @@
+.console {
+  display: block;
+  position: relative;
+  overflow: hidden;
+
+  .header {
+    width: 100%;
+    padding: 7px 21px;
+    display: flex;
+    align-items: center;
+
+    .hostname {
+      margin-right: auto;
+    }
+
+    .filter {
+      margin-left: 42px;
+    }
+  }
+
+  .logWrapper {
+    height: calc(100% - 46px);
+    overflow: auto;
+    background-color: #000;
+    color: #ffffff;
+
+    .logLine {
+      font: 12px monospace;
+
+      .timestamp {
+        background-color: #1d1d1d;
+        width: 170px;
+        color: lightgray;
+        margin-right: auto;
+        height: 25px;
+        float: left;
+        padding: 5px 0 0 20px;
+        border-bottom: 1px solid #1d1d1d;
+      }
+
+      .entry {
+        min-width: 100%;
+        background-color: #000;
+        color: #ffffff;
+        height: 25px;
+        padding-left: 20px;
+        padding-top: 5px;
+        margin-left: 170px;
+        white-space: pre;
+        border-bottom: 1px solid transparent;
+      }
+
+      &.separator {
+        .timestamp,
+        .entry {
+          border-bottom: 1px solid #343a40;
+        }
+      }
+    }
+  }
+}
