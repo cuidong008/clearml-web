@@ -48,10 +48,7 @@ export const AbortAllExperimentDialog = (props: {
     >
       <div style={{ textAlign: "center" }}>
         <div>
-          <i
-            className="al-ico-abort-all"
-            style={{ fontSize: 60, height: 60 }}
-          />
+          <i className="al-ico-abort-all al-icon icon mx-auto xxl" />
         </div>
         <span className="commonDialogTitle">ABORT CHILD TASKS</span>
         <p className="subDialogHeader" style={{ textAlign: "left" }}>

@@ -1,4 +1,13 @@
 .editableTextView {
+  position: relative;
+  box-sizing: content-box;
+
+  .editBtn {
+    position: absolute;
+    top: 28px;
+    right: 30px;
+  }
+
   .btnBar {
     position: absolute;
     right: 40px;
@@ -72,15 +81,19 @@
     }
   }
 
+  .emptyText {
+    color: #5a658e;
+    font-family: Heebo, sans-serif, sans-serif;
+    font-size: 14px;
+  }
+
   .textScrollView {
     padding: 16px 0 0 16px;
     border-radius: 4px;
     background: #0d0e15;
-    min-height: 250px;
-    max-height: 300px;
-    height: 100%;
     color: $white;
     overflow: auto;
+    min-height: 250px;
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
 

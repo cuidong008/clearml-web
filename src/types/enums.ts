@@ -68,6 +68,8 @@ export const TaskTypeEnum: Record<string, TaskTypeEnumType> = {
 
 export type ArtifactModeEnum = "input" | "output"
 
+export type Direction = "prev" | "next"
+
 export const ArtifactModeEnum = {
   Input: "input" as ArtifactModeEnum,
   Output: "output" as ArtifactModeEnum,

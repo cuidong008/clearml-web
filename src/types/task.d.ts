@@ -37,7 +37,7 @@ export interface Artifact {
 }
 
 export interface Execution {
-  queue?: { id?: string }
+  queue?: { id?: string; name?: string }
   parameters?: object
   model?: string
   model_desc?: object

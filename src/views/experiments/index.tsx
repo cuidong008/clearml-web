@@ -156,7 +156,7 @@ export const Experiments = () => {
           }
           setTasks(() => taskList)
           injectColsFilters(taskList)
-          setHasMore(data.tasks.length >= 12)
+          setHasMore(data.tasks.length >= 15)
           if (data.scroll_id && data.scroll_id !== scrollId) {
             setScrollId(data.scroll_id)
           }

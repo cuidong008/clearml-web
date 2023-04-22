@@ -55,7 +55,7 @@ export const TASK_INFO_ONLY_FIELDS_BASE = [
   "project.name",
   "output",
   "hyperparams",
-  "execution.queue.name",
+  "execution",
   "script.binary",
   "script.repository",
   "script.tag",

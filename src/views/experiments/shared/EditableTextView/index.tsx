@@ -1,7 +1,13 @@
 import classNames from "classnames"
 import { Button, Input, Modal, Space } from "antd"
-import React, { ReactNode, useEffect, useRef, useState } from "react"
-import { useDetailCtx } from "../../details/DetailContext"
+import React, {
+  CSSProperties,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import styles from "./index.module.scss"
 import { SearchOutlined } from "@ant-design/icons"
 import copy from "copy-to-clipboard"
@@ -15,11 +21,14 @@ export const EditableTextView = (props: {
   customBtn?: ReactNode
   editable: boolean
   text?: string
+  emptyText?: ReactNode
   onEdit?: (e: boolean) => void
-  onSave?: () => Promise<boolean>
+  onSave?: (e?: string) => void
+  style?: CSSProperties
 }) => {
-  const ctx = useDetailCtx()
-  const { editable, label, onEdit, onSave, text, customBtn } = props
+  const { editable, label, style, onEdit, onSave, text, emptyText, customBtn } =
+    props
+
   const [edit, setEdit] = useState(false)
   const [lines, setLines] = useState<string[]>([])
   const [search, setSearch] = useState<string>()
@@ -28,8 +37,9 @@ export const EditableTextView = (props: {
   const [copied, setCopied] = useState(false)
   const [index, setIndex] = useState(0)
   const [indexes, setIndexes] = useState<number[]>([])
-  const ref = useRef<HTMLDivElement>(null)
   const [newText, setNewText] = useState<string>()
+
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setLines(() =>
@@ -51,8 +61,12 @@ export const EditableTextView = (props: {
 
   function stopEdit() {
     setEdit(false)
-    ctx.setEditing(false)
     onEdit?.(false)
+  }
+
+  function confirmEdit() {
+    onSave?.(newText)
+    stopEdit()
   }
 
   function split(line: string, search: string) {
@@ -105,20 +119,24 @@ export const EditableTextView = (props: {
         setCopied(false)
         setShowSearch(false)
       }}
-      className={classNames("editPanel", styles.editableTextView, {
-        [styles.editable]: editable,
-      })}
+      style={style}
+      className={classNames("editPanel", styles.editableTextView)}
       onDoubleClick={() => editable && startEdit()}
     >
       <Modal
         title={
           <div style={{ textAlign: "center", fontSize: 22, fontWeight: 100 }}>
-            EDIT {label}
+            EDIT{" "}
+            {typeof label === "string"
+              ? label
+              : (label as ReactElement)?.props?.children}
           </div>
         }
+        destroyOnClose
         width={"80vw"}
         open={edit}
-        onCancel={() => setEdit(false)}
+        onCancel={() => stopEdit()}
+        onOk={() => confirmEdit()}
       >
         <div style={{ padding: 20, background: "#282a36" }}>
           <AceEditor
@@ -130,8 +148,15 @@ export const EditableTextView = (props: {
           />
         </div>
       </Modal>
+      <Button
+        style={{ display: showBtn && !text ? "block" : "none" }}
+        className={classNames(styles.editBtn, "primaryBtn")}
+        onClick={() => startEdit()}
+      >
+        EDIT
+      </Button>
       <Space
-        style={{ display: showBtn ? "flex" : "none" }}
+        style={{ display: showBtn && text ? "flex" : "none" }}
         className={styles.btnBar}
       >
         <div
@@ -142,14 +167,7 @@ export const EditableTextView = (props: {
             }
           }}
         >
-          {!showSearch && (
-            <Button
-              onMouseEnter={() => setShowSearch(true)}
-              className={classNames(styles.panelBtn)}
-              icon={<SearchOutlined />}
-            />
-          )}
-          {showSearch && (
+          {showSearch ? (
             <div className={styles.searchTool}>
               <Input
                 placeholder="Type to search"
@@ -186,9 +204,14 @@ export const EditableTextView = (props: {
                 />
               </div>
             </div>
+          ) : (
+            <Button
+              onMouseEnter={() => setShowSearch(true)}
+              className={classNames(styles.panelBtn)}
+              icon={<SearchOutlined />}
+            />
           )}
         </div>
-
         <Button
           className={classNames(styles.panelBtn)}
           onClick={() => {
@@ -214,30 +237,33 @@ export const EditableTextView = (props: {
           </>
         )}
       </Space>
-
-      <h4>{label}</h4>
-      <div className={styles.textScrollView} ref={ref}>
-        {lines.map((line, k) => (
-          <div key={k} className={styles.line}>
-            {(search ? split(line, search) : [[line, search]]).map(
-              (part, i) => (
-                <span key={i}>
-                  {part[0]}
-                  {part[1] && (
-                    <span
-                      className={classNames(styles.found, {
-                        [styles.current]: indexes[index] === k,
-                      })}
-                    >
-                      {part[1]}
-                    </span>
-                  )}
-                </span>
-              ),
-            )}
-          </div>
-        ))}
-      </div>
+      {typeof label === "string" ? <h4>{label}</h4> : label}
+      {text ? (
+        <div className={styles.textScrollView} ref={ref}>
+          {lines.map((line, k) => (
+            <div key={k} className={styles.line}>
+              {(search ? split(line, search) : [[line, search]]).map(
+                (part, i) => (
+                  <span key={i}>
+                    {part[0]}
+                    {part[1] && (
+                      <span
+                        className={classNames(styles.found, {
+                          [styles.current]: indexes[index] === k,
+                        })}
+                      >
+                        {part[1]}
+                      </span>
+                    )}
+                  </span>
+                ),
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.emptyText}>{emptyText ?? "No data to show"}</div>
+      )}
     </div>
   )
 }
