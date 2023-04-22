@@ -1,62 +1,48 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { resolve } from "path";
-import svgr from "vite-plugin-svgr";
-import viteCompression from "vite-plugin-compression";
-
-const dev = "http://dev-mlp-api-gateway.deeproute.cn"
-const stg = "http://stg-mlp-api-gateway.deeproute.cn"
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
+import { resolve } from "path"
+import svgr from "vite-plugin-svgr"
+import viteCompression from "vite-plugin-compression"
 
 export default defineConfig({
   resolve: {
     alias: {
       // 如果报错__dirname找不到，需要安装node,执行yarn add @types/node --save-dev
       "@": resolve(__dirname, "./src"),
-      "~antd": resolve(__dirname, "./node_modules/antd")
-    }
+      "~antd": resolve(__dirname, "./node_modules/antd"),
+    },
   },
-  plugins: [react(), svgr(), viteCompression(),],
+  plugins: [react(), svgr(), viteCompression()],
   server: {
     proxy: {
       "/api": {
-        target: `${stg}/evaluation/v1/clearml/api/v2.23`,
+        target: `https://app.clear.ml/api/v22.0`,
         changeOrigin: true,
         rewrite: (path) => path.replace("/api", ""),
-        bypass: (r, s, o) => {
-          r.headers["X-DR-Swimlane"] = '(ml-platform-api-evaluation=swimlane-00)'
-          console.log(r.url)
-        }
       },
-      "/auth": {
-        target: stg,
-        changeOrigin: true,
-        rewrite: (path) => path.replace("/auth", ""),
-        bypass: (r, s, o) => {
-          r.headers["X-DR-Swimlane"] = '(ml-platform-api-evaluation=swimlane-00)'
-          console.log(r.url)
-        }
-      },
-    }
+    },
   },
   css: {
     preprocessorOptions: {
       scss: {
         javascriptEnabled: true,
-        additionalData: `@import "@/styles/var.scss";`
-      }
+        additionalData: `@import "@/styles/var.scss";`,
+      },
     },
     postcss: {
-      plugins: [{
-        postcssPlugin: "internal:charset-removal",
-        AtRule: {
-          charset: (rule) => {
-            if (rule.name === "charset") {
-              rule.remove();
-            }
-          }
-        }
-      }]
-    }
+      plugins: [
+        {
+          postcssPlugin: "internal:charset-removal",
+          AtRule: {
+            charset: (rule) => {
+              if (rule.name === "charset") {
+                rule.remove()
+              }
+            },
+          },
+        },
+      ],
+    },
   },
   build: {
     minify: "esbuild",
@@ -64,23 +50,23 @@ export default defineConfig({
       output: {
         chunkFileNames: "static/js/chunk-[hash].js",
         assetFileNames: (e) => {
-          let dir = "";
+          let dir = ""
           if (e.name) {
-            const ext = e.name.split(".")[1];
+            const ext = e.name.split(".")[1]
             if (["eot", "ttf", "woff", "woff2"].indexOf(ext) !== -1) {
-              dir = "fonts";
+              dir = "fonts"
             }
             if (["svg", "png", "jpg", "jpeg"].indexOf(ext) !== -1) {
-              dir = "images";
+              dir = "images"
             }
             if (["css", "scss"].indexOf(ext) !== -1) {
-              dir = "css";
+              dir = "css"
             }
           }
-          return "static/" + dir + "/" + "chunk-[hash][extname]";
+          return "static/" + dir + "/" + "chunk-[hash][extname]"
         },
-        entryFileNames: "static/js/index.[hash].js"
-      }
-    }
-  }
+        entryFileNames: "static/js/index.[hash].js",
+      },
+    },
+  },
 })
